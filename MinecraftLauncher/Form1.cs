@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 //                                           //
 //     To secure this programs encyption     //
 //         change the string in line         //
-// "private const string saltString = "" + defaultString; // Change the "" as needed. Uses only up to 16 characters."
+// private const string saltString = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
 //        to somthing else other than        //
 //     "" to somthing like "mycustomsalt"    //
 //                                           //
@@ -37,20 +37,6 @@ namespace MinecraftLauncher
     // Start - File Usage
         public partial class Form1 : Form
         {
-
-            //Found this on Stack overflow with the relevant information i needed to start this.
-            // Link = http://stackoverflow.com/questions/10440483/launch-jar-from-c-sharp
-            // Might come in handy later.
-            //
-            //public static bool IsLinux
-            //{
-            //    get
-            //    {
-            //        int p = (int)Environment.OSVersion.Platform;
-            //        return (p == 4) || (p == 6) || (p == 128);
-            //    }
-            //}
-
             /////////////////////////////////////
             // Start - Settings and Parameters
             // Accept all Certificats? // ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
@@ -92,67 +78,86 @@ namespace MinecraftLauncher
             // End
             /////////////////////////////////////
 
+            /////////////////////////////////////
+            // Start - Enter Button Tab and Login
+                private void tbUsername_KeyDown(object sender, KeyEventArgs e)
+                {
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        tbPassword.Focus();
+                        e.Handled = true;
+                    }
+                }
+
+                private void tbPassword_KeyDown(object sender, KeyEventArgs e)
+                {
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        webLogin();
+                        e.Handled = true;
+                    }
+                }
+            // End
+            /////////////////////////////////////
+
             public string mcName = "";
             public string mcSession = "";
 
+            private void webLogin()
+            {
+                textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
+                loginButton.Focus();
+                string userName = tbUsername.Text;
+                string userPass = tbPassword.Text;
+
+                /////////////////////////////////////
+                // Start - Create URL
+                    string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
+                // End
+                /////////////////////////////////////
+
+                /////////////////////////////////////
+                // Start - Web Code, Unlearned, But it Works
+                // Gets Session Id and other strings from Minecraft
+                    string mcURLData = "";
+                    using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
+                    {
+                        try
+                        {
+                            mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
+                        }
+                        catch
+                        {
+                            textError.Text = "Cant connect to login.minecraft.net.";
+                        }
+                    }
+                // End
+                /////////////////////////////////////
+
+                /////////////////////////////////////
+                // Start - Check Minecraft Session Status
+                    if (mcURLData.Contains(":"))
+                    {
+                        string[] mcLoginData = mcURLData.Split(':');
+                        mcName = mcLoginData[2];
+                        mcSession = mcLoginData[3];
+                        textSession.Text = mcSession;
+                        textUsername.Text = mcName;
+                        textError.Text = "Seccessful Login";
+                        startButton.Enabled = true;
+                    }
+                    else
+                    {
+                        textError.Text = mcURLData;
+                    }
+                // End
+                /////////////////////////////////////
+            }
             /////////////////////////////////////
             // Start - Login Button Code
                 private void loginButton_Click(object sender, EventArgs e) // It also freezes until web connect is done. I wonder if thats fixable.
                 {
-                    textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
-                    string userName = tbUsername.Text;
-                    string userPass = tbPassword.Text;
-            
-                    /////////////////////////////////////
-                    // Start - Create URL
-                        string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
-                    // End
-                    /////////////////////////////////////
-
-                    /////////////////////////////////////
-                    // Start - Web Code, Unlearned, But it Works
-                    // Gets Session Id and other strings from Minecraft
-                        string mcURLData = "";
-                        using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
-                        {
-                            try
-                            {
-                                mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
-                            }
-                            catch
-                            {
-                                textError.Text = "Cant connect to login.minecraft.net.";
-                            }
-                        }
-                    // End
-                    /////////////////////////////////////
-
-                    /////////////////////////////////////
-                    // Start - Check Minecraft Session Status
-                        if (mcURLData.Contains(":"))
-                        {
-                            string[] mcLoginData = mcURLData.Split(':');
-                            mcName = mcLoginData[2];
-                            mcSession = mcLoginData[3];
-                            textSession.Text = mcSession;
-                            textUsername.Text = mcName;
-                            textError.Text = "Seccessful Login";
-                            startButton.Enabled = true;
-                        }
-                        else if (mcURLData == "Bad login")
-                        {
-                            textError.Text = "Password or Username is incorrect.";
-                        }
-                        else if (mcURLData == "User not premium")
-                        {
-                            textError.Text = "You have not purchased Minecraft";
-                        }
-                        else if (mcURLData == "Account migrated, use e-mail as username.")
-                        {
-                            textError.Text = "Use your Email Address, not your username.";
-                        }
-                    // End
-                    /////////////////////////////////////
+                    webLogin();
                 }
             // End
             /////////////////////////////////////
@@ -176,11 +181,6 @@ namespace MinecraftLauncher
         {
             public static string Truncate(this string value, int maxLength)
             {
-                // ACTIVE ON TESTING
-                //if (maxLength == null) 
-                //{
-                //    maxLength = 5;
-                //}
                 return value.Length <= maxLength ? value : value.Substring(0, maxLength);
             }
         }
@@ -231,8 +231,7 @@ namespace MinecraftLauncher
                 // This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
                 // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
                 // 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
-                private const string defaultSalt = "8dfn27c6vhd81j9s"; // Do not touch. Makes sure string is atleast 16 characters.
-                private const string saltString = "" + defaultSalt; // Change the "" as needed. Uses only up to 16 characters.
+                private const string saltString = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
                 private static string initVector = saltString.Truncate(16); // Makes sure the string is limited to 16 characters.
 
                 // This constant is used to determine the keysize of the encryption algorithm.
