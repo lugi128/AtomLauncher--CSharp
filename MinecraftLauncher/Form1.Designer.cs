@@ -48,6 +48,7 @@
             this.tbUsername.Name = "tbUsername";
             this.tbUsername.Size = new System.Drawing.Size(192, 20);
             this.tbUsername.TabIndex = 0;
+            this.tbUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbUsername_KeyDown);
             // 
             // label1
             // 
@@ -104,6 +105,7 @@
             this.tbPassword.PasswordChar = '*';
             this.tbPassword.Size = new System.Drawing.Size(192, 20);
             this.tbPassword.TabIndex = 2;
+            this.tbPassword.UseSystemPasswordChar = true;
             // 
             // label3
             // 
@@ -155,13 +157,14 @@
             // 
             this.textError.BackColor = System.Drawing.SystemColors.Control;
             this.textError.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textError.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)), true);
             this.textError.Location = new System.Drawing.Point(16, 224);
             this.textError.Name = "textError";
             this.textError.ReadOnly = true;
             this.textError.Size = new System.Drawing.Size(192, 11);
             this.textError.TabIndex = 9;
             this.textError.TabStop = false;
+            this.textError.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // Form1
             // 
@@ -181,7 +184,7 @@
             this.Controls.Add(this.tbUsername);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Minecraft Launcher";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
