@@ -78,83 +78,93 @@ namespace MinecraftLauncher
             // End
             /////////////////////////////////////
 
-            private void tbUsername_KeyDown(object sender, KeyEventArgs e)
-            {
-                if (e.KeyCode == Keys.Enter)
+            /////////////////////////////////////
+            // Start - Enter Button Tab and Login
+                private void tbUsername_KeyDown(object sender, KeyEventArgs e)
                 {
-                    tbPassword.Focus();
-                    e.Handled = true;
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        tbPassword.Focus();
+                        e.Handled = true;
+                    }
                 }
-            }
 
-            private void tbPassword_KeyDown(object sender, KeyEventArgs e)
-            {
-                if (e.KeyCode == Keys.Enter)
+                private void tbPassword_KeyDown(object sender, KeyEventArgs e)
                 {
-                    startButton();
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        webLogin();
+                        e.Handled = true;
+                    }
                 }
-            }
+            // End
+            /////////////////////////////////////
 
             public string mcName = "";
             public string mcSession = "";
 
+            private void webLogin()
+            {
+                textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
+                loginButton.Focus();
+                string userName = tbUsername.Text;
+                string userPass = tbPassword.Text;
+
+                /////////////////////////////////////
+                // Start - Create URL
+                    string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
+                // End
+                /////////////////////////////////////
+
+                /////////////////////////////////////
+                // Start - Web Code, Unlearned, But it Works
+                // Gets Session Id and other strings from Minecraft
+                    string mcURLData = "";
+                    using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
+                    {
+                        try
+                        {
+                            mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
+                        }
+                        catch
+                        {
+                            textError.Text = "Cant connect to login.minecraft.net.";
+                        }
+                    }
+                // End
+                /////////////////////////////////////
+
+                /////////////////////////////////////
+                // Start - Check Minecraft Session Status
+                    if (mcURLData.Contains(":"))
+                    {
+                        string[] mcLoginData = mcURLData.Split(':');
+                        mcName = mcLoginData[2];
+                        mcSession = mcLoginData[3];
+                        textSession.Text = mcSession;
+                        textUsername.Text = mcName;
+                        textError.Text = "Seccessful Login";
+                        startButton.Enabled = true;
+                    }
+                    else
+                    {
+                        textError.Text = mcURLData;
+                    }
+                // End
+                /////////////////////////////////////
+            }
             /////////////////////////////////////
             // Start - Login Button Code
                 private void loginButton_Click(object sender, EventArgs e) // It also freezes until web connect is done. I wonder if thats fixable.
                 {
-                    textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
-                    string userName = tbUsername.Text;
-                    string userPass = tbPassword.Text;
-            
-                    /////////////////////////////////////
-                    // Start - Create URL
-                        string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
-                    // End
-                    /////////////////////////////////////
-
-                    /////////////////////////////////////
-                    // Start - Web Code, Unlearned, But it Works
-                    // Gets Session Id and other strings from Minecraft
-                        string mcURLData = "";
-                        using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
-                        {
-                            try
-                            {
-                                mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
-                            }
-                            catch
-                            {
-                                textError.Text = "Cant connect to login.minecraft.net.";
-                            }
-                        }
-                    // End
-                    /////////////////////////////////////
-
-                    /////////////////////////////////////
-                    // Start - Check Minecraft Session Status
-                        if (mcURLData.Contains(":"))
-                        {
-                            string[] mcLoginData = mcURLData.Split(':');
-                            mcName = mcLoginData[2];
-                            mcSession = mcLoginData[3];
-                            textSession.Text = mcSession;
-                            textUsername.Text = mcName;
-                            textError.Text = "Seccessful Login";
-                            startButton.Enabled = true;
-                        }
-                        else
-                        {
-                            textError.Text = mcURLData;
-                        }
-                    // End
-                    /////////////////////////////////////
+                    webLogin();
                 }
             // End
             /////////////////////////////////////
 
             /////////////////////////////////////
             // Start - Start Button Code
-                public void startButton_Click(object sender, EventArgs e)
+                private void startButton_Click(object sender, EventArgs e)
                 {
                     Process.Start("javaw", "-Xms512m -Xmx1024m -cp " + appData + @"\.minecraft\bin\* -Djava.library.path=" + appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + mcName + " " + mcSession);
                     this.Close();
