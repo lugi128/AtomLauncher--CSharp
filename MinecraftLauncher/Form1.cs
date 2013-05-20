@@ -47,9 +47,32 @@ namespace MinecraftLauncher
             /////////////////////////////////////
             // Start - File Usage
 
+                void WriteLoginToFile()
+                {
+                    string CombinedString = tbUsername.Text + ":" + tbPassword.Text;
+                    string EncryptedString = StringCipher.Encrypt(CombinedString, StringCipher.uniqueMachineId());
+                    System.IO.File.WriteAllText(@".\AEUsers", EncryptedString);
+                }
+
+                void ReadLoginFromFile()
+                {
+                    string EncryptedString = System.IO.File.ReadAllText(@".\AEUsers");
+                    string DecryptedString = StringCipher.Decrypt(EncryptedString, StringCipher.uniqueMachineId());
+                    string[] StringArray = DecryptedString.Split(new char[] { ':' }, 2);
+                    tbUsername.Text = StringArray[0];
+                    tbPassword.Text = StringArray[1];
+                }
+
                 // -------
                 // Input Code Here
                 // -------
+
+                // string[] ARRAYNAME = FILEREADSTRING.Split(new char[] { ':' }, 2);
+                // Username = ARRAYNAME[0];
+                // Password = ARRAYNAME[1];
+
+                // string PASSSTRING = StringCipher.Decrypt("STRING", StringCipher.uniqueMachineId());
+                // string PASSSTRING = StringCipher.Encrypt("STRING", StringCipher.uniqueMachineId());
 
             // End
             /////////////////////////////////////
@@ -73,7 +96,11 @@ namespace MinecraftLauncher
 
                 private void Form1_Load(object sender, EventArgs e)
                 {
-
+                    if (File.Exists(@"./AEUsers"))
+                    {
+                        checkLogin.Checked = true;
+                        ReadLoginFromFile();
+                    }
                 }
             // End
             /////////////////////////////////////
@@ -112,7 +139,7 @@ namespace MinecraftLauncher
 
                 /////////////////////////////////////
                 // Start - Create URL
-                    string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
+                  //  string urlData = "?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
                 // End
                 /////////////////////////////////////
 
@@ -124,11 +151,16 @@ namespace MinecraftLauncher
                     {
                         try
                         {
-                            mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
+                            System.Collections.Specialized.NameValueCollection urlData = new System.Collections.Specialized.NameValueCollection();
+                            urlData.Add("user", userName);
+                            urlData.Add("password", userPass);
+                            urlData.Add("version", "13");
+                            byte[] responsebytes = client.UploadValues("https://login.minecraft.net", "POST", urlData);
+                            mcURLData = Encoding.UTF8.GetString(responsebytes);
                         }
                         catch
                         {
-                            textError.Text = "Cant connect to login.minecraft.net.";
+                            textError.Text = "Can't connect to login.minecraft.net.";
                         }
                     }
                 // End
@@ -143,8 +175,12 @@ namespace MinecraftLauncher
                         mcSession = mcLoginData[3];
                         textSession.Text = mcSession;
                         textUsername.Text = mcName;
-                        textError.Text = "Seccessful Login";
+                        textError.Text = "Successful Login";
                         startButton.Enabled = true;
+                        if(checkLogin.Checked == true)
+                        {
+                            WriteLoginToFile();
+                        }
                     }
                     else
                     {
