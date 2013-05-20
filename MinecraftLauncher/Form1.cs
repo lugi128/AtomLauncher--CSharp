@@ -47,6 +47,22 @@ namespace MinecraftLauncher
             /////////////////////////////////////
             // Start - File Usage
 
+                void WriteLoginToFile()
+                {
+                    string CombinedString = tbUsername.Text + ":" + tbPassword.Text;
+                    string EncryptedString = StringCipher.Encrypt(CombinedString, StringCipher.uniqueMachineId());
+                    System.IO.File.WriteAllText(@".\AEUsers", EncryptedString);
+                }
+
+                void ReadLoginFromFile()
+                {
+                    string EncryptedString = System.IO.File.ReadAllText(@".\AEUsers");
+                    string DecryptedString = StringCipher.Decrypt(EncryptedString, StringCipher.uniqueMachineId());
+                    string[] StringArray = DecryptedString.Split(new char[] { ':' }, 2);
+                    tbUsername.Text = StringArray[0];
+                    tbPassword.Text = StringArray[1];
+                }
+
                 // -------
                 // Input Code Here
                 // -------
@@ -80,7 +96,11 @@ namespace MinecraftLauncher
 
                 private void Form1_Load(object sender, EventArgs e)
                 {
-
+                    if (File.Exists(@"./AEUsers"))
+                    {
+                        checkLogin.Checked = true;
+                        ReadLoginFromFile();
+                    }
                 }
             // End
             /////////////////////////////////////
@@ -140,7 +160,7 @@ namespace MinecraftLauncher
                         }
                         catch
                         {
-                            textError.Text = "Cant connect to login.minecraft.net.";
+                            textError.Text = "Can't connect to login.minecraft.net.";
                         }
                     }
                 // End
@@ -155,8 +175,12 @@ namespace MinecraftLauncher
                         mcSession = mcLoginData[3];
                         textSession.Text = mcSession;
                         textUsername.Text = mcName;
-                        textError.Text = "Seccessful Login";
+                        textError.Text = "Successful Login";
                         startButton.Enabled = true;
+                        if(checkLogin.Checked == true)
+                        {
+                            WriteLoginToFile();
+                        }
                     }
                     else
                     {

@@ -39,6 +39,7 @@
             this.textSession = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textError = new System.Windows.Forms.TextBox();
+            this.checkLogin = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // tbUsername
@@ -64,7 +65,7 @@
             // 
             // loginButton
             // 
-            this.loginButton.Location = new System.Drawing.Point(16, 248);
+            this.loginButton.Location = new System.Drawing.Point(16, 288);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(48, 48);
             this.loginButton.TabIndex = 3;
@@ -76,7 +77,7 @@
             // 
             this.startButton.Enabled = false;
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startButton.Location = new System.Drawing.Point(72, 248);
+            this.startButton.Location = new System.Drawing.Point(72, 288);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(136, 48);
             this.startButton.TabIndex = 4;
@@ -167,11 +168,22 @@
             this.textError.TabStop = false;
             this.textError.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // checkLogin
+            // 
+            this.checkLogin.AutoSize = true;
+            this.checkLogin.Location = new System.Drawing.Point(32, 248);
+            this.checkLogin.Name = "checkLogin";
+            this.checkLogin.Size = new System.Drawing.Size(107, 17);
+            this.checkLogin.TabIndex = 10;
+            this.checkLogin.Text = "Save Login Info?";
+            this.checkLogin.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(225, 313);
+            this.ClientSize = new System.Drawing.Size(225, 353);
+            this.Controls.Add(this.checkLogin);
             this.Controls.Add(this.textError);
             this.Controls.Add(this.textSession);
             this.Controls.Add(this.textUsername);
@@ -205,6 +217,7 @@
         private System.Windows.Forms.TextBox textSession;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textError;
+        private System.Windows.Forms.CheckBox checkLogin;
     }
 }
 
