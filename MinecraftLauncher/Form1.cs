@@ -112,7 +112,7 @@ namespace MinecraftLauncher
 
                 /////////////////////////////////////
                 // Start - Create URL
-                    string url = "https://login.minecraft.net/?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
+                  //  string urlData = "?user=" + userName + "&password=" + userPass + "&version=13"; //Place username and password in to url before using it.
                 // End
                 /////////////////////////////////////
 
@@ -124,7 +124,12 @@ namespace MinecraftLauncher
                     {
                         try
                         {
-                            mcURLData = client.DownloadString(url); // Is this already "HTTPS" compliant? Seems so. But i need to be sure.
+                            System.Collections.Specialized.NameValueCollection urlData = new System.Collections.Specialized.NameValueCollection();
+                            urlData.Add("user", userName);
+                            urlData.Add("password", userPass);
+                            urlData.Add("version", "13");
+                            byte[] responsebytes = client.UploadValues("https://login.minecraft.net", "POST", urlData);
+                            mcURLData = Encoding.UTF8.GetString(responsebytes);
                         }
                         catch
                         {
