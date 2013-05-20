@@ -1,11 +1,11 @@
 MinecraftLauncher
 =================
 
-An Open Source Minecraft Launcher in C#.
+An Open Source Minecraft Launcher written in C#.
 
-(Before Compiling this please follow the warring at the top of the code)
+(Before compiling this please follow the warning at the top of the code)
 
 (Requires a downloaded copy of minecraft first via your own login)
 
 Feel free to use this repository to boost your own projects.
-Works exactly as intended. Allows ONLY people who bought minecraft to login and launches strait into minecraft.
+Works exactly as intended. Allows ONLY people who bought Minecraft to login and launches straight into Minecraft.
