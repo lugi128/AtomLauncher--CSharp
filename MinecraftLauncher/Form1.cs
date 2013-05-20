@@ -46,7 +46,6 @@ namespace MinecraftLauncher
 
             /////////////////////////////////////
             // Start - File Usage
-
                 void WriteLoginToFile()
                 {
                     string CombinedString = tbUsername.Text + ":" + tbPassword.Text;
@@ -62,28 +61,6 @@ namespace MinecraftLauncher
                     tbUsername.Text = StringArray[0];
                     tbPassword.Text = StringArray[1];
                 }
-
-                // -------
-                // Input Code Here
-                // -------
-
-                // string[] ARRAYNAME = FILEREADSTRING.Split(new char[] { ':' }, 2);
-                // Username = ARRAYNAME[0];
-                // Password = ARRAYNAME[1];
-
-                // string PASSSTRING = StringCipher.Decrypt("STRING", StringCipher.uniqueMachineId());
-                // string PASSSTRING = StringCipher.Encrypt("STRING", StringCipher.uniqueMachineId());
-
-            // End
-            /////////////////////////////////////
-
-            /////////////////////////////////////
-            // Start - Auto Login
-
-                // -------
-                // Input Code Here, Need File usage first.
-                // -------
-
             // End
             /////////////////////////////////////
 
