@@ -51,6 +51,13 @@ namespace MinecraftLauncher
                 // Input Code Here
                 // -------
 
+                // string[] ARRAYNAME = FILEREADSTRING.Split(new char[] { ':' }, 2);
+                // Username = ARRAYNAME[0];
+                // Password = ARRAYNAME[1];
+
+                // string PASSSTRING = StringCipher.Decrypt("STRING", StringCipher.uniqueMachineId());
+                // string PASSSTRING = StringCipher.Encrypt("STRING", StringCipher.uniqueMachineId());
+
             // End
             /////////////////////////////////////
 
