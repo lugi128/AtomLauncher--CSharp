@@ -14,6 +14,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 
+
 ///////////////////////////////////////////////
 //                 ATTENTION                 //
 //--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--//
@@ -21,7 +22,9 @@ using System.Text.RegularExpressions;
 //                                           //
 //     To secure this programs encyption     //
 //         change the string in line         //
-// private const string saltString = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
+// return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)
+//                     or                    //
+// private const string initVector = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
 //        to somthing else other than        //
 //     "" to somthing like "mycustomsalt"    //
 //                                           //
@@ -39,10 +42,23 @@ namespace MinecraftLauncher
         {
             /////////////////////////////////////
             // Start - Settings and Parameters
-            // Accept all Certificats? // ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 string appData = Environment.GetEnvironmentVariable("APPDATA");
+                Form2 frm2 = new Form2();
+                public string mcName = "";
+                public string mcSession = "";
+                public string usersFile = @"./AEUsers";
             // End
             /////////////////////////////////////
+
+            private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                this.Close();
+            }
+
+            private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                frm2.Show();
+            }
 
             /////////////////////////////////////
             // Start - File Usage
@@ -50,12 +66,12 @@ namespace MinecraftLauncher
                 {
                     string CombinedString = tbUsername.Text + ":" + tbPassword.Text;
                     string EncryptedString = StringCipher.Encrypt(CombinedString, StringCipher.uniqueMachineId());
-                    System.IO.File.WriteAllText(@".\AEUsers", EncryptedString);
+                    System.IO.File.WriteAllText(usersFile, EncryptedString);
                 }
 
                 void ReadLoginFromFile()
                 {
-                    string EncryptedString = System.IO.File.ReadAllText(@".\AEUsers");
+                    string EncryptedString = System.IO.File.ReadAllText(usersFile);
                     string DecryptedString = StringCipher.Decrypt(EncryptedString, StringCipher.uniqueMachineId());
                     string[] StringArray = DecryptedString.Split(new char[] { ':' }, 2);
                     tbUsername.Text = StringArray[0];
@@ -73,7 +89,7 @@ namespace MinecraftLauncher
 
                 private void Form1_Load(object sender, EventArgs e)
                 {
-                    if (File.Exists(@"./AEUsers"))
+                    if (File.Exists(usersFile))
                     {
                         checkLogin.Checked = true;
                         ReadLoginFromFile();
@@ -99,20 +115,19 @@ namespace MinecraftLauncher
                     {
                         webLogin();
                         e.Handled = true;
+                        startButton.Focus();
+                        startButton_Click(sender, e);
                     }
                 }
             // End
             /////////////////////////////////////
 
-            public string mcName = "";
-            public string mcSession = "";
-
-            private void webLogin()
+            private bool webLogin()
             {
                 textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
-                loginButton.Focus();
                 string userName = tbUsername.Text;
                 string userPass = tbPassword.Text;
+                bool loginStatus = false;
 
                 /////////////////////////////////////
                 // Start - Create URL
@@ -150,13 +165,17 @@ namespace MinecraftLauncher
                         string[] mcLoginData = mcURLData.Split(':');
                         mcName = mcLoginData[2];
                         mcSession = mcLoginData[3];
-                        textSession.Text = mcSession;
-                        textUsername.Text = mcName;
+                        frm2.debugTextUsername = mcSession;
+                        frm2.debugTextSession = mcName;
                         textError.Text = "Successful Login";
-                        startButton.Enabled = true;
-                        if(checkLogin.Checked == true)
+                        loginStatus = true;
+                        if (checkLogin.Checked == true)
                         {
                             WriteLoginToFile();
+                        }
+                        else if (File.Exists(usersFile))
+                        {
+                            File.Delete(usersFile);
                         }
                     }
                     else
@@ -165,22 +184,22 @@ namespace MinecraftLauncher
                     }
                 // End
                 /////////////////////////////////////
+
+                    return loginStatus;
             }
-            /////////////////////////////////////
-            // Start - Login Button Code
-                private void loginButton_Click(object sender, EventArgs e) // It also freezes until web connect is done. I wonder if thats fixable.
-                {
-                    webLogin();
-                }
-            // End
-            /////////////////////////////////////
 
             /////////////////////////////////////
             // Start - Start Button Code
                 private void startButton_Click(object sender, EventArgs e)
                 {
-                    Process.Start("javaw", "-Xms512m -Xmx1024m -cp " + appData + @"\.minecraft\bin\* -Djava.library.path=" + appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + mcName + " " + mcSession);
-                    this.Close();
+                    if (webLogin())
+                    {
+                        if (frm2.debugCheckMinecraft != true)
+                        {
+                            Process.Start("javaw", "-Xms512m -Xmx1024m -cp " + appData + @"\.minecraft\bin\* -Djava.library.path=" + appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + mcName + " " + mcSession);
+                            this.Close();
+                        }
+                    }
                 }
             // End
             /////////////////////////////////////
@@ -234,7 +253,7 @@ namespace MinecraftLauncher
             // Start - Combine IDs
                 public static string uniqueMachineId()
                 {
-                    return machineIDLookup() + machineIDLookup(true);
+                    return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)
                 }
             // End
             /////////////////////////////////////
@@ -244,15 +263,15 @@ namespace MinecraftLauncher
                 // This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
                 // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
                 // 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
-                private const string saltString = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
-                private static string initVector = saltString.Truncate(16); // Makes sure the string is limited to 16 characters.
+                private const string initVector = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
+                private const int vectorInt = 16; // Max Character length of string.
 
                 // This constant is used to determine the keysize of the encryption algorithm.
                 private const int keysize = 256;
 
                 public static string Encrypt(string plainText, string passPhrase)
                 {
-                    byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector);
+                    byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector.Truncate(vectorInt));
                     byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
                     PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
                     byte[] keyBytes = password.GetBytes(keysize / 8);
@@ -271,7 +290,7 @@ namespace MinecraftLauncher
 
                 public static string Decrypt(string cipherText, string passPhrase)
                 {
-                    byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector);
+                    byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector.Truncate(vectorInt));
                     byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
                     PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null);
                     byte[] keyBytes = password.GetBytes(keysize / 8);
