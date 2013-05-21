@@ -94,6 +94,11 @@ namespace MinecraftLauncher
                         checkLogin.Checked = true;
                         ReadLoginFromFile();
                     }
+                    if (checkAutoLogin.Checked == true)
+                    {
+                        // This Needs a five second time that can be interrpted. Before enableing the checkbox.
+                        startButton_Click(sender, e);
+                    }
                 }
             // End
             /////////////////////////////////////
@@ -113,7 +118,6 @@ namespace MinecraftLauncher
                 {
                     if (e.KeyCode == Keys.Enter)
                     {
-                        webLogin();
                         e.Handled = true;
                         startButton.Focus();
                         startButton_Click(sender, e);
@@ -194,7 +198,7 @@ namespace MinecraftLauncher
                 {
                     if (webLogin())
                     {
-                        if (frm2.debugCheckMinecraft != true)
+                        if (frm2.Visible != true || frm2.debugCheckMinecraft == true)
                         {
                             Process.Start("javaw", "-Xms512m -Xmx1024m -cp " + appData + @"\.minecraft\bin\* -Djava.library.path=" + appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + mcName + " " + mcSession);
                             this.Close();

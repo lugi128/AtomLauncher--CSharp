@@ -60,10 +60,10 @@
             this.textUsername.BackColor = System.Drawing.SystemColors.Control;
             this.textUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textUsername.Location = new System.Drawing.Point(24, 24);
+            this.textUsername.Location = new System.Drawing.Point(8, 24);
             this.textUsername.Name = "textUsername";
             this.textUsername.ReadOnly = true;
-            this.textUsername.Size = new System.Drawing.Size(176, 18);
+            this.textUsername.Size = new System.Drawing.Size(216, 18);
             this.textUsername.TabIndex = 9;
             this.textUsername.TabStop = false;
             this.textUsername.Text = "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ";
@@ -73,10 +73,10 @@
             this.textSession.BackColor = System.Drawing.SystemColors.Control;
             this.textSession.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textSession.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textSession.Location = new System.Drawing.Point(24, 64);
+            this.textSession.Location = new System.Drawing.Point(8, 64);
             this.textSession.Name = "textSession";
             this.textSession.ReadOnly = true;
-            this.textSession.Size = new System.Drawing.Size(176, 18);
+            this.textSession.Size = new System.Drawing.Size(216, 18);
             this.textSession.TabIndex = 9;
             this.textSession.TabStop = false;
             this.textSession.Text = "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ";
@@ -84,18 +84,18 @@
             // checkMinecraft
             // 
             this.checkMinecraft.AutoSize = true;
-            this.checkMinecraft.Location = new System.Drawing.Point(16, 96);
+            this.checkMinecraft.Location = new System.Drawing.Point(8, 96);
             this.checkMinecraft.Name = "checkMinecraft";
-            this.checkMinecraft.Size = new System.Drawing.Size(108, 17);
+            this.checkMinecraft.Size = new System.Drawing.Size(214, 17);
             this.checkMinecraft.TabIndex = 10;
-            this.checkMinecraft.Text = "Disable Minecraft";
+            this.checkMinecraft.Text = "Force Enable Minecraft (Bypass Debug)";
             this.checkMinecraft.UseVisualStyleBackColor = true;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(209, 121);
+            this.ClientSize = new System.Drawing.Size(233, 121);
             this.Controls.Add(this.checkMinecraft);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
