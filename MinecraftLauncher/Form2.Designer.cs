@@ -86,10 +86,11 @@
             this.checkMinecraft.AutoSize = true;
             this.checkMinecraft.Location = new System.Drawing.Point(8, 96);
             this.checkMinecraft.Name = "checkMinecraft";
-            this.checkMinecraft.Size = new System.Drawing.Size(214, 17);
+            this.checkMinecraft.Size = new System.Drawing.Size(218, 17);
             this.checkMinecraft.TabIndex = 10;
-            this.checkMinecraft.Text = "Force Enable Minecraft (Bypass Debug)";
+            this.checkMinecraft.Text = "Prevent Minecraft Startup (Debug Mode)";
             this.checkMinecraft.UseVisualStyleBackColor = true;
+            this.checkMinecraft.CheckedChanged += new System.EventHandler(this.checkMinecraft_CheckedChanged);
             // 
             // Form2
             // 

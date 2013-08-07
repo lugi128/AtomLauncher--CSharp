@@ -16,7 +16,7 @@ namespace MinecraftLauncher
             InitializeComponent();
         }
 
-        public string debugTextUsername
+        public string debugTextSession
         {
             get
             {
@@ -27,7 +27,7 @@ namespace MinecraftLauncher
                 this.textSession.Text = value;
             }
         }
-        public string debugTextSession
+        public string debugTextUsername
         {
             get
             {
@@ -55,6 +55,11 @@ namespace MinecraftLauncher
         {
             this.Hide();
             e.Cancel = true;
+        }
+
+        private void checkMinecraft_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

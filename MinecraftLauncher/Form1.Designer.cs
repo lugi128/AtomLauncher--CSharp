@@ -146,26 +146,25 @@
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-            this.debugToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.debugToolStripMenuItem.Text = "Debug";
             this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
             // 
             // divToolStripMenuItem
             // 
             this.divToolStripMenuItem.Name = "divToolStripMenuItem";
-            this.divToolStripMenuItem.Size = new System.Drawing.Size(106, 6);
+            this.divToolStripMenuItem.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // checkAutoLogin
             // 
             this.checkAutoLogin.AutoSize = true;
-            this.checkAutoLogin.Enabled = false;
             this.checkAutoLogin.Location = new System.Drawing.Point(24, 176);
             this.checkAutoLogin.Name = "checkAutoLogin";
             this.checkAutoLogin.Size = new System.Drawing.Size(77, 17);
