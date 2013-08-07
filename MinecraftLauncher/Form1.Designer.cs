@@ -41,6 +41,7 @@
             this.divToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkAutoLogin = new System.Windows.Forms.CheckBox();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,7 +127,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuToolStripMenuItem});
+            this.menuToolStripMenuItem,
+            this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(225, 24);
@@ -172,6 +174,13 @@
             this.checkAutoLogin.Text = "Auto Login";
             this.checkAutoLogin.UseVisualStyleBackColor = true;
             // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Enabled = false;
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -213,6 +222,7 @@
         private System.Windows.Forms.ToolStripSeparator divToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkAutoLogin;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
     }
 }
 
