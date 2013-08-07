@@ -12,6 +12,7 @@ using System.Management;
 using System.Security.Cryptography;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 
 
@@ -46,6 +47,7 @@ namespace MinecraftLauncher
                 Form2 frm2 = new Form2();
                 public string mcName = "";
                 public string mcSession = "";
+                public bool userLoggedIn = false;
                 public string usersFile = @"./AEUsers";
             // End
             /////////////////////////////////////
@@ -126,12 +128,12 @@ namespace MinecraftLauncher
             // End
             /////////////////////////////////////
 
-            private bool webLogin()
+            private void webLogin()
             {
-                textError.Text = "Connecting..."; //Why doesnt this show up? - If there is a delay?
+                // Error fixing, start here. Error fix below.
+                //textError.Text = "Connecting...";
                 string userName = tbUsername.Text;
                 string userPass = tbPassword.Text;
-                bool loginStatus = false;
 
                 /////////////////////////////////////
                 // Start - Create URL
@@ -156,6 +158,16 @@ namespace MinecraftLauncher
                         }
                         catch
                         {
+                                // ERROR location possible fix from
+                                // http://social.msdn.microsoft.com/Forums/vstudio/en-US/507f5d4b-d33e-40e0-8802-05fe46519658/crossthread-operation-not-valid [
+                                //     public void SetText(string value)  
+                                //     {  
+                                //         if (InvokeRequired)  
+                                //             Invoke(new SetTextDelegate(SetText), value);  
+                                //         else 
+                                //             TextBox.Text = value;  
+                                //     } 
+                                // ]
                             textError.Text = "Can't connect to login.minecraft.net.";
                         }
                     }
@@ -169,10 +181,12 @@ namespace MinecraftLauncher
                         string[] mcLoginData = mcURLData.Split(':');
                         mcName = mcLoginData[2];
                         mcSession = mcLoginData[3];
-                        frm2.debugTextUsername = mcSession;
-                        frm2.debugTextSession = mcName;
-                        textError.Text = "Successful Login";
-                        loginStatus = true;
+                        //Possible Error
+                        //frm2.debugTextUsername = mcSession;
+                        //frm2.debugTextSession = mcName;
+                        //textError.Text = "Successful Login";
+                        //startButton.Text = "Start";
+                        userLoggedIn = true;
                         if (checkLogin.Checked == true)
                         {
                             WriteLoginToFile();
@@ -188,21 +202,24 @@ namespace MinecraftLauncher
                     }
                 // End
                 /////////////////////////////////////
-
-                    return loginStatus;
             }
 
             /////////////////////////////////////
             // Start - Start Button Code
                 private void startButton_Click(object sender, EventArgs e)
                 {
-                    if (webLogin())
+                    if (userLoggedIn)
                     {
                         if (frm2.Visible != true || frm2.debugCheckMinecraft == true)
                         {
                             Process.Start("javaw", "-Xms512m -Xmx1024m -cp " + appData + @"\.minecraft\bin\* -Djava.library.path=" + appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + mcName + " " + mcSession);
                             this.Close();
                         }
+                    }
+                    else
+                    {
+                        Thread t = new Thread(webLogin);          // Kick off a new thread
+                        t.Start();
                     }
                 }
             // End
