@@ -53,7 +53,6 @@ namespace MinecraftLauncher
             // End
             /////////////////////////////////////
 
-            private Object threadLock = new Object();
 
             /////////////////////////////////////
             // Start - The Link between threads and Error text Form Controls
@@ -116,7 +115,15 @@ namespace MinecraftLauncher
                     string[] StringArray = DecryptedString.Split(new char[] { ':' }, 3);
                     tbUsername.Text = StringArray[0];
                     tbPassword.Text = StringArray[1];
-                    checkAutoLogin.Checked = Convert.ToBoolean(StringArray[2]);
+                    try
+                    {
+                        checkAutoLogin.Checked = Convert.ToBoolean(StringArray[2]);
+                    }
+                    catch
+                    {
+                        SetErrorText("Account Data, Refreshed.");
+                        WriteLoginToFile();
+                    }
                 }
             // End
             /////////////////////////////////////
@@ -208,10 +215,10 @@ namespace MinecraftLauncher
                     if (c == timeSeconds & stopAutoLogin != true)
                     {
                         startControl(false);
-                        SetButtonText("Login");
+                        SetButtonText("Login"); //When i don't have an internet connection this doesnt present the right code. Fix other code error first.
                         webLogin();
                         startControl(true);
-                        this.Invoke(new Action(() => { startButton.PerformClick(); }));
+                        this.Invoke(new Action(() => { startButton.PerformClick(); })); //Error, Closeing window Makes this error.
                         break;
                     }
                     else
@@ -220,6 +227,9 @@ namespace MinecraftLauncher
                     }
                 }
             }
+
+            private Object threadLock = new Object();
+            // How to unlock the thread after its use. Error Fix this first.
 
             /////////////////////////////////////
             // Start - Get Login Session from Minecraft.
@@ -230,11 +240,10 @@ namespace MinecraftLauncher
                     SetErrorText("Connecting...");
                     string userName = tbUsername.Text;
                     string userPass = tbPassword.Text;
-
                     /////////////////////////////////////
                     // Start - Web Code, Unlearned, But it Works
                     // Gets Session Id and other strings from Minecraft
-                        string mcURLData = "";
+                        string mcURLData = "WebClient Code Error";
                         using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
                         {
                             try
@@ -248,7 +257,7 @@ namespace MinecraftLauncher
                             }
                             catch
                             {
-                                SetErrorText("Can't connect to login.minecraft.net.");
+                                mcURLData = "Can't connect to login.minecraft.net.";
                             }
                         }
                     // End
@@ -285,7 +294,7 @@ namespace MinecraftLauncher
                     }
                     else
                     {
-                        SetErrorText("CONNECTING!!?.. patience, :)");
+                        SetErrorText("Error:CONNECTING!!?.. patience, :)");
                     }
                 }
             // End
@@ -295,6 +304,7 @@ namespace MinecraftLauncher
             // Start - Start Button Code
                 private void startButton_Click(object sender, EventArgs e)
                 {
+                    
                     if (startButton.Text == "Cancel")
                     {
                         stopAutoLogin = true;
