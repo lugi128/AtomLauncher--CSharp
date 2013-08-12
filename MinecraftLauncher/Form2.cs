@@ -14,6 +14,7 @@ namespace MinecraftLauncher
         public Form2()
         {
             InitializeComponent();
+            checkMinecraft.Checked = Properties.Settings.Default.setDebug;
         }
 
         public string debugTextSession
@@ -59,7 +60,8 @@ namespace MinecraftLauncher
 
         private void checkMinecraft_CheckedChanged(object sender, EventArgs e)
         {
-
+            Properties.Settings.Default.setDebug = checkMinecraft.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }
