@@ -181,28 +181,6 @@ namespace MinecraftLauncher
             // End
             /////////////////////////////////////
 
-            /////////////////////////////////////
-            // Start - File Usage
-                void WriteLoginToFile()
-                {
-                    Properties.Settings.Default.ALogin = checkAutoLogin.Checked;
-                    Properties.Settings.Default.Save();
-                    string CombinedString = tbUsername.Text + ":" + tbPassword.Text;
-                    string EncryptedString = StringCipher.Encrypt(CombinedString, StringCipher.uniqueMachineId());
-                    System.IO.File.WriteAllText(usersFile, EncryptedString);
-                }
-
-                void ReadLoginFromFile()
-                {
-                    string EncryptedString = System.IO.File.ReadAllText(usersFile);
-                    string DecryptedString = StringCipher.Decrypt(EncryptedString, StringCipher.uniqueMachineId());
-                    string[] StringArray = DecryptedString.Split(new char[] { ':' }, 3);
-                    tbUsername.Text = StringArray[0];
-                    tbPassword.Text = StringArray[1];
-                }
-            // End
-            /////////////////////////////////////
-
 			private void loginStart()
 			{
 				if (userLoggedIn)
