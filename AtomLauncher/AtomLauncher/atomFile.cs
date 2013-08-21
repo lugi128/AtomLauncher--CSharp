@@ -12,8 +12,8 @@ namespace AtomLauncher
         // Start - File Usage
         
         // config File Location.
-        public static string usersFile = @".\AEUsers";
-        public static string conigFile = @".\config";
+        public static string usersFile = @".\ALData";
+        public static string conigFile = @".\ALConfig";
         
         public void saveConfFile(string[] setArray)
         {
@@ -118,7 +118,7 @@ namespace AtomLauncher
                     {
                         string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                        if (lineArray[0] != game)
+                        if (lineArray[0] != game && lineArray[1] != accName)
                         {
                             if (i - x >= NewEncryptedStrings.Length)
                             {
@@ -181,12 +181,10 @@ namespace AtomLauncher
             return multiLineA;
         }
 
-        public static string[,] readLoginFileUser(string game, string location)
+        public static string[] readLoginFileUser(string game, string location, string accName)
         {
             // Change this to make User only requesting.
             string[] lineArray = { "false" };
-            string[,] multiLineA = { { "false", "false", "false", "false" } };
-            int y = 4;
             if (File.Exists(location))
             {
                 string[] EncryptedStrings = File.ReadAllLines(location);
@@ -196,22 +194,14 @@ namespace AtomLauncher
                     {
                         string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
                         lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                        if (lineArray[0] == game)
+                        if (lineArray[0] == game && lineArray[1] == accName)
                         {
-                            for (int i = 0; i < lineArray.Length; i++)
-                            {
-                                if (x >= multiLineA.GetLength(0))
-                                {
-                                    int z = multiLineA.GetLength(0) + 1;
-                                    ResizeArray(ref multiLineA, z, y);
-                                }
-                                multiLineA[x, i] = lineArray[i];
-                            }
+                            break;
                         }
                     }
                 }
             }
-            return multiLineA;
+            return lineArray;
         }
 
         public static void ResizeArray(ref string[,] Arr, int x, int y)
