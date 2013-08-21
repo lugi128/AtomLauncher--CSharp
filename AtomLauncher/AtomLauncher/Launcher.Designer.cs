@@ -32,7 +32,6 @@
             this.homeAutoLogin = new System.Windows.Forms.CheckBox();
             this.homeSaveLogin = new System.Windows.Forms.CheckBox();
             this.homeBarTop = new System.Windows.Forms.ProgressBar();
-            this.homeUserText = new System.Windows.Forms.TextBox();
             this.homePassText = new System.Windows.Forms.TextBox();
             this.homeUserTitle = new System.Windows.Forms.Label();
             this.homePassTitle = new System.Windows.Forms.Label();
@@ -46,6 +45,7 @@
             this.homeLabelTop = new System.Windows.Forms.Label();
             this.homeBarBottom = new System.Windows.Forms.ProgressBar();
             this.homeLabelBar = new System.Windows.Forms.Label();
+            this.homeUserText = new System.Windows.Forms.ComboBox();
             this.homeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,13 +92,6 @@
             this.homeBarTop.Size = new System.Drawing.Size(284, 11);
             this.homeBarTop.TabIndex = 3;
             this.homeBarTop.Tag = "";
-            // 
-            // homeUserText
-            // 
-            this.homeUserText.Location = new System.Drawing.Point(4, 44);
-            this.homeUserText.Name = "homeUserText";
-            this.homeUserText.Size = new System.Drawing.Size(192, 20);
-            this.homeUserText.TabIndex = 4;
             // 
             // homePassText
             // 
@@ -207,18 +200,27 @@
             this.homeLabelBar.TabIndex = 9;
             this.homeLabelBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // homeUserText
+            // 
+            this.homeUserText.FormattingEnabled = true;
+            this.homeUserText.Location = new System.Drawing.Point(4, 44);
+            this.homeUserText.Name = "homeUserText";
+            this.homeUserText.Size = new System.Drawing.Size(192, 21);
+            this.homeUserText.TabIndex = 10;
+            this.homeUserText.SelectedIndexChanged += new System.EventHandler(this.homeUserText_SelectedIndexChanged);
+            // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(293, 201);
+            this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeLabelTop);
             this.Controls.Add(this.homeLabelBar);
             this.Controls.Add(this.homeLabelBottom);
             this.Controls.Add(this.homePassTitle);
             this.Controls.Add(this.homeUserTitle);
             this.Controls.Add(this.homePassText);
-            this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeBarBottom);
             this.Controls.Add(this.homeBarTop);
             this.Controls.Add(this.homeSaveLogin);
@@ -241,7 +243,6 @@
         #endregion
 
         private System.Windows.Forms.Button homeStartButton;
-        private System.Windows.Forms.TextBox homeUserText;
         private System.Windows.Forms.TextBox homePassText;
         private System.Windows.Forms.Label homeUserTitle;
         private System.Windows.Forms.Label homePassTitle;
@@ -258,6 +259,7 @@
         public System.Windows.Forms.Label homeLabelBar;
         private System.Windows.Forms.ToolStripMenuItem appSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gameSettingsToolStripMenuItem;
+        private System.Windows.Forms.ComboBox homeUserText;
     }
 }
 
