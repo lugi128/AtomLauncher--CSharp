@@ -1,0 +1,172 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+
+namespace AtomLauncher
+{
+    public class atomFile
+    {
+        /////////////////////////////////////
+        // Start - File Usage
+        
+        // config File Location.
+        public static string usersFile = @".\AEUsers";
+        public static string conigFile = @".\config";
+        
+        public void saveConfFile(string[] setArray)
+        {
+        }
+
+        public Dictionary<string,string> loadConfFile()
+        {
+            var dict = new Dictionary<string, string>();
+            dict["status"] = "NoFile";
+            dict["test"] = "NoFile";
+            dict["numah"] = "NoFile";
+            if (File.Exists(conigFile))
+            {
+                string[] getArray = File.ReadAllLines(conigFile);
+                for (int i = 0; i < getArray.Length; i++)
+                {
+                    if (getArray[i] != "" && !getArray[i].StartsWith("[") && getArray[i].Contains("="))
+                    {
+                        string[] splitArray = getArray[i].Split('=');
+                        dict[splitArray[0]] = splitArray[1];
+                    }
+                }
+                return dict;
+            }
+            else
+            {
+                return dict;
+            }
+        }
+
+        public static Dictionary<string,string> loadArgs(string[] tmpAryArg)
+        {
+            var dict = new Dictionary<string, string>();
+            if (tmpAryArg.Length > 0)
+            {
+                foreach (string txt in tmpAryArg)
+                {
+                    string[] tempSplit = txt.Split(new char[] { '=' }, 2);
+                    dict[tempSplit[0]] = tempSplit[1];
+                }
+            }
+            int defSplashTime = 1000;
+            if (!dict.ContainsKey("splashTime"))
+            {
+                dict["splashTime"] = defSplashTime.ToString();
+            }
+            if (!Int32.TryParse(dict["splashTime"], out Program.splashTime))
+            {
+                Program.splashTime = defSplashTime;
+            }
+            return dict;
+        }
+
+        // Username, Password, File name (Usually @"./AEUsers"), game ("minecraft")
+        // possible multiple logins idea, return multiple dictionarys with array
+        // also look for name of login as well. before saving.
+        public static void writeLoginFile(string textOne, string textTwo, string location, string game, bool auto)
+        {
+            string saveString = StringCipher.Encrypt(game + ":" + textOne + ":" + textTwo + ":" + auto.ToString(), StringCipher.uniqueMachineId());
+            bool gameSaved = false;
+            if (File.Exists(location))
+            {
+                string[] EncryptedStrings = File.ReadAllLines(location);
+                for (int i = 0; i < EncryptedStrings.Length; i++)
+                {
+                    if (EncryptedStrings[i] != "")
+                    {
+                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
+                        if (lineArray[0] == game)
+                        {
+                            EncryptedStrings[i] = saveString;
+                            gameSaved = true;
+                        }
+                    }
+                }
+                if (gameSaved == false)
+                {
+                    Array.Resize(ref EncryptedStrings, EncryptedStrings.Length + 1);
+                    EncryptedStrings[EncryptedStrings.Length - 1] = saveString;
+                }
+                File.WriteAllLines(location, EncryptedStrings);
+            }
+            else
+            {
+                File.WriteAllText(location, saveString);
+            }
+        }
+
+        // possible multiple logins idea, return multiple dictionarys with array
+        // also look for name of login as well. before saving.
+        public static void removeLoginLine(string location, string game)
+        {
+            if (File.Exists(location))
+            {
+                string[] EncryptedStrings = File.ReadAllLines(location);
+                string[] NewEncryptedStrings = {""};
+                int x = 0;
+                for (int i = 0; i < EncryptedStrings.Length; i++)
+                {
+                    if (EncryptedStrings[i] != "")
+                    {
+                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
+                        if (lineArray[0] != game)
+                        {
+                            if (i - x >= NewEncryptedStrings.Length)
+                            {
+                                Array.Resize(ref NewEncryptedStrings, NewEncryptedStrings.Length + 1);
+                            }
+                            NewEncryptedStrings[i - x] = EncryptedStrings[i];
+                        }
+                        else
+                        {
+                            x++;
+                        }
+                    }
+                    else
+                    {
+                        x++;
+                    }
+                }
+                File.WriteAllLines(location, NewEncryptedStrings);
+            }
+        }
+
+        // Game "minecraft", File name @"./AEUsers"
+        // possible multiple logins idea, return multiple dictionarys with array
+        // 
+        public static string[] readLoginFile(string game, string location)
+        {
+            string[] errorArray = { "false", "", "" };
+            if (File.Exists(location))
+            {
+                string[] EncryptedStrings = File.ReadAllLines(location);
+                string[] lineArray = { "" };
+                foreach (string fileLine in EncryptedStrings)
+                {
+                    string DecryptedString = StringCipher.Decrypt(fileLine, StringCipher.uniqueMachineId());
+                    lineArray = DecryptedString.Split(new char[] { ':' }, 4);
+                    if (lineArray[0] == game)
+                    {
+                        return lineArray;
+                    }
+                }
+                return errorArray;
+            }
+            else
+            {
+                return errorArray;
+            }
+        }
+        // End
+        /////////////////////////////////////
+    }
+}

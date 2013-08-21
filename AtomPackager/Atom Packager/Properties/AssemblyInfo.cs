@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WindowsFormsApplication1")]
+[assembly: AssemblyTitle("Atom Packager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WindowsFormsApplication1")]
+[assembly: AssemblyProduct("Atom Packager")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("abc99c45-ae00-4b82-8516-ff253bcb8e6c")]
+[assembly: Guid("9a09e91e-77c2-4a07-bc8a-1d22e9340939")]
 
 // Version information for an assembly consists of the following four values:
 //

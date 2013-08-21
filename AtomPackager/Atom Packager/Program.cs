@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace MinecraftLauncher
+namespace Atom_Packager
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace MinecraftLauncher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Home());
         }
     }
 }
