@@ -70,9 +70,9 @@ namespace AtomLauncher
         // Username, Password, File name (Usually @"./AEUsers"), game ("minecraft")
         // possible multiple logins idea, return multiple dictionarys with array
         // also look for name of login as well. before saving.
-        public static void writeLoginFile(string textOne, string textTwo, string location, string game, bool auto)
+        public static void writeLoginFile(string accName, string accPass, string location, string game, bool auto)
         {
-            string saveString = StringCipher.Encrypt(game + ":" + textOne + ":" + textTwo + ":" + auto.ToString(), StringCipher.uniqueMachineId());
+            string saveString = StringCipher.Encrypt(game + ":" + accName + ":" + accPass + ":" + auto.ToString(), StringCipher.uniqueMachineId());
             bool gameSaved = false;
             if (File.Exists(location))
             {
@@ -83,7 +83,7 @@ namespace AtomLauncher
                     {
                         string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                        if (lineArray[0] == game)
+                        if (lineArray[0] == game && lineArray[1] == accName)
                         {
                             EncryptedStrings[i] = saveString;
                             gameSaved = true;
@@ -105,7 +105,7 @@ namespace AtomLauncher
 
         // possible multiple logins idea, return multiple dictionarys with array
         // also look for name of login as well. before saving.
-        public static void removeLoginLine(string location, string game)
+        public static void removeLoginLine(string location, string game, string accName)
         {
             if (File.Exists(location))
             {
@@ -141,31 +141,92 @@ namespace AtomLauncher
         }
 
         // Game "minecraft", File name @"./AEUsers"
-        // possible multiple logins idea, return multiple dictionarys with array
+        // possible multiple logins idea, array within array
         // 
-        public static string[] readLoginFile(string game, string location)
+        // For example: Step by step
+        // readline
+        // its "minecraft" add to array of dictonary key "minecraft" 
+        // next line 
+        // its "minecraft" add to array of diconary key "minecraft"
+        // Nothing more? Return array?
+        public static string[,] readLoginFileAll(string game, string location)
         {
-            string[] errorArray = { "false", "", "" };
+            string[] lineArray = { "false" };
+            string[,] multiLineA = { { "false", "false", "false", "false" } };
+            int y = 4;
             if (File.Exists(location))
             {
                 string[] EncryptedStrings = File.ReadAllLines(location);
-                string[] lineArray = { "" };
-                foreach (string fileLine in EncryptedStrings)
+                for (int x = 0; x < EncryptedStrings.Length; x++)
                 {
-                    string DecryptedString = StringCipher.Decrypt(fileLine, StringCipher.uniqueMachineId());
-                    lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                    if (lineArray[0] == game)
+                    if (EncryptedStrings[x] != "")
                     {
-                        return lineArray;
+                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        lineArray = DecryptedString.Split(new char[] { ':' }, 4);
+                        if (lineArray[0] == game)
+                        {
+                            for (int i = 0; i < lineArray.Length; i++)
+                            {
+                                if (x >= multiLineA.GetLength(0))
+                                {
+                                    int z = multiLineA.GetLength(0) + 1;
+                                    ResizeArray(ref multiLineA, z, y);
+                                }
+                                multiLineA[x, i] = lineArray[i];
+                            }
+                        }
                     }
                 }
-                return errorArray;
             }
-            else
-            {
-                return errorArray;
-            }
+            return multiLineA;
         }
+
+        public static string[,] readLoginFileUser(string game, string location)
+        {
+            // Change this to make User only requesting.
+            string[] lineArray = { "false" };
+            string[,] multiLineA = { { "false", "false", "false", "false" } };
+            int y = 4;
+            if (File.Exists(location))
+            {
+                string[] EncryptedStrings = File.ReadAllLines(location);
+                for (int x = 0; x < EncryptedStrings.Length; x++)
+                {
+                    if (EncryptedStrings[x] != "")
+                    {
+                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        lineArray = DecryptedString.Split(new char[] { ':' }, 4);
+                        if (lineArray[0] == game)
+                        {
+                            for (int i = 0; i < lineArray.Length; i++)
+                            {
+                                if (x >= multiLineA.GetLength(0))
+                                {
+                                    int z = multiLineA.GetLength(0) + 1;
+                                    ResizeArray(ref multiLineA, z, y);
+                                }
+                                multiLineA[x, i] = lineArray[i];
+                            }
+                        }
+                    }
+                }
+            }
+            return multiLineA;
+        }
+
+        public static void ResizeArray(ref string[,] Arr, int x, int y)
+        {
+            string[,] _arr = new string[x, y];
+            int minRows = Math.Min(x, Arr.GetLength(0));
+            int minCols = Math.Min(y, Arr.GetLength(1));
+            for (int i = 0; i < minRows; i++)
+                for (int j = 0; j < minCols; j++)
+                    _arr[i, j] = Arr[i, j];
+            Arr = _arr;
+        }
+
+
+
         // End
         /////////////////////////////////////
     }

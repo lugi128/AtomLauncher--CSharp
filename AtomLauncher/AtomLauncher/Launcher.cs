@@ -26,20 +26,33 @@ namespace AtomLauncher
 
         private void Home_Load(object sender, EventArgs e)
         {
+            /////////
+            // Startup Form Code
+            //
             this.Activate(); // Makes sure the window shows its self.
-            //Disable Unuseable Controls
-            enableDevControls(false);
+            homeMenuMenu.Enabled = false; //Dev
+            homeMenuOptions.Enabled = false; //Dev
+            homeMenuGame.Enabled = false; //Dev
+            //
+            // End
+            /////////
 
             if (File.Exists(atomFile.usersFile))
             {
                 //configFile has Selected "minecraft"
                 //Change to form game type at this point.
-                string[] tmpArray = atomFile.readLoginFile("minecraft", atomFile.usersFile);
-                if (tmpArray[0] != "false")
+                string[,] tmpArray = atomFile.readLoginFileAll("minecraft", atomFile.usersFile);
+                if (tmpArray[0,0] != "false")
                 {
-                    homeUserText.Text = tmpArray[1];
-                    homePassText.Text = tmpArray[2];
-                    if (Convert.ToBoolean(tmpArray[3]))
+                    int dsa = tmpArray.GetLength(0);
+                    homeLabelBar.Text = dsa.ToString() + " mc Accounts Found";
+                    for (int i = 0; i < tmpArray.GetLength(0); i++)
+                    {
+                        homeUserText.Items.Add(tmpArray[i, 1]);
+                    }
+                    homeUserText.Text = tmpArray[0, 1];
+                    homePassText.Text = tmpArray[0, 2];
+                    if (Convert.ToBoolean(tmpArray[0,3]))
                     {
                         homeAutoLogin.Checked = true;
                     }
@@ -60,16 +73,23 @@ namespace AtomLauncher
             homeAutoLogin.Enabled = homeSaveLogin.Checked;
         }
 
+        private void homeUserText_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //homePassText.Text = tmpArray[0, 2];
+        }
+
         private void homeStartButton_Click(object sender, EventArgs e)
         {
             if (homeStartButton.Text == "Cancel")
             {
                 aD_cancel = true;
-                homeStartButton.Text = "Start";
+                homeStartButton.Text = "Canceling..";
+                homeStartButton.Enabled = false;
             }
             else
             {
                 aD_cancel = false;
+                enableControls(false);
                 homeStartButton.Text = "Cancel";
                 Thread webt = new Thread(launchGame);
                 webt.IsBackground = true;
@@ -77,9 +97,16 @@ namespace AtomLauncher
             }
         }
 
+        private void controlRestore()
+        {
+            this.Invoke(new MethodInvoker(delegate { enableControls(true); })); //Threading Friendly
+            this.Invoke(new MethodInvoker(delegate { homeStartButton.Enabled = true; })); //Threading Friendly
+            this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Login"; })); //Threading Friendly
+        }
+
         private void autoLogin()
         {
-            //enableControls(false);
+            enableControls(false);
             this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Cancel"; })); //Threading Friendly
             int timeSeconds = 5;
             int c = 0;
@@ -90,12 +117,14 @@ namespace AtomLauncher
                 if (aD_cancel == true)
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Auto Login Canceled"; })); //Threading Friendly
-                    this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Start"; })); //Threading Friendly
+                    enableControls(true);
+                    this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Login"; })); //Threading Friendly
                     break;
                 }
                 if (c >= timeSeconds & aD_cancel != true)
                 {
-                    this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Start"; })); //Threading Friendly
+                    enableControls(true);
+                    this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Login"; })); //Threading Friendly
                     Thread webt = new Thread(launchGame);
                     webt.IsBackground = true;
                     webt.Start();
@@ -127,7 +156,7 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    //this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = openStatus; })); //Threading Friendly
+                    this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = openStatus; })); //Threading Friendly
                 }
             }
             finally
@@ -136,12 +165,12 @@ namespace AtomLauncher
             }
         }
 
-        //Development Method
-        public void enableDevControls(bool trufal)
+        public void enableControls(bool trufal)
         {
-            homeMenuMenu.Enabled = trufal;
-            homeMenuOptions.Enabled = trufal;
-            homeMenuGame.Enabled = trufal;
+            homeAutoLogin.Enabled = trufal;
+            homeSaveLogin.Enabled = trufal;
+            homeUserText.Enabled = trufal;
+            homePassText.Enabled = trufal;
         }
     }
 }

@@ -35,6 +35,7 @@ namespace AtomLauncher
             spLoad.Join(); // Wait for loadThread to complete
             Thread lTh = new Thread(new ThreadStart(launcherThread));
             lTh.Start();
+            Thread.Sleep(1000);
             this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
         }
 
@@ -47,7 +48,7 @@ namespace AtomLauncher
 
         public void loadThread()
         {
-            atomFile.removeLoginLine(atomFile.usersFile, "");
+            atomFile.removeLoginLine(atomFile.usersFile, "", "");
             Program.config = aF.loadConfFile();
         }
     }
