@@ -20,18 +20,18 @@ namespace AtomLauncher
         public string CMC_open(string username, string password, bool save, bool auto)
         {
             status = CMC_webLogin(username, password, save, auto);
-            if (aD_cancel != true)
+            if (homeCancel != true)
             {
                 if (status == "Login")
                 {
-                    Process.Start(@"javaw", @"-Xms512m -Xmx1024m -cp " + Program.appData + @"\.minecraft\bin\* -Djava.library.path=" + Program.appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession);
+                    Process.Start(@"javaw", @"-Xms" + Program.config["minecraft_startRam"] + "m -Xmx" + Program.config["minecraft_maxRam"] + "m -cp " + Program.config["minecraft_location"] + @"\bin\* -Djava.library.path=" + Program.config["minecraft_location"] + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession);
                 }
             }
             else
             {
-                status = "Minecraft Startup was Canceled";
+                status = status + ": Canceled";
             }
-            controlRestore();
+            homeSetControl(true, true);
             return status;
         }
 

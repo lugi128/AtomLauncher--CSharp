@@ -13,7 +13,7 @@ namespace AtomLauncher
         
         // config File Location.
         public static string usersFile = @".\ALData";
-        public static string conigFile = @".\ALConfig";
+        public static string conigFile = @".\ALConfig.alcfg";
         
         public void saveConfFile(string[] setArray)
         {
@@ -22,9 +22,13 @@ namespace AtomLauncher
         public Dictionary<string,string> loadConfFile()
         {
             var dict = new Dictionary<string, string>();
-            dict["status"] = "NoFile";
-            dict["test"] = "NoFile";
-            dict["numah"] = "NoFile";
+            dict["minecraft_location"] = Program.appData + @"\.minecraft" ;
+            dict["minecraft_startRam"] = "512"; //"-Xms" + "512" + "m";
+            dict["minecraft_maxRam"] = "1024"; //"-Xmx" + "1024" + "m";
+            dict["minecraft_displayCMD"] = "False";
+            dict["minecraft_onlineMode"] = "True";
+            dict["minecraft_autoSelect"] = "True";
+            dict["minecraft_force64Bit"] = "False"; //other wise use 32bit
             if (File.Exists(conigFile))
             {
                 string[] getArray = File.ReadAllLines(conigFile);
@@ -55,15 +59,15 @@ namespace AtomLauncher
                     dict[tempSplit[0]] = tempSplit[1];
                 }
             }
-            int defSplashTime = 1000;
-            if (!dict.ContainsKey("splashTime"))
-            {
-                dict["splashTime"] = defSplashTime.ToString();
-            }
-            if (!Int32.TryParse(dict["splashTime"], out Program.splashTime))
-            {
-                Program.splashTime = defSplashTime;
-            }
+            //int defSplashTime = 1000;
+            //if (!dict.ContainsKey("splashTime"))
+            //{
+            //    dict["splashTime"] = defSplashTime.ToString();
+            //}
+            //if (!Int32.TryParse(dict["splashTime"], out Program.splashTime))
+            //{
+            //    Program.splashTime = defSplashTime;
+            //}
             return dict;
         }
 
