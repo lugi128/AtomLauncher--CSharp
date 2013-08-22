@@ -18,7 +18,6 @@ namespace AtomLauncher
     public partial class Launcher : Form
     {
         bool aD_cancel = false; // Varible that changes when cancel is pressed.
-        
 
         public Launcher()
         {
@@ -62,7 +61,6 @@ namespace AtomLauncher
                 Thread a = new Thread(autoLogin);          // Kick off a new thread
                 a.IsBackground = true;
                 a.Start();
-                //autoLogin();
             }
         }
 
@@ -116,13 +114,13 @@ namespace AtomLauncher
                 if (aD_cancel == true)
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Auto Login Canceled"; })); //Threading Friendly
-                    enableControls(true);
+                    controlRestore();
                     this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Login"; })); //Threading Friendly
                     break;
                 }
                 if (c >= timeSeconds & aD_cancel != true)
                 {
-                    enableControls(true);
+                    controlRestore();
                     this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Login"; })); //Threading Friendly
                     Thread webt = new Thread(launchGame);
                     webt.IsBackground = true;
@@ -168,10 +166,13 @@ namespace AtomLauncher
 
         public void enableControls(bool trufal)
         {
-            this.Invoke(new MethodInvoker(delegate { homeAutoLogin.Enabled = trufal; })); //Threading Friendly
-            this.Invoke(new MethodInvoker(delegate { homeSaveLogin.Enabled = trufal; }));
-            this.Invoke(new MethodInvoker(delegate { homeUserText.Enabled = trufal; }));
-            this.Invoke(new MethodInvoker(delegate { homePassText.Enabled = trufal; }));
+            this.Invoke(new MethodInvoker(delegate 
+            { 
+                homeAutoLogin.Enabled = trufal;
+                homeSaveLogin.Enabled = trufal;
+                homeUserText.Enabled = trufal;
+                homePassText.Enabled = trufal;
+            }));
         }
     }
 }

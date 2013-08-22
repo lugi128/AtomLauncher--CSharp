@@ -103,8 +103,6 @@ namespace AtomLauncher
             }
         }
 
-        // possible multiple logins idea, return multiple dictionarys with array
-        // also look for name of login as well. before saving.
         public static void removeLoginLine(string location, string game, string accName)
         {
             if (File.Exists(location))
@@ -118,17 +116,17 @@ namespace AtomLauncher
                     {
                         string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                        if (lineArray[0] != game && lineArray[1] != accName)
+                        if (lineArray[0] == game && lineArray[1] == accName)
+                        {
+                            x++;
+                        }
+                        else
                         {
                             if (i - x >= NewEncryptedStrings.Length)
                             {
                                 Array.Resize(ref NewEncryptedStrings, NewEncryptedStrings.Length + 1);
                             }
                             NewEncryptedStrings[i - x] = EncryptedStrings[i];
-                        }
-                        else
-                        {
-                            x++;
                         }
                     }
                     else
@@ -140,15 +138,6 @@ namespace AtomLauncher
             }
         }
 
-        // Game "minecraft", File name @"./AEUsers"
-        // possible multiple logins idea, array within array
-        // 
-        // For example: Step by step
-        // readline
-        // its "minecraft" add to array of dictonary key "minecraft" 
-        // next line 
-        // its "minecraft" add to array of diconary key "minecraft"
-        // Nothing more? Return array?
         public static string[,] readLoginFileAll(string game, string location)
         {
             string[] lineArray = { "false" };
@@ -183,7 +172,6 @@ namespace AtomLauncher
 
         public static string[] readLoginFileUser(string game, string location, string accName)
         {
-            // Change this to make User only requesting.
             string[] lineArray = { "false" };
             if (File.Exists(location))
             {
