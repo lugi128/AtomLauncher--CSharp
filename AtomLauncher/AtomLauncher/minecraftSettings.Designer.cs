@@ -43,23 +43,30 @@
             this.button1 = new System.Windows.Forms.Button();
             this.mcButtonOK = new System.Windows.Forms.Button();
             this.mcButtonCancel = new System.Windows.Forms.Button();
+            this.mcButtonDefaults = new System.Windows.Forms.Button();
+            this.mcComboCPUPri = new System.Windows.Forms.ComboBox();
+            this.mcLabelCPUPri = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mcComboStartRam
             // 
+            this.mcComboStartRam.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.mcComboStartRam.FormattingEnabled = true;
             this.mcComboStartRam.Location = new System.Drawing.Point(8, 88);
             this.mcComboStartRam.Name = "mcComboStartRam";
             this.mcComboStartRam.Size = new System.Drawing.Size(112, 21);
             this.mcComboStartRam.TabIndex = 0;
+            this.mcComboStartRam.SelectedIndexChanged += new System.EventHandler(this.mcComboStartRam_SelectedIndexChanged);
             // 
             // mcComboMaxRam
             // 
+            this.mcComboMaxRam.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.mcComboMaxRam.FormattingEnabled = true;
             this.mcComboMaxRam.Location = new System.Drawing.Point(136, 88);
             this.mcComboMaxRam.Name = "mcComboMaxRam";
             this.mcComboMaxRam.Size = new System.Drawing.Size(112, 21);
             this.mcComboMaxRam.TabIndex = 1;
+            this.mcComboMaxRam.SelectedIndexChanged += new System.EventHandler(this.mcComboMaxRam_SelectedIndexChanged);
             // 
             // mcCheckCMD
             // 
@@ -160,9 +167,9 @@
             // 
             // mcButtonOK
             // 
-            this.mcButtonOK.Location = new System.Drawing.Point(168, 184);
+            this.mcButtonOK.Location = new System.Drawing.Point(128, 184);
             this.mcButtonOK.Name = "mcButtonOK";
-            this.mcButtonOK.Size = new System.Drawing.Size(80, 31);
+            this.mcButtonOK.Size = new System.Drawing.Size(56, 31);
             this.mcButtonOK.TabIndex = 11;
             this.mcButtonOK.Text = "OK";
             this.mcButtonOK.UseVisualStyleBackColor = true;
@@ -170,19 +177,58 @@
             // 
             // mcButtonCancel
             // 
-            this.mcButtonCancel.Location = new System.Drawing.Point(184, 152);
+            this.mcButtonCancel.Location = new System.Drawing.Point(192, 192);
             this.mcButtonCancel.Name = "mcButtonCancel";
-            this.mcButtonCancel.Size = new System.Drawing.Size(64, 23);
+            this.mcButtonCancel.Size = new System.Drawing.Size(56, 24);
             this.mcButtonCancel.TabIndex = 12;
             this.mcButtonCancel.Text = "Cancel";
             this.mcButtonCancel.UseVisualStyleBackColor = true;
             this.mcButtonCancel.Click += new System.EventHandler(this.mcButtonCancel_Click);
+            // 
+            // mcButtonDefaults
+            // 
+            this.mcButtonDefaults.Location = new System.Drawing.Point(192, 168);
+            this.mcButtonDefaults.Name = "mcButtonDefaults";
+            this.mcButtonDefaults.Size = new System.Drawing.Size(56, 23);
+            this.mcButtonDefaults.TabIndex = 13;
+            this.mcButtonDefaults.Text = "Defaults";
+            this.mcButtonDefaults.UseVisualStyleBackColor = true;
+            this.mcButtonDefaults.Click += new System.EventHandler(this.mcButtonDefaults_Click);
+            // 
+            // mcComboCPUPri
+            // 
+            this.mcComboCPUPri.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mcComboCPUPri.FormattingEnabled = true;
+            this.mcComboCPUPri.Items.AddRange(new object[] {
+            "Realtime",
+            "High",
+            "Above Normal",
+            "Normal",
+            "Below Normal",
+            "Low"});
+            this.mcComboCPUPri.Location = new System.Drawing.Point(136, 136);
+            this.mcComboCPUPri.Name = "mcComboCPUPri";
+            this.mcComboCPUPri.Size = new System.Drawing.Size(112, 21);
+            this.mcComboCPUPri.TabIndex = 14;
+            // 
+            // mcLabelCPUPri
+            // 
+            this.mcLabelCPUPri.AutoSize = true;
+            this.mcLabelCPUPri.Location = new System.Drawing.Point(144, 120);
+            this.mcLabelCPUPri.Name = "mcLabelCPUPri";
+            this.mcLabelCPUPri.Size = new System.Drawing.Size(63, 13);
+            this.mcLabelCPUPri.TabIndex = 15;
+            this.mcLabelCPUPri.Text = "CPU Priority";
             // 
             // minecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(257, 225);
+            this.ControlBox = false;
+            this.Controls.Add(this.mcLabelCPUPri);
+            this.Controls.Add(this.mcComboCPUPri);
+            this.Controls.Add(this.mcButtonDefaults);
             this.Controls.Add(this.mcButtonCancel);
             this.Controls.Add(this.mcButtonOK);
             this.Controls.Add(this.button1);
@@ -197,6 +243,7 @@
             this.Controls.Add(this.mcCheckCMD);
             this.Controls.Add(this.mcComboMaxRam);
             this.Controls.Add(this.mcComboStartRam);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "minecraftSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Minecraft Settings";
@@ -223,6 +270,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button mcButtonOK;
         private System.Windows.Forms.Button mcButtonCancel;
+        private System.Windows.Forms.Button mcButtonDefaults;
+        private System.Windows.Forms.ComboBox mcComboCPUPri;
+        private System.Windows.Forms.Label mcLabelCPUPri;
 
     }
 }

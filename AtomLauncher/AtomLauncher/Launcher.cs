@@ -17,6 +17,7 @@ namespace AtomLauncher
 
     public partial class Launcher : Form
     {
+        string gameSelect = "minecraft";
         bool homeCancel = false; // Varible that changes when cancel is pressed.
 
         public Launcher()
@@ -30,7 +31,7 @@ namespace AtomLauncher
             // Startup Form Code
             //
                 Thread spLoad = new Thread(loadThread);
-                spLoad.IsBackground = true; //Closes thread if Splash gets closed.
+                spLoad.IsBackground = true;
                 spLoad.Start();
             //
             // End
@@ -44,14 +45,17 @@ namespace AtomLauncher
 
         private void homeUserText_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] tmpPassAr = atomFile.readLoginFileUser("minecraft", atomFile.usersFile, homeUserText.Text);
+            string[] tmpPassAr = atomFile.readLoginFileUser(gameSelect, atomFile.usersFile, homeUserText.Text);
             homePassText.Text = tmpPassAr[2];
         }
 
         private void gameSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            minecraftSettings mcSet = new minecraftSettings();
-            mcSet.Show();
+            if (gameSelect == "minecraft")
+            {
+                minecraftSettings mcSet = new minecraftSettings();
+                mcSet.Show();
+            }
         }
 
         private void homeStartButton_Click(object sender, EventArgs e)
@@ -74,15 +78,14 @@ namespace AtomLauncher
 
         private void loadThread()
         {
-            atomFile aF = new atomFile();
             atomFile.removeLoginLine(atomFile.usersFile, "", "");
-            Program.config = aF.loadConfFile();
+            Program.config = atomFile.loadConfFile(atomFile.conigFile);
 
             if (File.Exists(atomFile.usersFile))
             {
                 //configFile has Selected "minecraft"
                 //Change to form game type at this point.
-                string[,] tmpArray = atomFile.readLoginFileAll("minecraft", atomFile.usersFile);
+                string[,] tmpArray = atomFile.readLoginFileAll(gameSelect, atomFile.usersFile);
                 if (tmpArray[0, 0] != "false")
                 {
                     for (int i = 0; i < tmpArray.GetLength(0); i++)
