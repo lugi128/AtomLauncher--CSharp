@@ -11,7 +11,6 @@ namespace AtomLauncher
         /// The main entry point for the application.
         /// </summary>
         public static string appData = Environment.GetEnvironmentVariable("APPDATA");
-        public static int splashTime;
         public static bool is64Bit = Environment.Is64BitProcess;
         public static Dictionary<string, string> config;
         public static Dictionary<string, string> atomArgs;
@@ -23,7 +22,7 @@ namespace AtomLauncher
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Splash());
+            Application.Run(new Launcher());
         }
     }
 }

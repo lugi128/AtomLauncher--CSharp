@@ -38,9 +38,9 @@
             this.homeMenu = new System.Windows.Forms.MenuStrip();
             this.homeMenuMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.homeMenuGame = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeMenuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.appSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gameSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.homeMenuTools = new System.Windows.Forms.ToolStripMenuItem();
+            this.homeMenuToolsLauncherConfig = new System.Windows.Forms.ToolStripMenuItem();
+            this.homeMenuToolsGameSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.homeLabelBottom = new System.Windows.Forms.Label();
             this.homeLabelTop = new System.Windows.Forms.Label();
             this.homeBarBottom = new System.Windows.Forms.ProgressBar();
@@ -51,6 +51,7 @@
             // 
             // homeStartButton
             // 
+            this.homeStartButton.Enabled = false;
             this.homeStartButton.Location = new System.Drawing.Point(200, 72);
             this.homeStartButton.Name = "homeStartButton";
             this.homeStartButton.Size = new System.Drawing.Size(87, 31);
@@ -76,6 +77,7 @@
             // 
             this.homeSaveLogin.AutoSize = true;
             this.homeSaveLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.homeSaveLogin.Enabled = false;
             this.homeSaveLogin.Location = new System.Drawing.Point(200, 28);
             this.homeSaveLogin.Name = "homeSaveLogin";
             this.homeSaveLogin.Size = new System.Drawing.Size(86, 17);
@@ -95,6 +97,7 @@
             // 
             // homePassText
             // 
+            this.homePassText.Enabled = false;
             this.homePassText.Location = new System.Drawing.Point(4, 84);
             this.homePassText.Name = "homePassText";
             this.homePassText.PasswordChar = '*';
@@ -105,6 +108,7 @@
             // homeUserTitle
             // 
             this.homeUserTitle.AutoSize = true;
+            this.homeUserTitle.Enabled = false;
             this.homeUserTitle.Location = new System.Drawing.Point(4, 28);
             this.homeUserTitle.Name = "homeUserTitle";
             this.homeUserTitle.Size = new System.Drawing.Size(55, 13);
@@ -114,6 +118,7 @@
             // homePassTitle
             // 
             this.homePassTitle.AutoSize = true;
+            this.homePassTitle.Enabled = false;
             this.homePassTitle.Location = new System.Drawing.Point(4, 68);
             this.homePassTitle.Name = "homePassTitle";
             this.homePassTitle.Size = new System.Drawing.Size(53, 13);
@@ -126,7 +131,7 @@
             this.homeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.homeMenuMenu,
             this.homeMenuGame,
-            this.homeMenuOptions});
+            this.homeMenuTools});
             this.homeMenu.Location = new System.Drawing.Point(0, 0);
             this.homeMenu.Name = "homeMenu";
             this.homeMenu.Size = new System.Drawing.Size(293, 24);
@@ -135,36 +140,41 @@
             // 
             // homeMenuMenu
             // 
+            this.homeMenuMenu.Enabled = false;
             this.homeMenuMenu.Name = "homeMenuMenu";
             this.homeMenuMenu.Size = new System.Drawing.Size(50, 20);
             this.homeMenuMenu.Text = "Menu";
             // 
             // homeMenuGame
             // 
+            this.homeMenuGame.Enabled = false;
             this.homeMenuGame.Name = "homeMenuGame";
             this.homeMenuGame.Size = new System.Drawing.Size(50, 20);
             this.homeMenuGame.Text = "Game";
             // 
-            // homeMenuOptions
+            // homeMenuTools
             // 
-            this.homeMenuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.appSettingsToolStripMenuItem,
-            this.gameSettingsToolStripMenuItem});
-            this.homeMenuOptions.Name = "homeMenuOptions";
-            this.homeMenuOptions.Size = new System.Drawing.Size(48, 20);
-            this.homeMenuOptions.Text = "Tools";
+            this.homeMenuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.homeMenuToolsLauncherConfig,
+            this.homeMenuToolsGameSettings});
+            this.homeMenuTools.Enabled = false;
+            this.homeMenuTools.Name = "homeMenuTools";
+            this.homeMenuTools.Size = new System.Drawing.Size(48, 20);
+            this.homeMenuTools.Text = "Tools";
             // 
-            // appSettingsToolStripMenuItem
+            // homeMenuToolsLauncherConfig
             // 
-            this.appSettingsToolStripMenuItem.Name = "appSettingsToolStripMenuItem";
-            this.appSettingsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.appSettingsToolStripMenuItem.Text = "Launcher Config";
+            this.homeMenuToolsLauncherConfig.Enabled = false;
+            this.homeMenuToolsLauncherConfig.Name = "homeMenuToolsLauncherConfig";
+            this.homeMenuToolsLauncherConfig.Size = new System.Drawing.Size(162, 22);
+            this.homeMenuToolsLauncherConfig.Text = "Launcher Config";
             // 
-            // gameSettingsToolStripMenuItem
+            // homeMenuToolsGameSettings
             // 
-            this.gameSettingsToolStripMenuItem.Name = "gameSettingsToolStripMenuItem";
-            this.gameSettingsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.gameSettingsToolStripMenuItem.Text = "Game Settings";
+            this.homeMenuToolsGameSettings.Name = "homeMenuToolsGameSettings";
+            this.homeMenuToolsGameSettings.Size = new System.Drawing.Size(162, 22);
+            this.homeMenuToolsGameSettings.Text = "Game Settings";
+            this.homeMenuToolsGameSettings.Click += new System.EventHandler(this.gameSettingsToolStripMenuItem_Click);
             // 
             // homeLabelBottom
             // 
@@ -202,6 +212,7 @@
             // 
             // homeUserText
             // 
+            this.homeUserText.Enabled = false;
             this.homeUserText.FormattingEnabled = true;
             this.homeUserText.Location = new System.Drawing.Point(4, 44);
             this.homeUserText.Name = "homeUserText";
@@ -248,7 +259,7 @@
         private System.Windows.Forms.Label homePassTitle;
         private System.Windows.Forms.MenuStrip homeMenu;
         private System.Windows.Forms.ToolStripMenuItem homeMenuMenu;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuOptions;
+        private System.Windows.Forms.ToolStripMenuItem homeMenuTools;
         private System.Windows.Forms.ToolStripMenuItem homeMenuGame;
         public System.Windows.Forms.CheckBox homeSaveLogin;
         public System.Windows.Forms.CheckBox homeAutoLogin;
@@ -257,8 +268,8 @@
         public System.Windows.Forms.Label homeLabelBottom;
         public System.Windows.Forms.Label homeLabelTop;
         public System.Windows.Forms.Label homeLabelBar;
-        private System.Windows.Forms.ToolStripMenuItem appSettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem gameSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem homeMenuToolsLauncherConfig;
+        private System.Windows.Forms.ToolStripMenuItem homeMenuToolsGameSettings;
         private System.Windows.Forms.ComboBox homeUserText;
     }
 }

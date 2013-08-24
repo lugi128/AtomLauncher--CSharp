@@ -19,19 +19,71 @@ namespace AtomLauncher
 
         public string CMC_open(string username, string password, bool save, bool auto)
         {
-            status = CMC_webLogin(username, password, save, auto);
-            if (aD_cancel != true)
+            if (Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
+            {
+                status = CMC_webLogin(username, password, save, auto);
+            }
+            else
+            {
+                status = "Login";
+            }
+            if (homeCancel != true)
             {
                 if (status == "Login")
                 {
-                    Process.Start(@"javaw", @"-Xms512m -Xmx1024m -cp " + Program.appData + @"\.minecraft\bin\* -Djava.library.path=" + Program.appData + @"\.minecraft\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession);
+                    string javaCMD = @"javaw";
+                    if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
+                    {
+                        javaCMD = @"java";
+                    }
+                    if (!Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
+                    {
+                        CMC_mcSession = "";
+                        CMC_mcName = "Player";
+                    }
+                    if (!Convert.ToBoolean(Program.config["minecraft_autoSelect"]))
+                    {
+                        string mainDrive = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
+                        if (!Convert.ToBoolean(Program.config["minecraft_force64Bit"]))
+                        {
+                            javaCMD = mainDrive + @"Windows\SysWOW64\" + javaCMD + ".exe";
+                        }
+                        else
+                        {
+                            javaCMD = mainDrive + @"Windows\System32\" + javaCMD + ".exe";
+                        }
+                    }
+                    Process mcProc = new Process();
+                    mcProc.StartInfo.FileName = javaCMD;
+                    mcProc.StartInfo.Arguments = @"-Xms" + Program.config["minecraft_startRam"] + "m -Xmx" + Program.config["minecraft_maxRam"] + "m -cp " + Program.config["minecraft_location"] + @"\bin\* -Djava.library.path=" + Program.config["minecraft_location"] + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession;
+                    mcProc.Start();
+                    if (Program.config["minecraft_CPUPriority"] == "Realtime")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.RealTime;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "High")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.High;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "Above Normal")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.AboveNormal;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "Below Normal")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.BelowNormal;
+                    }
+                }
+                else
+                {
+                    status = status + " :Error: CodeMinecraft";
                 }
             }
             else
             {
-                status = "Minecraft Startup was Canceled";
+                status = status + ": Canceled";
             }
-            controlRestore();
+            homeSetControl(true, true);
             return status;
         }
 

@@ -107,7 +107,7 @@ namespace AtomLauncher
         {
             try
             {
-                if (aD_cancel == true)
+                if (homeCancel == true)
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Canceled"; })); //Error
                     aD_webClient.CancelAsync();

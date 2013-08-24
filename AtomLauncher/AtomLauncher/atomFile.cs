@@ -13,21 +13,48 @@ namespace AtomLauncher
         
         // config File Location.
         public static string usersFile = @".\ALData";
-        public static string conigFile = @".\ALConfig";
-        
-        public void saveConfFile(string[] setArray)
+        public static string conigFile = @".\ALConfig.alcfg";
+
+        public static void saveConfFile(string location, Dictionary<string, string> dict)
         {
+            string[] setArray = { "" };
+            int x = 0;
+            foreach (KeyValuePair<string, string> entry in dict)
+            {
+                if (x > setArray.Length - 1)
+                {
+                    Array.Resize(ref setArray, setArray.Length + 1);
+                }
+                setArray[x] = entry.Key + "=" + entry.Value;
+                x++;
+            }
+            File.WriteAllLines(location, setArray);
         }
 
-        public Dictionary<string,string> loadConfFile()
+        public static Dictionary<string, string> loadConfDefaults(string game)
         {
             var dict = new Dictionary<string, string>();
-            dict["status"] = "NoFile";
-            dict["test"] = "NoFile";
-            dict["numah"] = "NoFile";
+            if (game == "minecraft")
+            {
+                dict["minecraft_location"] = Program.appData + @"\.minecraft";
+                dict["minecraft_startRam"] = "512"; //"-Xms" + "512" + "m";
+                dict["minecraft_maxRam"] = "1024"; //"-Xmx" + "1024" + "m";
+                dict["minecraft_displayCMD"] = "False";
+                dict["minecraft_CPUPriority"] = "Normal";
+                dict["minecraft_onlineMode"] = "True";
+                dict["minecraft_autoSelect"] = "True";
+                dict["minecraft_force64Bit"] = "False"; //other wise use 32bit
+            }
+            return dict;
+        }
+
+        public static Dictionary<string,string> loadConfFile(string location)
+        {
+            var dict = new Dictionary<string, string>();
+            dict = loadConfDefaults("minecraft");
             if (File.Exists(conigFile))
             {
-                string[] getArray = File.ReadAllLines(conigFile);
+                string[] getArray = File.ReadAllLines(location);
                 for (int i = 0; i < getArray.Length; i++)
                 {
                     if (getArray[i] != "" && !getArray[i].StartsWith("[") && getArray[i].Contains("="))
@@ -55,15 +82,15 @@ namespace AtomLauncher
                     dict[tempSplit[0]] = tempSplit[1];
                 }
             }
-            int defSplashTime = 1000;
-            if (!dict.ContainsKey("splashTime"))
-            {
-                dict["splashTime"] = defSplashTime.ToString();
-            }
-            if (!Int32.TryParse(dict["splashTime"], out Program.splashTime))
-            {
-                Program.splashTime = defSplashTime;
-            }
+            //int defSplashTime = 1000;
+            //if (!dict.ContainsKey("splashTime"))
+            //{
+            //    dict["splashTime"] = defSplashTime.ToString();
+            //}
+            //if (!Int32.TryParse(dict["splashTime"], out Program.splashTime))
+            //{
+            //    Program.splashTime = defSplashTime;
+            //}
             return dict;
         }
 
@@ -103,8 +130,6 @@ namespace AtomLauncher
             }
         }
 
-        // possible multiple logins idea, return multiple dictionarys with array
-        // also look for name of login as well. before saving.
         public static void removeLoginLine(string location, string game, string accName)
         {
             if (File.Exists(location))
@@ -118,17 +143,17 @@ namespace AtomLauncher
                     {
                         string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
-                        if (lineArray[0] != game && lineArray[1] != accName)
+                        if (lineArray[0] == game && lineArray[1] == accName)
                         {
-                            if (i - x >= NewEncryptedStrings.Length)
+                            x++;
+                        }
+                        else
+                        {
+                            if (i - x >= NewEncryptedStrings.Length) //Possible edit for the better add " - 1" at the end. Maybe even change >= to > with that.
                             {
                                 Array.Resize(ref NewEncryptedStrings, NewEncryptedStrings.Length + 1);
                             }
                             NewEncryptedStrings[i - x] = EncryptedStrings[i];
-                        }
-                        else
-                        {
-                            x++;
                         }
                     }
                     else
@@ -140,15 +165,6 @@ namespace AtomLauncher
             }
         }
 
-        // Game "minecraft", File name @"./AEUsers"
-        // possible multiple logins idea, array within array
-        // 
-        // For example: Step by step
-        // readline
-        // its "minecraft" add to array of dictonary key "minecraft" 
-        // next line 
-        // its "minecraft" add to array of diconary key "minecraft"
-        // Nothing more? Return array?
         public static string[,] readLoginFileAll(string game, string location)
         {
             string[] lineArray = { "false" };
@@ -183,7 +199,6 @@ namespace AtomLauncher
 
         public static string[] readLoginFileUser(string game, string location, string accName)
         {
-            // Change this to make User only requesting.
             string[] lineArray = { "false" };
             if (File.Exists(location))
             {
