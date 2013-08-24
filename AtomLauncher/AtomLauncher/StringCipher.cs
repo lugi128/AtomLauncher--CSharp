@@ -7,6 +7,26 @@ using System.Text.RegularExpressions;
 
 namespace AtomLauncher
 {
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                                             ATTENTION                                                            // 
+    //                                            --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--                                           //
+    //                                                        WARNING NOT SECURE                                                        //                                     //
+    //                                                                                                                                  //
+    //      To secure this programs encyption                                                                                           //
+    //      change the string in line                                                                                                   //
+    //      return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)                       //
+    //      or                                                                                                                          //
+    //      private const string initVector = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.       //
+    //      to somthing else other than                                                                                                 //
+    //      "" to somthing like "mycustomsalt"                                                                                          //
+    //                                                                                                                                  //
+    //                                                        WARNING NOT SECURE                                                        //
+    //                                            --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--                                           //
+    //                                                                                                                                  //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /////////////////////////////////////
     // Start - 'string' Extensions. Example: randomString.Truncate(4)
         public static class StringExt
