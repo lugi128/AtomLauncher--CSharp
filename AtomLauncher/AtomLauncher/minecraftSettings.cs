@@ -258,5 +258,10 @@ namespace AtomLauncher
             mcComboStartRam.Text = Program.config["minecraft_startRam"];
             mcComboMaxRam.Text = Program.config["minecraft_maxRam"];
         }
+
+        private void mcCheckOnline_CheckedChanged(object sender, EventArgs e)
+        {
+            //username field enable and stuff.
+        }
     }
 }

@@ -47,6 +47,7 @@
             this.mcComboCPUPri = new System.Windows.Forms.ComboBox();
             this.mcLabelCPUPri = new System.Windows.Forms.Label();
             this.mcLabelStatus = new System.Windows.Forms.Label();
+            this.mcTextUsername = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // mcComboStartRam
@@ -78,7 +79,7 @@
             // mcCheckCMD
             // 
             this.mcCheckCMD.AutoSize = true;
-            this.mcCheckCMD.Location = new System.Drawing.Point(8, 120);
+            this.mcCheckCMD.Location = new System.Drawing.Point(8, 104);
             this.mcCheckCMD.Name = "mcCheckCMD";
             this.mcCheckCMD.Size = new System.Drawing.Size(129, 17);
             this.mcCheckCMD.TabIndex = 2;
@@ -88,12 +89,13 @@
             // mcCheckOnline
             // 
             this.mcCheckOnline.AutoSize = true;
-            this.mcCheckOnline.Location = new System.Drawing.Point(8, 144);
+            this.mcCheckOnline.Location = new System.Drawing.Point(8, 128);
             this.mcCheckOnline.Name = "mcCheckOnline";
             this.mcCheckOnline.Size = new System.Drawing.Size(86, 17);
             this.mcCheckOnline.TabIndex = 3;
             this.mcCheckOnline.Text = "Online Mode";
             this.mcCheckOnline.UseVisualStyleBackColor = true;
+            this.mcCheckOnline.CheckedChanged += new System.EventHandler(this.mcCheckOnline_CheckedChanged);
             // 
             // mcRadio64bitJava
             // 
@@ -217,7 +219,7 @@
             "Above Normal",
             "Normal",
             "Below Normal"});
-            this.mcComboCPUPri.Location = new System.Drawing.Point(136, 128);
+            this.mcComboCPUPri.Location = new System.Drawing.Point(136, 120);
             this.mcComboCPUPri.Name = "mcComboCPUPri";
             this.mcComboCPUPri.Size = new System.Drawing.Size(112, 21);
             this.mcComboCPUPri.TabIndex = 14;
@@ -225,7 +227,7 @@
             // mcLabelCPUPri
             // 
             this.mcLabelCPUPri.AutoSize = true;
-            this.mcLabelCPUPri.Location = new System.Drawing.Point(144, 112);
+            this.mcLabelCPUPri.Location = new System.Drawing.Point(144, 104);
             this.mcLabelCPUPri.Name = "mcLabelCPUPri";
             this.mcLabelCPUPri.Size = new System.Drawing.Size(63, 13);
             this.mcLabelCPUPri.TabIndex = 15;
@@ -241,12 +243,22 @@
             this.mcLabelStatus.Text = "System OK.";
             this.mcLabelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // mcTextUsername
+            // 
+            this.mcTextUsername.Enabled = false;
+            this.mcTextUsername.Location = new System.Drawing.Point(8, 144);
+            this.mcTextUsername.Name = "mcTextUsername";
+            this.mcTextUsername.Size = new System.Drawing.Size(120, 20);
+            this.mcTextUsername.TabIndex = 17;
+            this.mcTextUsername.Text = "Offline_Username";
+            // 
             // minecraftSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(257, 258);
             this.ControlBox = false;
+            this.Controls.Add(this.mcTextUsername);
             this.Controls.Add(this.mcLabelStatus);
             this.Controls.Add(this.mcLabelCPUPri);
             this.Controls.Add(this.mcComboCPUPri);
@@ -296,6 +308,7 @@
         private System.Windows.Forms.ComboBox mcComboCPUPri;
         private System.Windows.Forms.Label mcLabelCPUPri;
         private System.Windows.Forms.Label mcLabelStatus;
+        private System.Windows.Forms.TextBox mcTextUsername;
 
     }
 }

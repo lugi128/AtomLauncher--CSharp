@@ -19,7 +19,14 @@ namespace AtomLauncher
 
         public string CMC_open(string username, string password, bool save, bool auto)
         {
-            status = CMC_webLogin(username, password, save, auto);
+            if (Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
+            {
+                status = CMC_webLogin(username, password, save, auto);
+            }
+            else
+            {
+                status = "Login";
+            }
             if (homeCancel != true)
             {
                 if (status == "Login")
@@ -28,6 +35,23 @@ namespace AtomLauncher
                     if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
                     {
                         javaCMD = @"java";
+                    }
+                    if (!Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
+                    {
+                        CMC_mcSession = "";
+                        CMC_mcName = "Player";
+                    }
+                    if (!Convert.ToBoolean(Program.config["minecraft_autoSelect"]))
+                    {
+                        string mainDrive = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
+                        if (!Convert.ToBoolean(Program.config["minecraft_force64Bit"]))
+                        {
+                            javaCMD = mainDrive + @"Windows\SysWOW64\" + javaCMD + ".exe";
+                        }
+                        else
+                        {
+                            javaCMD = mainDrive + @"Windows\System32\" + javaCMD + ".exe";
+                        }
                     }
                     Process mcProc = new Process();
                     mcProc.StartInfo.FileName = javaCMD;
@@ -49,6 +73,10 @@ namespace AtomLauncher
                     {
                         mcProc.PriorityClass = ProcessPriorityClass.BelowNormal;
                     }
+                }
+                else
+                {
+                    status = status + " :Error: CodeMinecraft";
                 }
             }
             else
