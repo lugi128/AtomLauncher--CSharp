@@ -24,7 +24,31 @@ namespace AtomLauncher
             {
                 if (status == "Login")
                 {
-                    Process.Start(@"javaw", @"-Xms" + Program.config["minecraft_startRam"] + "m -Xmx" + Program.config["minecraft_maxRam"] + "m -cp " + Program.config["minecraft_location"] + @"\bin\* -Djava.library.path=" + Program.config["minecraft_location"] + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession);
+                    string javaCMD = @"javaw";
+                    if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
+                    {
+                        javaCMD = @"java";
+                    }
+                    Process mcProc = new Process();
+                    mcProc.StartInfo.FileName = javaCMD;
+                    mcProc.StartInfo.Arguments = @"-Xms" + Program.config["minecraft_startRam"] + "m -Xmx" + Program.config["minecraft_maxRam"] + "m -cp " + Program.config["minecraft_location"] + @"\bin\* -Djava.library.path=" + Program.config["minecraft_location"] + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession;
+                    mcProc.Start();
+                    if (Program.config["minecraft_CPUPriority"] == "Realtime")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.RealTime;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "High")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.High;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "Above Normal")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.AboveNormal;
+                    }
+                    else if (Program.config["minecraft_CPUPriority"] == "Below Normal")
+                    {
+                        mcProc.PriorityClass = ProcessPriorityClass.BelowNormal;
+                    }
                 }
             }
             else
