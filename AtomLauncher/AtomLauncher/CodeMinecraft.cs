@@ -53,9 +53,21 @@ namespace AtomLauncher
                             javaCMD = mainDrive + @"Windows\System32\" + javaCMD + ".exe";
                         }
                     }
+
+                    string srtRam = Program.config["minecraft_startRam"];
+                    string maxRam = Program.config["minecraft_maxRam"];
+                    string location = Program.config["minecraft_location"];
+
+                    //Already used// string username = "namehere";
+                    string nativesLoc = "-Djava.library.path=" + location + @"\versions\1.6.2\1.6.2-natives ";
+                    string session = "--session token:" + CMC_mcSession;
+                    string version = "1.6.2";
+                    string buildArgs = nativesLoc + "-cp " + location + @"\libraries\net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar;" + location + @"\libraries\com\paulscode\codecjorbis\20101023\codecjorbis-20101023.jar;" + location + @"\libraries\com\paulscode\codecwav\20101023\codecwav-20101023.jar;" + location + @"\libraries\com\paulscode\libraryjavasound\20101123\libraryjavasound-20101123.jar;" + location + @"\libraries\com\paulscode\librarylwjglopenal\20100824\librarylwjglopenal-20100824.jar;" + location + @"\libraries\com\paulscode\soundsystem\20120107\soundsystem-20120107.jar;" + location + @"\libraries\argo\argo\2.25_fixed\argo-2.25_fixed.jar;" + location + @"\libraries\org\bouncycastle\bcprov-jdk15on\1.47\bcprov-jdk15on-1.47.jar;" + location + @"\libraries\com\google\guava\guava\14.0\guava-14.0.jar;" + location + @"\libraries\org\apache\commons\commons-lang3\3.1\commons-lang3-3.1.jar;" + location + @"\libraries\commons-io\commons-io\2.4\commons-io-2.4.jar;" + location + @"\libraries\net\java\jinput\jinput\2.0.5\jinput-2.0.5.jar;" + location + @"\libraries\net\java\jutils\jutils\1.0.0\jutils-1.0.0.jar;" + location + @"\libraries\com\google\code\gson\gson\2.2.2\gson-2.2.2.jar;" + location + @"\libraries\org\lwjgl\lwjgl\lwjgl\2.9.0\lwjgl-2.9.0.jar;" + location + @"\libraries\org\lwjgl\lwjgl\lwjgl_util\2.9.0\lwjgl_util-2.9.0.jar;" + location + @"\versions\1.6.2\1.6.2.jar net.minecraft.client.main.Main --username " + CMC_mcName + " " + session + " --version " + version + " --gameDir " + location + @" --assetsDir " + location + @"\assets";
+
+
                     Process mcProc = new Process();
                     mcProc.StartInfo.FileName = javaCMD;
-                    mcProc.StartInfo.Arguments = @"-Xms" + Program.config["minecraft_startRam"] + "m -Xmx" + Program.config["minecraft_maxRam"] + "m -cp " + Program.config["minecraft_location"] + @"\bin\* -Djava.library.path=" + Program.config["minecraft_location"] + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession;
+                    mcProc.StartInfo.Arguments = @"-Xms" + srtRam + "m -Xmx" + maxRam + "m " + buildArgs;//buildArgs//-cp " + location + @"\bin\* -Djava.library.path=" + location + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession;
                     mcProc.Start();
                     if (Program.config["minecraft_CPUPriority"] == "Realtime")
                     {
