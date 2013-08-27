@@ -1,4 +1,3 @@
-
 Atom Launcher
 =============
 An Open Source Game Launcher written in C#.
@@ -10,6 +9,8 @@ Mainly Minecraft
 This Launcher will be mainly for my minecraft server, but, will be coded to be able to launch other things, once completed.
 
 
+Currently Only Works with 1.6.2, working on it.
+___
 - Before compiling this please follow the warning at the top of "StringCipher.cs".
 - For Minecraft, it requires a downloaded copy of minecraft first via your own login.
 - And, before minecraft will run you first have to run it from the real launcher and while its open copy the natives folder it creates to #.#.#-natives. I will add a way for this to automatically happen in the future.
