@@ -76,35 +76,8 @@ namespace AtomLauncher
                     string argWildLib = "-cp " + //Experimental
                         argLocation + @"\libraries\*;";
 
-                    string argumLib = "-cp " +
-                        // -----Minecraft Libraries-----------------------------------------------------------------
-                        argLocation + @"\libraries\net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar;" +
-                        argLocation + @"\libraries\com\paulscode\codecjorbis\20101023\codecjorbis-20101023.jar;" +
-                        argLocation + @"\libraries\com\paulscode\codecwav\20101023\codecwav-20101023.jar;" +
-                        argLocation + @"\libraries\com\paulscode\libraryjavasound\20101123\libraryjavasound-20101123.jar;" +
-                        argLocation + @"\libraries\com\paulscode\librarylwjglopenal\20100824\librarylwjglopenal-20100824.jar;" +
-                        argLocation + @"\libraries\com\paulscode\soundsystem\20120107\soundsystem-20120107.jar;" +
-                        argLocation + @"\libraries\argo\argo\2.25_fixed\argo-2.25_fixed.jar;" +
-                        argLocation + @"\libraries\org\bouncycastle\bcprov-jdk15on\1.47\bcprov-jdk15on-1.47.jar;" +
-                        argLocation + @"\libraries\com\google\guava\guava\14.0\guava-14.0.jar;" +
-                        argLocation + @"\libraries\org\apache\commons\commons-lang3\3.1\commons-lang3-3.1.jar;" +
-                        argLocation + @"\libraries\commons-io\commons-io\2.4\commons-io-2.4.jar;" +
-                        argLocation + @"\libraries\net\java\jinput\jinput\2.0.5\jinput-2.0.5.jar;" +
-                        argLocation + @"\libraries\net\java\jutils\jutils\1.0.0\jutils-1.0.0.jar;" +
-                        argLocation + @"\libraries\com\google\code\gson\gson\2.2.2\gson-2.2.2.jar;" +
-                        argLocation + @"\libraries\org\lwjgl\lwjgl\lwjgl\2.9.0\lwjgl-2.9.0.jar;" +
-                        argLocation + @"\libraries\org\lwjgl\lwjgl\lwjgl_util\2.9.0\lwjgl_util-2.9.0.jar;";
-                        // -----------------------------------------------------------------------------------------
-
-                    string forgeLib = "-cp " +
-                        // -----Forge Libraries---------------------------------------------------------------------
-                        argLocation + @"\libraries\net\minecraftforge\minecraftforge\9.10.0.842\minecraftforge-9.10.0.842.jar;" +
-                        argLocation + @"\libraries\net\minecraft\launchwrapper\1.3\launchwrapper-1.3.jar;" +
-                        argLocation + @"\libraries\org\ow2\asm\asm-all\4.1\asm-all-4.1.jar;" +
-                        argLocation + @"\libraries\org\scala-lang\scala-library\2.10.2\scala-library-2.10.2.jar;" +
-                        argLocation + @"\libraries\org\scala-lang\scala-compiler\2.10.2\scala-compiler-2.10.2.jar;" +
-                        argLocation + @"\libraries\lzma\lzma\0.0.1\lzma-0.0.1.jar;" +
-                        // -----------------------------------------------------------------------------------------
+                    
+                    string argLibraries = 
                         // -----Minecraft Libraries-----------------------------------------------------------------
                         argLocation + @"\libraries\net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar;" +
                         argLocation + @"\libraries\com\paulscode\codecjorbis\20101023\codecjorbis-20101023.jar;" +
@@ -123,6 +96,18 @@ namespace AtomLauncher
                         argLocation + @"\libraries\net\java\jutils\jutils\1.0.0\jutils-1.0.0.jar;" +
                         argLocation + @"\libraries\com\google\code\gson\gson\2.2.2\gson-2.2.2.jar;";
                         // -----------------------------------------------------------------------------------------
+                    
+                    string mineLib = "-cp " + argLibraries;
+
+                    string forgeLib = "-cp " + argLibraries +
+                        // -----Forge Libraries---------------------------------------------------------------------
+                        argLocation + @"\libraries\net\minecraftforge\minecraftforge\9.10.0.842\minecraftforge-9.10.0.842.jar;" +
+                        argLocation + @"\libraries\net\minecraft\launchwrapper\1.3\launchwrapper-1.3.jar;" +
+                        argLocation + @"\libraries\org\ow2\asm\asm-all\4.1\asm-all-4.1.jar;" +
+                        argLocation + @"\libraries\org\scala-lang\scala-library\2.10.2\scala-library-2.10.2.jar;" +
+                        argLocation + @"\libraries\org\scala-lang\scala-compiler\2.10.2\scala-compiler-2.10.2.jar;" +
+                        argLocation + @"\libraries\lzma\lzma\0.0.1\lzma-0.0.1.jar;";
+                        // -----------------------------------------------------------------------------------------
 
                     string libJar = argLocation + @"\versions\" + version + @"\" + version + ".jar";
                     string MCString = "net.minecraft.client.main.Main"; //net.minecraft.client.main.Main :: Minecraft //net.minecraft.launchwrapper.Launch :: Forge
@@ -133,7 +118,7 @@ namespace AtomLauncher
                     string assetsDir = "--assetsDir " + argLocation + @"\assets";
 
                     string buildArgs = argSrtRam + " " + argMaxRam + " " + argNatives + " "
-                        + argumLib // change to argumLib for 1.6.2 Vanilla. Change to forgeLib for Forge Libraries.
+                        + mineLib // change to mineLib for 1.6.2 Vanilla. Change to forgeLib for Forge Libraries.
                         + libJar + " " + MCString + " " + argUser + " " + argVersion + " " + gameDir + " " + assetsDir 
                         + " --tweakClass cpw.mods.fml.common.launcher.FMLTweaker"; // This is for forge, when vanilla runs it ignores this.
 
