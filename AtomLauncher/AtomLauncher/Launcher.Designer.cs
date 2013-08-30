@@ -44,8 +44,9 @@
             this.homeLabelBottom = new System.Windows.Forms.Label();
             this.homeLabelTop = new System.Windows.Forms.Label();
             this.homeBarBottom = new System.Windows.Forms.ProgressBar();
-            this.homeLabelBar = new System.Windows.Forms.Label();
+            this.homeLabelBottomBar = new System.Windows.Forms.Label();
             this.homeUserText = new System.Windows.Forms.ComboBox();
+            this.homeLabelTopBar = new System.Windows.Forms.Label();
             this.homeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,6 +91,7 @@
             // homeBarTop
             // 
             this.homeBarTop.Location = new System.Drawing.Point(4, 148);
+            this.homeBarTop.MarqueeAnimationSpeed = 10;
             this.homeBarTop.Name = "homeBarTop";
             this.homeBarTop.Size = new System.Drawing.Size(284, 11);
             this.homeBarTop.TabIndex = 3;
@@ -182,7 +184,6 @@
             this.homeLabelBottom.Name = "homeLabelBottom";
             this.homeLabelBottom.Size = new System.Drawing.Size(284, 13);
             this.homeLabelBottom.TabIndex = 9;
-            this.homeLabelBottom.Text = "Welcome!";
             this.homeLabelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeLabelTop
@@ -196,19 +197,19 @@
             // 
             // homeBarBottom
             // 
-            this.homeBarBottom.Location = new System.Drawing.Point(4, 164);
+            this.homeBarBottom.Location = new System.Drawing.Point(4, 184);
             this.homeBarBottom.Name = "homeBarBottom";
             this.homeBarBottom.Size = new System.Drawing.Size(284, 11);
             this.homeBarBottom.TabIndex = 3;
             this.homeBarBottom.Tag = "";
             // 
-            // homeLabelBar
+            // homeLabelBottomBar
             // 
-            this.homeLabelBar.Location = new System.Drawing.Point(4, 180);
-            this.homeLabelBar.Name = "homeLabelBar";
-            this.homeLabelBar.Size = new System.Drawing.Size(284, 13);
-            this.homeLabelBar.TabIndex = 9;
-            this.homeLabelBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.homeLabelBottomBar.Location = new System.Drawing.Point(4, 200);
+            this.homeLabelBottomBar.Name = "homeLabelBottomBar";
+            this.homeLabelBottomBar.Size = new System.Drawing.Size(284, 13);
+            this.homeLabelBottomBar.TabIndex = 9;
+            this.homeLabelBottomBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeUserText
             // 
@@ -220,14 +221,24 @@
             this.homeUserText.TabIndex = 10;
             this.homeUserText.SelectedIndexChanged += new System.EventHandler(this.homeUserText_SelectedIndexChanged);
             // 
+            // homeLabelTopBar
+            // 
+            this.homeLabelTopBar.Location = new System.Drawing.Point(4, 164);
+            this.homeLabelTopBar.Name = "homeLabelTopBar";
+            this.homeLabelTopBar.Size = new System.Drawing.Size(284, 13);
+            this.homeLabelTopBar.TabIndex = 9;
+            this.homeLabelTopBar.Text = "Welcome!";
+            this.homeLabelTopBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 201);
+            this.ClientSize = new System.Drawing.Size(293, 221);
             this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeLabelTop);
-            this.Controls.Add(this.homeLabelBar);
+            this.Controls.Add(this.homeLabelTopBar);
+            this.Controls.Add(this.homeLabelBottomBar);
             this.Controls.Add(this.homeLabelBottom);
             this.Controls.Add(this.homePassTitle);
             this.Controls.Add(this.homeUserTitle);
@@ -267,10 +278,11 @@
         public System.Windows.Forms.ProgressBar homeBarBottom;
         public System.Windows.Forms.Label homeLabelBottom;
         public System.Windows.Forms.Label homeLabelTop;
-        public System.Windows.Forms.Label homeLabelBar;
+        public System.Windows.Forms.Label homeLabelBottomBar;
         private System.Windows.Forms.ToolStripMenuItem homeMenuToolsLauncherConfig;
         private System.Windows.Forms.ToolStripMenuItem homeMenuToolsGameSettings;
         private System.Windows.Forms.ComboBox homeUserText;
+        public System.Windows.Forms.Label homeLabelTopBar;
     }
 }
 

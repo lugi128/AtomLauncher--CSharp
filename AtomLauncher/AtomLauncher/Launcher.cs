@@ -153,11 +153,12 @@ namespace AtomLauncher
             try
             {
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
-                // aD_DownloadFile(aD_webLocation + aD_fileName, aD_saveLocation + aD_fileName);
                 string threadString = "";
                 this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
                 string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
-                if (openStatus == "Login")
+                //string openStatus = "Testing";
+                //aD_DownloadFileArray(aD_urlDict, aD_saveLocation);
+                if (openStatus == "Successful")
                 {
                     this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
                 }
@@ -165,6 +166,7 @@ namespace AtomLauncher
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = openStatus; })); //Threading Friendly
                 }
+                homeSetControl(true, true);
             }
             finally
             {
