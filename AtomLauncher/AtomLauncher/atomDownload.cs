@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Diagnostics;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace AtomLauncher
 {
@@ -16,57 +17,168 @@ namespace AtomLauncher
         WebClient aD_webClient;    // Our WebClient that will be doing the downloading for us
         Stopwatch sw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
         Stopwatch tw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
-        public string aD_fileName = "GameDownload.rar";
-        public string aD_webLocation = "http://trinaryatom.com/_web_downloads/";
-        public string aD_saveLocation = @".\";
+        public string aD_fileName = "NoFile";
+        public int aD_totalSize = 0;
+        public double aD_totalRecieved = 0;
+        public double aD_Recieved = 0;
 
-        public void aD_DownloadFileArray(string urlAddress, string location)
+        //
+        //public string location = @".\";
+        //                           Location of All Files
+        //
+        //Dictionary<int, string[]> urlAddress = new Dictionary<int, string[]>{
+        //    {0, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test0.zip", "Folder" }},
+        //    {1, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test1.zip", "Folder" }},
+        //    {2, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test2.zip", "Folder" }},
+        //    {3, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test3.zip", "Folder" }},
+        //    {4, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test4.zip", "Folder" }},
+        //    {5, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test5.zip", "Folder" }}
+        //     #                  Website Location                               File         Sub Save Location
+        //};
+        public void aD_DownloadFileDict(Dictionary<int, string[]> urlAddress, string location)
         {
-            tw.Reset();
-            using (aD_webClient = new WebClient())
-            {
-                aD_webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(aD_Completed);
-                aD_webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(aD_ProgressChanged);
-                
-                try
-                {
-                    // The variable that will be holding the url address
-                    Uri URL;
-                    // Make sure the url starts with "http://"
-                    if (!urlAddress.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-                    {
-                        URL = new Uri("http://" + urlAddress);
-                    }
-                    else
-                    {
-                        URL = new Uri(urlAddress);
-                    }
-                    //while (l < i)
-                    //{
-                    //    sw.Start(); // Start the stopwatch which we will be using to calculate the download speed
-                    //    aD_webClient.DownloadFileAsync(URL, location); // Start downloading the file
-                    //    while (homeBarTop.Value < 100) // Wait for Complete File
-                    //    {
-                    //        Thread.Sleep(1000);
-                    //    }
-                    //    Thread.Sleep(1000);
-                    //    sw.Reset();
-                    //    l++;
-                    //    homeBarTop.Value = 0;
-                    //}
+            this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Checking Files..."; }));
+            this.Invoke(new MethodInvoker(delegate { homeBarTop.Style = ProgressBarStyle.Marquee; }));
+            int l = 0;
+            int x = 0;
 
-                }
-                catch (Exception ex)
+            //////////////////////
+
+            Dictionary<int, string[]> tmpDict = new Dictionary<int, string[]>();
+            while (l < urlAddress.Count) //Get File sizes before downloading everything.
+            {
+                bool doSkip = false;
+                this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = urlAddress[l][1]; }));
+                int ContentLength = 0;
+                if (File.Exists(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
                 {
-                    //not working? Exception not working.
-                    MessageBox.Show(ex.Message);
+                    string localChecksum = "ff344e7bc6007fade349565d545fd3e7"; //Development Temp.
+                    string fileChecksum = "";
+                    using (var md5 = MD5.Create())
+                    {
+                        using (var stream = File.OpenRead(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
+                        {
+                            fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                        }
+                    }
+                    //if (l == 1)
+                    //{
+                    //    if (fileChecksum != localChecksum)
+                    //    {
+                    //        doSkip = true;
+                    //        tmpDict.Add(x, urlAddress[l]);
+                    //        x++;
+                    //    }
+                    //}
                 }
+                else
+                {
+                    doSkip = true;
+                    tmpDict.Add(x, urlAddress[l]);
+                    x++;
+                }
+                if (doSkip)
+                {
+                    System.Net.WebRequest req = System.Net.HttpWebRequest.Create(urlAddress[l][0] + urlAddress[l][1]);
+                    req.Method = "HEAD";
+                    try
+                    {
+                        using (System.Net.WebResponse resp = req.GetResponse())
+                        {
+                            int.TryParse(resp.Headers.Get("Content-Length"), out ContentLength);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        homeCancel = true;
+                        this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = ex.Message; }));
+                        MessageBox.Show(ex.Message + " : File=" + urlAddress[l][0] + urlAddress[l][1]);
+                    }
+                    aD_totalSize = aD_totalSize + ContentLength;
+                }
+                l++;
+                this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = Convert.ToInt32((decimal)l / urlAddress.Count * 100); }));
+                if (homeCancel)
+                {
+                    break;
+                }
+            }
+
+            //////////////////////
+
+            this.Invoke(new MethodInvoker(delegate { homeBarTop.Style = ProgressBarStyle.Blocks; }));
+            if (homeCancel)
+            {
+                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Canceled File Check"; }));
+                return;
+            }
+            this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = 0; }));
+            this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Connecting..."; }));
+
+            //////////////////////
+
+            l = 0;
+            while (l < tmpDict.Count) // Loop through the file array and download list.
+            {
+                if (tmpDict[l][0] != "")
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 0; }));
+                    this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "Downloading " + tmpDict[l][1]; }));
+                    aD_DownloadFile(tmpDict[l][0] + tmpDict[l][1], location + @"\" + tmpDict[l][2], tmpDict[l][1]); // Start downloading the file
+                    while (homeBarTop.Value < 100) // Wait for Complete File
+                    {
+                        Thread.Sleep(100);
+                        if (homeCancel)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (homeCancel)
+                {
+                    break;
+                }
+                l++;
+                this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = Convert.ToInt32((decimal)l / urlAddress.Count * 100); }));
+            }
+
+            //////////////////////
+
+            if (homeCancel)
+            {
+                if (aD_fileName == "NoFile")
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "Canceled"; }));
+                }
+                else
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "Canceled Download: " + tmpDict[l][1]; }));
+                }
+            }
+            else
+            {
+                this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 100; }));
+                this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = 100; }));
+                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Download Complete"; }));
+                this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "All Files Present"; }));
+                this.Invoke(new MethodInvoker(delegate { homeLabelTopBar.Text = "Ready!"; }));
+            }
+            if (aD_totalSize != 0)
+            {
+                this.Invoke(new MethodInvoker(delegate { homeLabelBottomBar.Text = (Convert.ToDouble(aD_totalRecieved) / 1024 / 1024).ToString("0.00") + " Mb's" + "  /  " + (Convert.ToDouble(aD_totalSize) / 1024 / 1024).ToString("0.00") + " Mb's"; }));
             }
         }
 
-        public void aD_DownloadFile(string urlAddress, string location)
+        public void aD_DownloadFile(string urlAddress, string location, string file)
         {
+            Directory.CreateDirectory(location);
+            aD_fileName = location + @"\" + file;
             sw.Reset();
+            if (homeCancel)
+            {
+                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Download Canceled"; }));
+                return;
+            }
             using (aD_webClient = new WebClient())
             {
                 aD_webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(aD_Completed);
@@ -75,28 +187,15 @@ namespace AtomLauncher
                 try
                 {
                     // The variable that will be holding the url address
-                    Uri URL;
-
-                    // Make sure the url starts with "http://"
-                    if (!urlAddress.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-                    {
-                        URL = new Uri("http://" + urlAddress);
-                    }
-                    else
-                    {
-                        URL = new Uri(urlAddress);
-                    }
-
+                    Uri URL = new Uri(urlAddress);
                     // Start the stopwatch which we will be using to calculate the download speed
                     sw.Start();
-
                     // Start downloading the file
-                    aD_webClient.DownloadFileAsync(URL, location);
+                    aD_webClient.DownloadFileAsync(URL, aD_fileName);
 
                 }
                 catch (Exception ex)
                 {
-                    //not working? Exception not working.
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -109,13 +208,14 @@ namespace AtomLauncher
             {
                 if (homeCancel == true)
                 {
-                    this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Canceled"; })); //Error
                     aD_webClient.CancelAsync();
                 }
                 else
                 {
+                    aD_Recieved = e.BytesReceived;
                     if (e.ProgressPercentage != 100) // prevents this from Accidentally running aD_Completed is triggered.
                     {
+
                         // Calculate download speed and output it to label3
                         if (homeLabelBottom.Text != (Convert.ToDouble(e.BytesReceived) / 1024 / sw.Elapsed.TotalSeconds).ToString("0"))
                             this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = (Convert.ToDouble(e.BytesReceived) / 1024 / sw.Elapsed.TotalSeconds).ToString("0.00") + " kb/s"; }));
@@ -124,12 +224,11 @@ namespace AtomLauncher
                         if (homeBarTop.Value != e.ProgressPercentage)
                             this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = e.ProgressPercentage; }));
 
-                        // Show the percentage on our label (update only if the value isn't the same to avoid updating the control constantly)
-                        if (homeLabelBottom.Text != e.ProgressPercentage.ToString() + "%")
-                            this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = e.ProgressPercentage.ToString() + "%";}));
+                        // Update the label with how much data of the file has been downloaded so far and the total size of the file we are currently downloading
+                        this.Invoke(new MethodInvoker(delegate { homeLabelTopBar.Text = (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " Mb's" + "  /  " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " Mb's"; }));
 
-                        // Update the label with how much data have been downloaded so far and the total size of the file we are currently downloading
-                        this.Invoke(new MethodInvoker(delegate { homeLabelBar.Text = (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " Mb's" + "  /  " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " Mb's"; }));
+                        // Update the label with how much data has been downloaded so far and the total size of all the files we are currently downloading.
+                        this.Invoke(new MethodInvoker(delegate { homeLabelBottomBar.Text = (Convert.ToDouble(aD_totalRecieved + aD_Recieved) / 1024 / 1024).ToString("0.00") + " Mb's" + "  /  " + (Convert.ToDouble(aD_totalSize) / 1024 / 1024).ToString("0.00") + " Mb's"; }));
                     }
                 }
             }
@@ -142,23 +241,31 @@ namespace AtomLauncher
         // The event that will trigger when the WebClient is completed
         private void aD_Completed(object sender, AsyncCompletedEventArgs e)
         {
+            aD_totalRecieved = aD_totalRecieved + aD_Recieved;
             sw.Reset();
             if (e.Cancelled == true)
             {
-                File.Delete(@"./GameDownload.rar");       // Delete the incomplete file if the download is canceled
-                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Canceled"; })); //Error
+                File.Delete(aD_fileName);       // Delete the incomplete file if the download is canceled
             }
             else if (e.Error != null)
             {
+                homeCancel = true;
+                File.Delete(aD_fileName);       // Delete the incomplete file if the download is canceled
+                this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 0; }));
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = e.Error.Message; })); //Error
             }
             else
             {
                 if (homeBarTop.Value != 100)
                 {
+                    this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "100%"; }));
                     this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 100; }));
                 }
-                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Completed"; }));
+                if (!homeCancel)
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Completed"; }));
+                }
+                aD_fileName = "NoFile";
             }
         }
     }

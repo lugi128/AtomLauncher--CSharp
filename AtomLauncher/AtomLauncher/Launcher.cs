@@ -153,11 +153,13 @@ namespace AtomLauncher
             try
             {
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
-                // aD_DownloadFile(aD_webLocation + aD_fileName, aD_saveLocation + aD_fileName);
                 string threadString = "";
                 this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
                 string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
-                if (openStatus == "Login")
+                //aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, @".\");
+                //aJ_mcVersions = aJ_readJsonVer(@".\versions.json");
+                //string openStatus = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
+                if (openStatus == "Successful")
                 {
                     this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
                 }
@@ -165,6 +167,7 @@ namespace AtomLauncher
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = openStatus; })); //Threading Friendly
                 }
+                homeSetControl(true, true);
             }
             finally
             {

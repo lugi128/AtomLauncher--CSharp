@@ -17,19 +17,21 @@ namespace AtomLauncher
 
         public string status = "";
 
+
         public string CMC_open(string username, string password, bool save, bool auto)
         {
+
             if (Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
             {
                 status = CMC_webLogin(username, password, save, auto);
             }
             else
             {
-                status = "Login";
+                status = "Successful";
             }
             if (homeCancel != true)
             {
-                if (status == "Login")
+                if (status == "Successful")
                 {
                     string javaCMD = @"javaw";
                     if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
@@ -154,7 +156,6 @@ namespace AtomLauncher
             {
                 status = status + ": Canceled";
             }
-            homeSetControl(true, true);
             return status;
         }
 
@@ -207,7 +208,7 @@ namespace AtomLauncher
                 {
                     atomFile.removeLoginLine(atomFile.usersFile, "minecraft", username);
                 }
-                return "Login";
+                return "Successful";
             }
             else
             {

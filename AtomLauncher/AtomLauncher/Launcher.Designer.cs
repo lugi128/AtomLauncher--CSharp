@@ -44,8 +44,10 @@
             this.homeLabelBottom = new System.Windows.Forms.Label();
             this.homeLabelTop = new System.Windows.Forms.Label();
             this.homeBarBottom = new System.Windows.Forms.ProgressBar();
-            this.homeLabelBar = new System.Windows.Forms.Label();
+            this.homeLabelBottomBar = new System.Windows.Forms.Label();
             this.homeUserText = new System.Windows.Forms.ComboBox();
+            this.homeLabelTopBar = new System.Windows.Forms.Label();
+            this.homeTextBoxGeneral = new System.Windows.Forms.RichTextBox();
             this.homeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,6 +92,7 @@
             // homeBarTop
             // 
             this.homeBarTop.Location = new System.Drawing.Point(4, 148);
+            this.homeBarTop.MarqueeAnimationSpeed = 10;
             this.homeBarTop.Name = "homeBarTop";
             this.homeBarTop.Size = new System.Drawing.Size(284, 11);
             this.homeBarTop.TabIndex = 3;
@@ -98,10 +101,10 @@
             // homePassText
             // 
             this.homePassText.Enabled = false;
-            this.homePassText.Location = new System.Drawing.Point(4, 84);
+            this.homePassText.Location = new System.Drawing.Point(8, 84);
             this.homePassText.Name = "homePassText";
             this.homePassText.PasswordChar = '*';
-            this.homePassText.Size = new System.Drawing.Size(192, 20);
+            this.homePassText.Size = new System.Drawing.Size(188, 20);
             this.homePassText.TabIndex = 5;
             this.homePassText.UseSystemPasswordChar = true;
             // 
@@ -109,7 +112,7 @@
             // 
             this.homeUserTitle.AutoSize = true;
             this.homeUserTitle.Enabled = false;
-            this.homeUserTitle.Location = new System.Drawing.Point(4, 28);
+            this.homeUserTitle.Location = new System.Drawing.Point(8, 28);
             this.homeUserTitle.Name = "homeUserTitle";
             this.homeUserTitle.Size = new System.Drawing.Size(55, 13);
             this.homeUserTitle.TabIndex = 6;
@@ -119,7 +122,7 @@
             // 
             this.homePassTitle.AutoSize = true;
             this.homePassTitle.Enabled = false;
-            this.homePassTitle.Location = new System.Drawing.Point(4, 68);
+            this.homePassTitle.Location = new System.Drawing.Point(8, 68);
             this.homePassTitle.Name = "homePassTitle";
             this.homePassTitle.Size = new System.Drawing.Size(53, 13);
             this.homePassTitle.TabIndex = 7;
@@ -178,56 +181,75 @@
             // 
             // homeLabelBottom
             // 
-            this.homeLabelBottom.Location = new System.Drawing.Point(4, 128);
+            this.homeLabelBottom.Location = new System.Drawing.Point(8, 128);
             this.homeLabelBottom.Name = "homeLabelBottom";
-            this.homeLabelBottom.Size = new System.Drawing.Size(284, 13);
+            this.homeLabelBottom.Size = new System.Drawing.Size(280, 13);
             this.homeLabelBottom.TabIndex = 9;
-            this.homeLabelBottom.Text = "Welcome!";
             this.homeLabelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeLabelTop
             // 
-            this.homeLabelTop.Location = new System.Drawing.Point(4, 108);
+            this.homeLabelTop.Location = new System.Drawing.Point(8, 108);
             this.homeLabelTop.Name = "homeLabelTop";
-            this.homeLabelTop.Size = new System.Drawing.Size(284, 13);
+            this.homeLabelTop.Size = new System.Drawing.Size(280, 13);
             this.homeLabelTop.TabIndex = 9;
             this.homeLabelTop.Text = "^.^";
             this.homeLabelTop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeBarBottom
             // 
-            this.homeBarBottom.Location = new System.Drawing.Point(4, 164);
+            this.homeBarBottom.Location = new System.Drawing.Point(4, 184);
             this.homeBarBottom.Name = "homeBarBottom";
             this.homeBarBottom.Size = new System.Drawing.Size(284, 11);
             this.homeBarBottom.TabIndex = 3;
             this.homeBarBottom.Tag = "";
             // 
-            // homeLabelBar
+            // homeLabelBottomBar
             // 
-            this.homeLabelBar.Location = new System.Drawing.Point(4, 180);
-            this.homeLabelBar.Name = "homeLabelBar";
-            this.homeLabelBar.Size = new System.Drawing.Size(284, 13);
-            this.homeLabelBar.TabIndex = 9;
-            this.homeLabelBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.homeLabelBottomBar.Location = new System.Drawing.Point(8, 200);
+            this.homeLabelBottomBar.Name = "homeLabelBottomBar";
+            this.homeLabelBottomBar.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelBottomBar.TabIndex = 9;
+            this.homeLabelBottomBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeUserText
             // 
             this.homeUserText.Enabled = false;
             this.homeUserText.FormattingEnabled = true;
-            this.homeUserText.Location = new System.Drawing.Point(4, 44);
+            this.homeUserText.Location = new System.Drawing.Point(8, 44);
             this.homeUserText.Name = "homeUserText";
-            this.homeUserText.Size = new System.Drawing.Size(192, 21);
+            this.homeUserText.Size = new System.Drawing.Size(188, 21);
             this.homeUserText.TabIndex = 10;
             this.homeUserText.SelectedIndexChanged += new System.EventHandler(this.homeUserText_SelectedIndexChanged);
+            // 
+            // homeLabelTopBar
+            // 
+            this.homeLabelTopBar.Location = new System.Drawing.Point(8, 164);
+            this.homeLabelTopBar.Name = "homeLabelTopBar";
+            this.homeLabelTopBar.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelTopBar.TabIndex = 9;
+            this.homeLabelTopBar.Text = "Welcome!";
+            this.homeLabelTopBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // homeTextBoxGeneral
+            // 
+            this.homeTextBoxGeneral.Location = new System.Drawing.Point(4, 216);
+            this.homeTextBoxGeneral.Name = "homeTextBoxGeneral";
+            this.homeTextBoxGeneral.Size = new System.Drawing.Size(284, 8);
+            this.homeTextBoxGeneral.TabIndex = 11;
+            this.homeTextBoxGeneral.Text = "";
+            this.homeTextBoxGeneral.Visible = false;
             // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 201);
+            this.ClientSize = new System.Drawing.Size(293, 221);
+            this.Controls.Add(this.homeTextBoxGeneral);
             this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeLabelTop);
-            this.Controls.Add(this.homeLabelBar);
+            this.Controls.Add(this.homeLabelTopBar);
+            this.Controls.Add(this.homeLabelBottomBar);
             this.Controls.Add(this.homeLabelBottom);
             this.Controls.Add(this.homePassTitle);
             this.Controls.Add(this.homeUserTitle);
@@ -267,10 +289,12 @@
         public System.Windows.Forms.ProgressBar homeBarBottom;
         public System.Windows.Forms.Label homeLabelBottom;
         public System.Windows.Forms.Label homeLabelTop;
-        public System.Windows.Forms.Label homeLabelBar;
+        public System.Windows.Forms.Label homeLabelBottomBar;
         private System.Windows.Forms.ToolStripMenuItem homeMenuToolsLauncherConfig;
         private System.Windows.Forms.ToolStripMenuItem homeMenuToolsGameSettings;
         private System.Windows.Forms.ComboBox homeUserText;
+        public System.Windows.Forms.Label homeLabelTopBar;
+        private System.Windows.Forms.RichTextBox homeTextBoxGeneral;
     }
 }
 
