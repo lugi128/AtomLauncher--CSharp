@@ -175,7 +175,6 @@ namespace AtomLauncher
             }
         }
 
-
         private void homeSetControl(bool trufal, bool strbool)
         {
             enableControls(trufal); //Threading Friendly

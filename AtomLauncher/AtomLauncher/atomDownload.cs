@@ -52,15 +52,15 @@ namespace AtomLauncher
                 int ContentLength = 0;
                 if (File.Exists(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
                 {
-                    string localChecksum = "ff344e7bc6007fade349565d545fd3e7"; //Development Temp.
-                    string fileChecksum = "";
-                    using (var md5 = MD5.Create())
-                    {
-                        using (var stream = File.OpenRead(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
-                        {
-                            fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
-                        }
-                    }
+                    //string localChecksum = "ff344e7bc6007fade349565d545fd3e7"; //Development Temp.
+                    //string fileChecksum = "";
+                    //using (var md5 = MD5.Create())
+                    //{
+                    //    using (var stream = File.OpenRead(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
+                    //    {
+                    //        fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                    //    }
+                    //}
                     //if (l == 1)
                     //{
                     //    if (fileChecksum != localChecksum)

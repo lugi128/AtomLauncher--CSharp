@@ -10,7 +10,6 @@ namespace AtomLauncher
     {
         /////////////////////////////////////
         // Start - File Usage
-        
         // config File Location.
         public static string usersFile = @".\ALData";
         public static string conigFile = @".\ALConfig.alcfg";
@@ -229,9 +228,6 @@ namespace AtomLauncher
                     _arr[i, j] = Arr[i, j];
             Arr = _arr;
         }
-
-
-
         // End
         /////////////////////////////////////
     }

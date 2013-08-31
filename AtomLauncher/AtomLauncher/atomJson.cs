@@ -77,18 +77,18 @@ namespace AtomLauncher
                 }
             }
 
-            //dev
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("LatestIDs = " + tmpDict["latestids"][0] + " - " + tmpDict["latestids"][1]); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            foreach (KeyValuePair<string, string[]> entry in tmpDict)
-            {
-                if (entry.Key.Contains("versionid"))
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0] + " - " + entry.Value[1]); }));
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                }
-            }
-            //dev
+            ////dev
+            //this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("LatestIDs = " + tmpDict["latestids"][0] + " - " + tmpDict["latestids"][1]); }));
+            //this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //foreach (KeyValuePair<string, string[]> entry in tmpDict)
+            //{
+            //    if (entry.Key.Contains("versionid"))
+            //    {
+            //        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0] + " - " + entry.Value[1]); }));
+            //        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //    }
+            //}
+            ////dev
 
             tmpDict["Status"] = new string[] { "Successful", "Version File Scanned" };
             return tmpDict;
