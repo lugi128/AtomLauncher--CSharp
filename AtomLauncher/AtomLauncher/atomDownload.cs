@@ -17,36 +17,32 @@ namespace AtomLauncher
         WebClient aD_webClient;    // Our WebClient that will be doing the downloading for us
         Stopwatch sw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
         Stopwatch tw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
+        public string aD_fileName = "NoFile";
         public int aD_totalSize = 0;
         public double aD_totalRecieved = 0;
         public double aD_Recieved = 0;
-        public string aD_fileName = "NoFile";
-        public string aD_webLocation = "http://trinaryatom.com/_web_downloads/";
-        public string aD_saveLocation = @".\";
-        Dictionary<int, string[]> aD_urlDict = new Dictionary<int, string[]>{
-            {0, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test0.zip", "Folder" }},
-            {1, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test1.zip", "Folder" }},
-            {2, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test2.zip", "Folder" }},
-            {3, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test3.zip", "Folder" }},
-            {4, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test4.zip", "Folder" }},
-            {5, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test5.zip", "Folder" }}
-        };
-        //public string[,] urlAddress = {
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test0.zip", "Folder" },
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test1.zip", "Folder" },
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test2.zip", "Folder" },
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test3.zip", "Folder" },
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test4.zip", "Folder" },
-        //    { "http://trinaryatom.com/_web_downloads/Test/", "test5.zip", "Folder" }
+
+        //
+        //public string location = @".\";
+        //                           Location of All Files
+        //
+        //Dictionary<int, string[]> urlAddress = new Dictionary<int, string[]>{
+        //    {0, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test0.zip", "Folder" }},
+        //    {1, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test1.zip", "Folder" }},
+        //    {2, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test2.zip", "Folder" }},
+        //    {3, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test3.zip", "Folder" }},
+        //    {4, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test4.zip", "Folder" }},
+        //    {5, new string[] { "http://trinaryatom.com/_web_downloads/Test/", "test5.zip", "Folder" }}
+        //     #                  Website Location                               File         Sub Save Location
         //};
-        public void aD_DownloadFileArray(Dictionary<int, string[]> urlAddress, string location)
+        public void aD_DownloadFileDict(Dictionary<int, string[]> urlAddress, string location)
         {
             this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Checking Files..."; }));
             this.Invoke(new MethodInvoker(delegate { homeBarTop.Style = ProgressBarStyle.Marquee; }));
             int l = 0;
             int x = 0;
 
-
+            //////////////////////
 
             Dictionary<int, string[]> tmpDict = new Dictionary<int, string[]>();
             while (l < urlAddress.Count) //Get File sizes before downloading everything.
@@ -65,15 +61,15 @@ namespace AtomLauncher
                             fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
                         }
                     }
-                    if (l == 1)
-                    {
-                        if (fileChecksum != localChecksum)
-                        {
-                            doSkip = true;
-                            tmpDict.Add(x, urlAddress[l]);
-                            x++;
-                        }
-                    }
+                    //if (l == 1)
+                    //{
+                    //    if (fileChecksum != localChecksum)
+                    //    {
+                    //        doSkip = true;
+                    //        tmpDict.Add(x, urlAddress[l]);
+                    //        x++;
+                    //    }
+                    //}
                 }
                 else
                 {
@@ -108,8 +104,7 @@ namespace AtomLauncher
                 }
             }
 
-
-
+            //////////////////////
 
             this.Invoke(new MethodInvoker(delegate { homeBarTop.Style = ProgressBarStyle.Blocks; }));
             if (homeCancel)
@@ -119,6 +114,9 @@ namespace AtomLauncher
             }
             this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = 0; }));
             this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Connecting..."; }));
+
+            //////////////////////
+
             l = 0;
             while (l < tmpDict.Count) // Loop through the file array and download list.
             {
@@ -143,6 +141,9 @@ namespace AtomLauncher
                 l++;
                 this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = Convert.ToInt32((decimal)l / urlAddress.Count * 100); }));
             }
+
+            //////////////////////
+
             if (homeCancel)
             {
                 if (aD_fileName == "NoFile")
@@ -186,18 +187,7 @@ namespace AtomLauncher
                 try
                 {
                     // The variable that will be holding the url address
-                    Uri URL;
-
-                    // Make sure the url starts with "http://"
-                    if (!urlAddress.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
-                    {
-                        URL = new Uri("http://" + urlAddress);
-                    }
-                    else
-                    {
-                        URL = new Uri(urlAddress);
-                    }
-
+                    Uri URL = new Uri(urlAddress);
                     // Start the stopwatch which we will be using to calculate the download speed
                     sw.Start();
                     // Start downloading the file

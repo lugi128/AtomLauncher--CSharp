@@ -17,8 +17,10 @@ namespace AtomLauncher
 
         public string status = "";
 
+
         public string CMC_open(string username, string password, bool save, bool auto)
         {
+
             if (Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
             {
                 status = CMC_webLogin(username, password, save, auto);
