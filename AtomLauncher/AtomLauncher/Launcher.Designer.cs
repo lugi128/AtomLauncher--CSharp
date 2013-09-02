@@ -233,9 +233,9 @@
             // 
             // homeTextBoxGeneral
             // 
-            this.homeTextBoxGeneral.Location = new System.Drawing.Point(4, 220);
+            this.homeTextBoxGeneral.Location = new System.Drawing.Point(4, 228);
             this.homeTextBoxGeneral.Name = "homeTextBoxGeneral";
-            this.homeTextBoxGeneral.Size = new System.Drawing.Size(284, 224);
+            this.homeTextBoxGeneral.Size = new System.Drawing.Size(284, 216);
             this.homeTextBoxGeneral.TabIndex = 11;
             this.homeTextBoxGeneral.Text = "";
             // 
@@ -243,7 +243,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 451);
+            this.ClientSize = new System.Drawing.Size(293, 448);
             this.Controls.Add(this.homeTextBoxGeneral);
             this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeLabelTop);

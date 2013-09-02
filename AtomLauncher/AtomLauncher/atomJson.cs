@@ -25,14 +25,12 @@ namespace AtomLauncher
                 {"Libraries"           , new string[] { "None" }},
                 {"Natives"             , new string[] { "None" }},
                 {"mainClass"           , new string[] { "None" }},
-                {"Trash"               , new string[] { "None" }},
                 {"Status"              , new string[] { "None" , "Error Aj_vG_01" }}
         };
 
         public Dictionary<string, string[]> aJ_readJsonGame(string location)
         {
             Dictionary<string, string[]> tmpDict = new Dictionary<string, string[]>{
-                {"Trash"          , new string[] { "None" }},
                 {"Status"         , new string[] { "Failure" , "Version Json not found" }}
             };
             if (!File.Exists(location)) return tmpDict;
@@ -41,25 +39,26 @@ namespace AtomLauncher
             if (homeCancel) return tmpDict;
 
             string[] fileArray = File.ReadAllLines(location);
-            string section = "";
+            bool inLibraries = false;
+            int exitSection = 0;
             string jsonLine = "";
-            string tmpDictKey = "Trash";
             string[] tmpNativeArray = new string[] { "None" };
             string[] tmpLibrariesArray = new string[] { "None" };
 
             int x = 0;
             int z = 0;
+            int i = 0;
             for (int y = 0; y < fileArray.Length; y++)
             {
                 if (fileArray[y].Contains("\"libraries\":"))
                 {
-                    section = "libraries";
+                    inLibraries = true;
+                    exitSection = i;
                 }
                 else if (fileArray[y].Contains("\": \""))
                 {
-                    if (section == "libraries")
+                    if (inLibraries)
                     {
-                        tmpDictKey = "Libraries";
                         jsonLine = Regex.Replace(fileArray[y], "[ \",]", "");
                         string[] jsonKeyValue = jsonLine.Split(new char[] { ':' }, 2);
                         if (jsonKeyValue[0] == "name" && !jsonKeyValue[1].Contains("-nightly-") && jsonKeyValue[1] != "osx")
@@ -82,31 +81,83 @@ namespace AtomLauncher
                                 tmpLibrariesArray[x] = jsonKeyValue[1];
                                 x++;
                             }
+                            // Use
+                            // Path.GetFileName(@""); 
+                            // &
+                            // Path.GetDirectoryName(@""));
+                            // Later
                         }
+                    }
+                    else
+                    {
+                        jsonLine = Regex.Replace(fileArray[y], "[ \",]", "");
+                        string[] jsonKeyValue = jsonLine.Split(new char[] { ':' }, 2);
+                        if (jsonKeyValue[0] == "id")
+                        {
+                            tmpDict["ID"] = new string[] { jsonKeyValue[1] };
+                        }
+                        if (jsonKeyValue[0] == "Type")
+                        {
+                            tmpDict["Type"] = new string[] { jsonKeyValue[1] };
+                        }
+                        if (jsonKeyValue[0] == "processArguments")
+                        {
+                            tmpDict["ProcessArguments"] = new string[] { jsonKeyValue[1] };
+                        }
+                        if (jsonKeyValue[0] == "minecraftArguments")
+                        {
+                            string jsonLineMA = Regex.Replace(fileArray[y], "[\",]", ""); //Need the spaces to function correctly.
+                            string[] jsonKeyValueMA = Regex.Split(jsonLineMA, ": ");
+                            tmpDict["MinecraftArguments"] = new string[] { jsonKeyValueMA[1] };
+                        }
+                        if (jsonKeyValue[0] == "mainClass")
+                        {
+                            tmpDict["mainClass"] = new string[] { jsonKeyValue[1] };
+                        }
+                    }
+                }
+                if (fileArray[y].Contains("{") || fileArray[y].Contains("["))
+                {
+                    i++;
+                }
+                if (fileArray[y].Contains("}") || fileArray[y].Contains("]"))
+                {
+                    i--;
+                    if (i == exitSection)
+                    {
+                        inLibraries = false;
                     }
                 }
             }
             tmpDict["Libraries"] = tmpLibrariesArray;
             tmpDict["Natives"] = tmpNativeArray;
-
-            //dev
-            foreach (string entry in tmpDict["Libraries"])
-            {
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            }
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            foreach (string entry in tmpDict["Natives"])
-            {
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            }
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //dev
-
             tmpDict["Status"] = new string[] { "Successful", "GameVersion File Scanned" };
+
+            //dev
+               
+                foreach (string entry in tmpDict["Libraries"])
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                foreach (string entry in tmpDict["Natives"])
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                foreach (KeyValuePair<string, string[]> entry in tmpDict)
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0]); }));
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //dev
+
             return tmpDict;
         }
 
@@ -169,26 +220,26 @@ namespace AtomLauncher
                     }
                 }
             }
+            tmpDict["Status"] = new string[] { "Successful", "Version File Scanned" };
 
             //dev
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("LatestIDs = " + tmpDict["latestids"][0] + " - " + tmpDict["latestids"][1]); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //foreach (KeyValuePair<string, string[]> entry in tmpDict)
-            //{
-            //    if (entry.Key.Contains("versionid"))
-            //    {
-            //        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0] + " - " + entry.Value[1]); }));
-            //        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //    }
-            //}
-            //this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-            //this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            ////dev
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("LatestIDs = " + tmpDict["latestids"][0] + " & " + tmpDict["latestids"][1]); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                foreach (KeyValuePair<string, string[]> entry in tmpDict)
+                {
+                    if (entry.Key.Contains("versionid"))
+                    {
+                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0] + " - " + entry.Value[1]); }));
+                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                    }
+                }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //dev
 
-            tmpDict["Status"] = new string[] { "Successful", "Version File Scanned" };
             return tmpDict;
         }
     }

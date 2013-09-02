@@ -74,7 +74,6 @@ namespace AtomLauncher
 
                     string argWildLib = "-cp " + //Experimental
                         argLocation + @"\libraries\*;";
-
                     
                     string argLibraries = 
                         // -----Minecraft Libraries-----------------------------------------------------------------
