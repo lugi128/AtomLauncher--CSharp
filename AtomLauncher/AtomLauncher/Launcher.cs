@@ -152,13 +152,15 @@ namespace AtomLauncher
             }
             try
             {
-                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
-                string threadString = "";
-                this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
-                string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
-                //aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, @".\");
-                //aJ_mcVersions = aJ_readJsonVer(@".\versions.json");
-                //string openStatus = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
+                //this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
+                //string threadString = "";
+                //this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
+                //string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
+                aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, @".\");
+                aJ_mcVersions = aJ_readJsonVer(@".\versions.json");                   //https://s3.amazonaws.com/Minecraft.Download/versions/1.6.2/1.6.2.json latestids
+                aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + aJ_mcVersions["latestids"][0] + "/", aJ_mcVersions["latestids"][0] + ".json", "1.6.2" + @"\" + "1.6.2" } } }, @".\");
+                aJ_mcVerGame = aJ_readJsonGame(aJ_mcVersions["latestids"][0] + @"\" + aJ_mcVersions["latestids"][0] + @"\" + aJ_mcVersions["latestids"][0] + ".json");
+                string openStatus = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
                 if (openStatus == "Successful")
                 {
                     this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
