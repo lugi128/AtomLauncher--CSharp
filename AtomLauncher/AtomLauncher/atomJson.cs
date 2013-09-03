@@ -33,7 +33,7 @@ namespace AtomLauncher
             Dictionary<string, string[]> tmpDict = new Dictionary<string, string[]>{
                 {"Status"         , new string[] { "Failure" , "Version Json not found" }}
             };
-            if (!File.Exists(location)) return tmpDict;
+            if (!File.Exists(location)) { homeCancel = true; return tmpDict; };
 
             tmpDict["Status"] = new string[] { "Failure", "Canceled" };
             if (homeCancel) return tmpDict;
@@ -42,6 +42,7 @@ namespace AtomLauncher
             bool inLibraries = false;
             int exitSection = 0;
             string jsonLine = "";
+            string locationLine = "";
             string[] tmpNativeArray = new string[] { "None" };
             string[] tmpLibrariesArray = new string[] { "None" };
 
@@ -63,13 +64,27 @@ namespace AtomLauncher
                         string[] jsonKeyValue = jsonLine.Split(new char[] { ':' }, 2);
                         if (jsonKeyValue[0] == "name" && !jsonKeyValue[1].Contains("-nightly-") && jsonKeyValue[1] != "osx")
                         {
+                            string[] colonSplit = jsonKeyValue[1].Split(new char[] { ':' }, 3);
+                            string[] folderSplit = colonSplit[0].Split(new char[] { '.' });
+                            for (int a = 0; a < folderSplit.Length; a++)
+                            {
+                                if (a == 0)
+                                {
+                                    locationLine = folderSplit[a];
+                                }
+                                else
+                                {
+                                    locationLine = locationLine + @"\" + folderSplit[a];
+                                }
+                            }
+                            locationLine = locationLine + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2];
                             if (fileArray[y + 1].Contains("\"natives\":"))
                             {
                                 if (z > tmpNativeArray.Length - 1)
                                 {
                                     Array.Resize(ref tmpNativeArray, tmpNativeArray.Length + 1);
                                 }
-                                tmpNativeArray[z] = jsonKeyValue[1];
+                                tmpNativeArray[z] = locationLine + "-natives-windows.jar";
                                 z++;
                             }
                             else
@@ -78,14 +93,9 @@ namespace AtomLauncher
                                 {
                                     Array.Resize(ref tmpLibrariesArray, tmpLibrariesArray.Length + 1);
                                 }
-                                tmpLibrariesArray[x] = jsonKeyValue[1];
+                                tmpLibrariesArray[x] = locationLine + ".jar";
                                 x++;
                             }
-                            // Use
-                            // Path.GetFileName(@""); 
-                            // &
-                            // Path.GetDirectoryName(@""));
-                            // Later
                         }
                     }
                     else
@@ -132,32 +142,6 @@ namespace AtomLauncher
             tmpDict["Libraries"] = tmpLibrariesArray;
             tmpDict["Natives"] = tmpNativeArray;
             tmpDict["Status"] = new string[] { "Successful", "GameVersion File Scanned" };
-
-            //dev
-               
-                foreach (string entry in tmpDict["Libraries"])
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                }
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                foreach (string entry in tmpDict["Natives"])
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry); }));
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                }
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                foreach (KeyValuePair<string, string[]> entry in tmpDict)
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0]); }));
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                }
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //dev
-
             return tmpDict;
         }
 
@@ -168,7 +152,7 @@ namespace AtomLauncher
                 {"Trash"          , new string[] { "None" }},
                 {"Status"         , new string[] { "Failure" , "Version Does not exist."}}
             };
-            if (!File.Exists(location)) return tmpDict;
+            if (!File.Exists(location)) { homeCancel = true; return tmpDict; };
 
             tmpDict["Status"] = new string[] { "Failure", "Canceled" };
             if (homeCancel) return tmpDict;
@@ -221,24 +205,6 @@ namespace AtomLauncher
                 }
             }
             tmpDict["Status"] = new string[] { "Successful", "Version File Scanned" };
-
-            //dev
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("LatestIDs = " + tmpDict["latestids"][0] + " & " + tmpDict["latestids"][1]); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                foreach (KeyValuePair<string, string[]> entry in tmpDict)
-                {
-                    if (entry.Key.Contains("versionid"))
-                    {
-                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Key + " = " + entry.Value[0] + " - " + entry.Value[1]); }));
-                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                    }
-                }
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); }));
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            //dev
 
             return tmpDict;
         }

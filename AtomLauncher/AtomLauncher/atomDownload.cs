@@ -17,6 +17,7 @@ namespace AtomLauncher
         WebClient aD_webClient;    // Our WebClient that will be doing the downloading for us
         Stopwatch sw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
         Stopwatch tw = new Stopwatch();    // The stopwatch which we will be using to calculate the download speed
+        bool downloadBusy = false;
         public string aD_fileName = "NoFile";
         public int aD_totalSize = 0;
         public double aD_totalRecieved = 0;
@@ -39,6 +40,8 @@ namespace AtomLauncher
         {
             this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Checking Files..."; }));
             this.Invoke(new MethodInvoker(delegate { homeBarTop.Style = ProgressBarStyle.Marquee; }));
+            aD_totalSize = 0;
+            aD_totalRecieved = 0;
             int l = 0;
             int x = 0;
 
@@ -122,10 +125,11 @@ namespace AtomLauncher
             {
                 if (tmpDict[l][0] != "")
                 {
+                    downloadBusy = true;
                     this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 0; }));
                     this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "Downloading " + tmpDict[l][1]; }));
                     aD_DownloadFile(tmpDict[l][0] + tmpDict[l][1], location + @"\" + tmpDict[l][2], tmpDict[l][1]); // Start downloading the file
-                    while (homeBarTop.Value < 100) // Wait for Complete File
+                    while (downloadBusy) // Wait for Complete File
                     {
                         Thread.Sleep(100);
                         if (homeCancel)
@@ -160,8 +164,6 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 100; }));
                 this.Invoke(new MethodInvoker(delegate { homeBarBottom.Value = 100; }));
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Download Complete"; }));
-                this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "All Files Present"; }));
-                this.Invoke(new MethodInvoker(delegate { homeLabelTopBar.Text = "Ready!"; }));
             }
             if (aD_totalSize != 0)
             {
@@ -256,11 +258,7 @@ namespace AtomLauncher
             }
             else
             {
-                if (homeBarTop.Value != 100)
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeLabelBottom.Text = "100%"; }));
-                    this.Invoke(new MethodInvoker(delegate { homeBarTop.Value = 100; }));
-                }
+                downloadBusy = false;
                 if (!homeCancel)
                 {
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Completed"; }));

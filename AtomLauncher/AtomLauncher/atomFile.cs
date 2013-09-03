@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.IO;
 
 namespace AtomLauncher
@@ -13,6 +14,31 @@ namespace AtomLauncher
         // config File Location.
         public static string usersFile = @".\ALData";
         public static string conigFile = @".\ALConfig.alcfg";
+        
+        public static void queueDelete(string location)
+        {
+            Thread delQuT = new Thread(() => deleteThread(location));
+            delQuT.Start();
+        }
+
+        public static void deleteThread(string location)
+        {
+            while (true)
+            {
+                try
+                {
+                    File.Delete(location);
+                }
+                catch
+                {
+                    Thread.Sleep(1000);
+                }
+                if (!File.Exists(location))
+                {
+                    break;
+                }
+            }
+        }
 
         public static void saveConfFile(string location, Dictionary<string, string> dict)
         {

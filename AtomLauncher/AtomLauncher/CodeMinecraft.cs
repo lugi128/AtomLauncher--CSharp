@@ -18,9 +18,46 @@ namespace AtomLauncher
         public string CMC_open(string username, string password, bool save, bool auto)
         {
             string status = "";
+            Dictionary<int, string[]> downloadInput = new Dictionary<int, string[]>();
+            string argLocation = Program.config["minecraft_location"];
+
+            aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, argLocation);
+            aJ_mcVersions = aJ_readJsonVer(argLocation + @"\versions.json");
+            status = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
+
+            atomFile.queueDelete(argLocation + @"\versions.json");
+
+            if (homeCancel) return status;
+
+            aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + aJ_mcVersions["latestids"][0] + "/", aJ_mcVersions["latestids"][0] + ".json", @"versions\" + aJ_mcVersions["latestids"][0] } } }, argLocation);
+            aJ_mcVerGame = aJ_readJsonGame(argLocation + @"\versions\" + aJ_mcVersions["latestids"][0] + @"\" + aJ_mcVersions["latestids"][0] + ".json");
+            status = aJ_mcVerGame["Status"][0] + ", " + aJ_mcVerGame["Status"][1];
+
+            if (homeCancel) return status;
+
             if (Convert.ToBoolean(Program.config["minecraft_onlineMode"]))
             {
                 status = CMC_webLogin(username, password, save, auto);
+                if (status == "Successful")
+                {
+                    aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/", "Minecraft.Resources", @".\" } } }, argLocation);
+                    int x = 0;
+                    foreach (string entry in aJ_mcVerGame["Libraries"])
+                    {
+                        downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(aJ_mcVerGame["Libraries"][x]) + "/", Path.GetFileName(aJ_mcVerGame["Libraries"][x]), @"libraries\" + Path.GetDirectoryName(aJ_mcVerGame["Libraries"][x]) });
+                        x++;
+                    }
+                    int y = 0;
+                    foreach (string entry in aJ_mcVerGame["Natives"])
+                    {
+                        downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(aJ_mcVerGame["Natives"][y]) + "/", Path.GetFileName(aJ_mcVerGame["Natives"][y]), @"libraries\" + Path.GetDirectoryName(aJ_mcVerGame["Natives"][y]) });
+                        x++;
+                        y++;
+                    }
+                    downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + aJ_mcVerGame["ID"][0] + "/", aJ_mcVerGame["ID"][0] + ".jar", @"versions\" + aJ_mcVerGame["ID"][0] });
+                    x++;
+                    aD_DownloadFileDict(downloadInput, argLocation);
+                }
             }
             else
             {
@@ -28,7 +65,7 @@ namespace AtomLauncher
             }
             if (homeCancel != true)
             {
-                if (status == "Successful")
+                if (status == "Successful dasdasds")
                 {
                     string javaCMD = @"javaw";
                     if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
@@ -53,7 +90,7 @@ namespace AtomLauncher
                         }
                     }
 
-                    //Download Minecraft and Assets research.
+                    // Download Minecraft and Assets research.
                     // Discovered https://s3.amazonaws.com/Minecraft.Download/libraries/org/lwjgl/lwjgl/lwjgl-platform/2.9.0/lwjgl-platform-2.9.0-natives-windows.jar
                     // https://s3.amazonaws.com/Minecraft.Download/versions/versions.json returns list of versions.
                     // https://s3.amazonaws.com/Minecraft.Download/versions/id/id.json Where ID is the latest version will return required files. ... Awesome.
@@ -61,13 +98,8 @@ namespace AtomLauncher
                     // https://s3.amazonaws.com/Minecraft.Download/versions/1.6.2/1.6.2.jar
                     // https://s3.amazonaws.com/MinecraftDownload Returns a list of files.
                     // http://assets.minecraft.net also returns a list of files.
-                    //
-                    // put on stackoverflow. https://jira.forkk.net/browse/MMCFOUR-3
-                    // Test if libraries are auto downloaded with my launcher.
 
                     string version = "1.6.2";
-                    string argLocation = Program.config["minecraft_location"];
-
                     string argSrtRam = "-Xms" + Program.config["minecraft_startRam"] + "m ";
                     string argMaxRam = "-Xmx" + Program.config["minecraft_maxRam"] + "m ";
                     string argNatives = "-Djava.library.path=" + argLocation + @"\versions\" + version + @"\" + version + "-natives";
