@@ -137,6 +137,21 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeLabelBottomBar.Text = (Convert.ToDouble(aD_totalRecieved) / 1024 / 1024).ToString("0.00") + " Mb's" + "  /  " + (Convert.ToDouble(aD_totalSize) / 1024 / 1024).ToString("0.00") + " Mb's"; }));
             }
         }
+        
+        public void aD_DownloadFileSingle(string urlAddress, string location, string file) // Doesnt work...
+        {
+            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Downloading " + file); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            downloadBusy = true;
+            aD_DownloadFile(urlAddress, location, file); // Start downloading the file
+            while (downloadBusy) // Wait for Complete File
+            {
+                Thread.Sleep(100);
+                if (homeCancel)
+                {
+                    break;
+                }
+            }
+        }
 
         public void aD_DownloadFile(string urlAddress, string location, string file)
         {

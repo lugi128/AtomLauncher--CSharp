@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 
 namespace AtomLauncher
 {
@@ -22,15 +23,24 @@ namespace AtomLauncher
         }
         public static void deleteThread(string location)
         {
+            int x = 0;
             while (true)
             {
                 try
                 {
                     File.Delete(location);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Thread.Sleep(1000);
+                    if (x > 10)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    else
+                    {
+                        x++;
+                        Thread.Sleep(1000);
+                    }
                 }
                 if (!File.Exists(location))
                 {

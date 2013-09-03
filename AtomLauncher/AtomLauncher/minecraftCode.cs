@@ -41,11 +41,9 @@ namespace AtomLauncher
             Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
             string argLocation = Program.config["minecraft_location"];
 
-            aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, argLocation);
+            aD_DownloadFileSingle("http://s3.amazonaws.com/Minecraft.Download/versions/", argLocation, "versions.json");
             mC_mcVersions = aJ_readJsonVer(argLocation + @"\versions.json");
-            status = mC_mcVersions["Status"][0] + ", " + mC_mcVersions["Status"][1];
-
-            atomFileCode.queueDelete(argLocation + @"\versions.json");
+            //atomFileCode.queueDelete(argLocation + @"\versions.json");
 
             if (homeCancel) return status;
             if (!File.Exists(argLocation + @"\versions\" + mC_mcVersions["latestids"][0] + @"\" + mC_mcVersions["latestids"][0] + ".json"))
