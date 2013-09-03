@@ -1,6 +1,6 @@
 ﻿namespace AtomLauncher
 {
-    partial class gameSettings
+    partial class customGameSettings
     {
         /// <summary>
         /// Required designer variable.

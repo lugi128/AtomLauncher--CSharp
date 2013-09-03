@@ -41,7 +41,7 @@ namespace AtomLauncher
 
     /////////////////////////////////////
     // Start - Encrypt Section
-        public static class StringCipher
+        public static class cipherCode
         {
             /////////////////////////////////////
             // Start - Get Machine Id for Encrypt

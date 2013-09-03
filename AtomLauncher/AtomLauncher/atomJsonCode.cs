@@ -11,23 +11,6 @@ namespace AtomLauncher
     public partial class Launcher
     {
 
-        Dictionary<string, string[]> aJ_mcVersions = new Dictionary<string, string[]>{
-            //  {"versionsid1.6.2", new string[] { "1.6.2" , "release"       }},
-            //  {"latestids"      , new string[] { "1.6.2" , "w13d12"        }},
-                {"Trash"          , new string[] { "None" }},
-                {"Status"         , new string[] { "None"   , "Error Aj_V_01" }}
-        };
-        Dictionary<string, string[]> aJ_mcVerGame = new Dictionary<string, string[]>{
-                {"ID"                  , new string[] { "None" }},
-                {"Type"                , new string[] { "None" }},
-                {"ProcessArguments"    , new string[] { "None" }},
-                {"MinecraftArguments"  , new string[] { "None" }},
-                {"Libraries"           , new string[] { "None" }},
-                {"Natives"             , new string[] { "None" }},
-                {"mainClass"           , new string[] { "None" }},
-                {"Status"              , new string[] { "None" , "Error Aj_vG_01" }}
-        };
-
         public Dictionary<string, string[]> aJ_readJsonGame(string location)
         {
             Dictionary<string, string[]> tmpDict = new Dictionary<string, string[]>{
@@ -60,7 +43,7 @@ namespace AtomLauncher
                 {
                     if (inLibraries)
                     {
-                        jsonLine = Regex.Replace(fileArray[y], "[ \",]", "");
+                        jsonLine = Regex.Replace(fileArray[y], "[\t\n\r \",]", "");
                         string[] jsonKeyValue = jsonLine.Split(new char[] { ':' }, 2);
                         if (jsonKeyValue[0] == "name" && !jsonKeyValue[1].Contains("-nightly-") && jsonKeyValue[1] != "osx")
                         {
@@ -78,7 +61,7 @@ namespace AtomLauncher
                                 }
                             }
                             locationLine = locationLine + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2];
-                            if (fileArray[y + 1].Contains("\"natives\":"))
+                            if (fileArray[y].Contains("-platform"))
                             {
                                 if (z > tmpNativeArray.Length - 1)
                                 {
@@ -100,7 +83,7 @@ namespace AtomLauncher
                     }
                     else
                     {
-                        jsonLine = Regex.Replace(fileArray[y], "[ \",]", "");
+                        jsonLine = Regex.Replace(fileArray[y], "[\t\n\r \",]", "");
                         string[] jsonKeyValue = jsonLine.Split(new char[] { ':' }, 2);
                         if (jsonKeyValue[0] == "id")
                         {
@@ -142,6 +125,21 @@ namespace AtomLauncher
             tmpDict["Libraries"] = tmpLibrariesArray;
             tmpDict["Natives"] = tmpNativeArray;
             tmpDict["Status"] = new string[] { "Successful", "GameVersion File Scanned" };
+            foreach (KeyValuePair<string, string[]> entry in tmpDict)
+            {
+                if (entry.Key == "Libraries" || entry.Key == "Natives")
+                {
+                    foreach (string line in entry.Value)
+                    {
+                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(line); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                    }
+                }
+                else
+                {
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Value[0]); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+                }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            }
             return tmpDict;
         }
 

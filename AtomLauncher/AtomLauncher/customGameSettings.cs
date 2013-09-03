@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace AtomLauncher
 {
-    public partial class gameSettings : Form
+    public partial class customGameSettings : Form
     {
-        public gameSettings()
+        public customGameSettings()
         {
             InitializeComponent();
         }

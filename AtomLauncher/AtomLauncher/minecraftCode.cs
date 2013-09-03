@@ -12,26 +12,48 @@ namespace AtomLauncher
 {
     public partial class Launcher
     {
+        //aJ_readJsonVer
+        Dictionary<string, string[]> mC_mcVersions = new Dictionary<string, string[]>{
+            //  {"versionsid1.6.2", new string[] { "1.6.2" , "release"       }},
+            //  {"latestids"      , new string[] { "1.6.2" , "w13d12"        }},
+                {"Trash"          , new string[] { "None" }},
+                {"Status"         , new string[] { "None"   , "Error Aj_V_01" }}
+        };
+
+        //aJ_readJsonGame
+        Dictionary<string, string[]> mC_mcVerGame = new Dictionary<string, string[]>{
+                {"ID"                  , new string[] { "None" }},
+                {"Type"                , new string[] { "None" }},
+                {"ProcessArguments"    , new string[] { "None" }},
+                {"MinecraftArguments"  , new string[] { "None" }},
+                {"Libraries"           , new string[] { "None" }},
+                {"Natives"             , new string[] { "None" }},
+                {"mainClass"           , new string[] { "None" }},
+                {"Status"              , new string[] { "None" , "Error Aj_vG_01" }}
+        };
+
         string CMC_mcName = "";
         string CMC_mcSession = "";
 
         public string CMC_open(string username, string password, bool save, bool auto)
         {
             string status = "";
-            Dictionary<int, string[]> downloadInput = new Dictionary<int, string[]>();
+            Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
             string argLocation = Program.config["minecraft_location"];
 
             aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, argLocation);
-            aJ_mcVersions = aJ_readJsonVer(argLocation + @"\versions.json");
-            status = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
+            mC_mcVersions = aJ_readJsonVer(argLocation + @"\versions.json");
+            status = mC_mcVersions["Status"][0] + ", " + mC_mcVersions["Status"][1];
 
-            atomFile.queueDelete(argLocation + @"\versions.json");
+            atomFileCode.queueDelete(argLocation + @"\versions.json");
 
             if (homeCancel) return status;
-
-            aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + aJ_mcVersions["latestids"][0] + "/", aJ_mcVersions["latestids"][0] + ".json", @"versions\" + aJ_mcVersions["latestids"][0] } } }, argLocation);
-            aJ_mcVerGame = aJ_readJsonGame(argLocation + @"\versions\" + aJ_mcVersions["latestids"][0] + @"\" + aJ_mcVersions["latestids"][0] + ".json");
-            status = aJ_mcVerGame["Status"][0] + ", " + aJ_mcVerGame["Status"][1];
+            if (!File.Exists(argLocation + @"\versions\" + mC_mcVersions["latestids"][0] + @"\" + mC_mcVersions["latestids"][0] + ".json"))
+            {
+                aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + mC_mcVersions["latestids"][0] + "/", mC_mcVersions["latestids"][0] + ".json", @"versions\" + mC_mcVersions["latestids"][0] } } }, argLocation);
+            }
+            mC_mcVerGame = aJ_readJsonGame(argLocation + @"\versions\" + mC_mcVersions["latestids"][0] + @"\" + mC_mcVersions["latestids"][0] + ".json");
+            status = mC_mcVerGame["Status"][0] + ", " + mC_mcVerGame["Status"][1];
 
             if (homeCancel) return status;
 
@@ -40,22 +62,22 @@ namespace AtomLauncher
                 status = CMC_webLogin(username, password, save, auto);
                 if (status == "Successful")
                 {
-                    aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/", "Minecraft.Resources", @".\" } } }, argLocation);
                     int x = 0;
-                    foreach (string entry in aJ_mcVerGame["Libraries"])
+                    foreach (string entry in mC_mcVerGame["Libraries"])
                     {
-                        downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(aJ_mcVerGame["Libraries"][x]) + "/", Path.GetFileName(aJ_mcVerGame["Libraries"][x]), @"libraries\" + Path.GetDirectoryName(aJ_mcVerGame["Libraries"][x]) });
+                        fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(mC_mcVerGame["Libraries"][x]).Replace(@"\", "/") + "/", Path.GetFileName(mC_mcVerGame["Libraries"][x]), @"libraries\" + Path.GetDirectoryName(mC_mcVerGame["Libraries"][x]) });
                         x++;
                     }
                     int y = 0;
-                    foreach (string entry in aJ_mcVerGame["Natives"])
+                    foreach (string entry in mC_mcVerGame["Natives"])
                     {
-                        downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(aJ_mcVerGame["Natives"][y]) + "/", Path.GetFileName(aJ_mcVerGame["Natives"][y]), @"libraries\" + Path.GetDirectoryName(aJ_mcVerGame["Natives"][y]) });
+                        fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(mC_mcVerGame["Natives"][y]).Replace(@"\", "/") + "/", Path.GetFileName(mC_mcVerGame["Natives"][y]), @"libraries\" + Path.GetDirectoryName(mC_mcVerGame["Natives"][y]) });
                         x++;
                         y++;
                     }
-                    downloadInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + aJ_mcVerGame["ID"][0] + "/", aJ_mcVerGame["ID"][0] + ".jar", @"versions\" + aJ_mcVerGame["ID"][0] });
+                    fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + mC_mcVerGame["ID"][0] + "/", mC_mcVerGame["ID"][0] + ".jar", @"versions\" + mC_mcVerGame["ID"][0] });
                     x++;
+                    Dictionary<int, string[]> downloadInput = atomFileCode.checkReqFiles(fileInput, argLocation);
                     aD_DownloadFileDict(downloadInput, argLocation);
                 }
             }
@@ -65,7 +87,7 @@ namespace AtomLauncher
             }
             if (homeCancel != true)
             {
-                if (status == "Successful dasdasds")
+                if (status == "Successful")
                 {
                     string javaCMD = @"javaw";
                     if (Convert.ToBoolean(Program.config["minecraft_displayCMD"]))
@@ -154,7 +176,7 @@ namespace AtomLauncher
 
                     string pre16Args = argSrtRam + " " + argMaxRam + " -cp " + argLocation + @"\bin\* -Djava.library.path=" + argLocation + @"\bin\natives net.minecraft.client.Minecraft " + CMC_mcName + " " + CMC_mcSession;
                     Process mcProc = new Process();
-                    //mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on my laptop. // Get more info on this and perhaps make it automatic and/or optional.
+                    mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on my laptop. // Get more info on this and perhaps make it automatic and/or optional.
                     mcProc.StartInfo.FileName = javaCMD;
                     mcProc.StartInfo.Arguments = buildArgs;
                     mcProc.Start();
@@ -230,11 +252,11 @@ namespace AtomLauncher
                 CMC_mcSession = mcLoginData[3];
                 if (save)
                 {
-                    atomFile.writeLoginFile(username, password, atomFile.usersFile, "minecraft", auto);
+                    atomFileCode.writeLoginFile(username, password, atomFileCode.usersFile, "minecraft", auto);
                 }
                 else
                 {
-                    atomFile.removeLoginLine(atomFile.usersFile, "minecraft", username);
+                    atomFileCode.removeLoginLine(atomFileCode.usersFile, "minecraft", username);
                 }
                 return "Successful";
             }

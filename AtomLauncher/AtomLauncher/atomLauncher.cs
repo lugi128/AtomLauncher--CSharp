@@ -18,7 +18,7 @@ namespace AtomLauncher
     public partial class Launcher : Form
     {
         string gameSelect = "minecraft";
-        bool homeCancel = false; // Varible that changes when cancel is pressed.
+        public static bool homeCancel = false; // Varible that changes when cancel is pressed.
 
         public Launcher()
         {
@@ -45,7 +45,7 @@ namespace AtomLauncher
 
         private void homeUserText_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] tmpPassAr = atomFile.readLoginFileUser(gameSelect, atomFile.usersFile, homeUserText.Text);
+            string[] tmpPassAr = atomFileCode.readLoginFileUser(gameSelect, atomFileCode.usersFile, homeUserText.Text);
             homePassText.Text = tmpPassAr[2];
         }
 
@@ -78,14 +78,14 @@ namespace AtomLauncher
 
         private void loadThread()
         {
-            atomFile.removeLoginLine(atomFile.usersFile, "", "");
-            Program.config = atomFile.loadConfFile(atomFile.conigFile);
+            atomFileCode.removeLoginLine(atomFileCode.usersFile, "", "");
+            Program.config = atomFileCode.loadConfFile(atomFileCode.conigFile);
 
-            if (File.Exists(atomFile.usersFile))
+            if (File.Exists(atomFileCode.usersFile))
             {
                 //configFile has Selected "minecraft"
                 //Change to form game type at this point.
-                string[,] tmpArray = atomFile.readLoginFileAll(gameSelect, atomFile.usersFile);
+                string[,] tmpArray = atomFileCode.readLoginFileAll(gameSelect, atomFileCode.usersFile);
                 if (tmpArray[0, 0] != "false")
                 {
                     for (int i = 0; i < tmpArray.GetLength(0); i++)

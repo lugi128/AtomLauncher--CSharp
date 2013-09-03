@@ -7,7 +7,7 @@ using System.IO;
 
 namespace AtomLauncher
 {
-    public class atomFile
+    public class atomFileCode
     {
         /////////////////////////////////////
         // Start - File Usage
@@ -20,7 +20,6 @@ namespace AtomLauncher
             Thread delQuT = new Thread(() => deleteThread(location));
             delQuT.Start();
         }
-
         public static void deleteThread(string location)
         {
             while (true)
@@ -38,6 +37,48 @@ namespace AtomLauncher
                     break;
                 }
             }
+        }
+
+        public static Dictionary<int, string[]> checkReqFiles(Dictionary<int, string[]> dict, string location)
+        {
+            Dictionary<int, string[]> tmpDict = new Dictionary<int, string[]>();
+            int l = 0;
+            int x = 0;
+            while (l < dict.Count) //Get File sizes before downloading everything.
+            {
+                if (File.Exists(location + @"\" + dict[l][2] + @"\" + dict[l][1]))
+                {
+                    //string localChecksum = "ff344e7bc6007fade349565d545fd3e7"; //Development Temp.
+                    //string fileChecksum = "";
+                    //using (var md5 = MD5.Create())
+                    //{
+                    //    using (var stream = File.OpenRead(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
+                    //    {
+                    //        fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                    //    }
+                    //}
+                    //if (l == 1)
+                    //{
+                    //    if (fileChecksum != localChecksum)
+                    //    {
+                    //        doSkip = true;
+                    //        tmpDict.Add(x, urlAddress[l]);
+                    //        x++;
+                    //    }
+                    //}
+                }
+                else
+                {
+                    tmpDict.Add(x, dict[l]);
+                    x++;
+                }
+                l++;
+                if (Launcher.homeCancel)
+                {
+                    break;
+                }
+            }
+            return tmpDict;
         }
 
         public static void saveConfFile(string location, Dictionary<string, string> dict)
@@ -119,12 +160,12 @@ namespace AtomLauncher
             return dict;
         }
 
-        // Username, Password, File name (Usually @"./AEUsers"), game ("minecraft")
+        // Username, Password, File name (Usually @"./ALData"), game ("minecraft")
         // possible multiple logins idea, return multiple dictionarys with array
         // also look for name of login as well. before saving.
         public static void writeLoginFile(string accName, string accPass, string location, string game, bool auto)
         {
-            string saveString = StringCipher.Encrypt(game + ":" + accName + ":" + accPass + ":" + auto.ToString(), StringCipher.uniqueMachineId());
+            string saveString = cipherCode.Encrypt(game + ":" + accName + ":" + accPass + ":" + auto.ToString(), cipherCode.uniqueMachineId());
             bool gameSaved = false;
             if (File.Exists(location))
             {
@@ -133,7 +174,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[i] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[i], cipherCode.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {
@@ -166,7 +207,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[i] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[i], cipherCode.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {
@@ -202,7 +243,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[x] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[x], cipherCode.uniqueMachineId());
                         lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game)
                         {
@@ -232,7 +273,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[x] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[x], cipherCode.uniqueMachineId());
                         lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {

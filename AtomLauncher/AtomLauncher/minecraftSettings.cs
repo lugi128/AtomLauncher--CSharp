@@ -189,7 +189,7 @@ namespace AtomLauncher
 
         private void mcButtonDefaults_Click(object sender, EventArgs e)
         {
-            Program.config = atomFile.loadConfDefaults("minecraft");
+            Program.config = atomFileCode.loadConfDefaults("minecraft");
             fillForm();
         }
 
@@ -210,7 +210,7 @@ namespace AtomLauncher
             Program.config["minecraft_onlineMode"] = mcCheckOnline.Checked.ToString();
             Program.config["minecraft_autoSelect"] = mcCheckAutoJava.Checked.ToString();
             Program.config["minecraft_force64Bit"] = mcRadio64bitJava.Checked.ToString();
-            atomFile.saveConfFile(atomFile.conigFile, Program.config);
+            atomFileCode.saveConfFile(atomFileCode.conigFile, Program.config);
             //Possibly add a way to keep the dialog from makeing the main window from falling.
             //Like Launcher.Activate(); or sotmhing.
             this.Close();

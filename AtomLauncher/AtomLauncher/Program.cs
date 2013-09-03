@@ -18,7 +18,7 @@ namespace AtomLauncher
         //Dictionary<string, string> 
         static void Main(string[] args)
         {
-            atomArgs = atomFile.loadArgs(args);
+            atomArgs = atomFileCode.loadArgs(args);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

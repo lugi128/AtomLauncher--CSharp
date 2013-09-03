@@ -103,21 +103,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="atomDownload.cs">
+    <Compile Include="atomDownloadCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="atomFile.cs" />
-    <Compile Include="atomJson.cs">
+    <Compile Include="atomFileCode.cs" />
+    <Compile Include="atomJsonCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CodeMinecraft.cs">
+    <Compile Include="minecraftCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="gameSettings.cs">
+    <Compile Include="customGameSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="gameSettings.Designer.cs">
-      <DependentUpon>gameSettings.cs</DependentUpon>
+    <Compile Include="customGameSettings.Designer.cs">
+      <DependentUpon>customGameSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="minecraftSettings.cs">
       <SubType>Form</SubType>
@@ -125,17 +125,17 @@
     <Compile Include="minecraftSettings.Designer.cs">
       <DependentUpon>minecraftSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="StringCipher.cs" />
-    <Compile Include="Launcher.cs">
+    <Compile Include="cipherCode.cs" />
+    <Compile Include="atomLauncher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Launcher.Designer.cs">
-      <DependentUpon>Launcher.cs</DependentUpon>
+    <Compile Include="atomLauncher.Designer.cs">
+      <DependentUpon>atomLauncher.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Launcher.resx">
-      <DependentUpon>Launcher.cs</DependentUpon>
+    <EmbeddedResource Include="atomLauncher.resx">
+      <DependentUpon>atomLauncher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="minecraftSettings.resx">
       <DependentUpon>minecraftSettings.cs</DependentUpon>
