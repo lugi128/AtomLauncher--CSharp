@@ -187,7 +187,7 @@
             // 
             this.homeLabelBottom.Location = new System.Drawing.Point(8, 168);
             this.homeLabelBottom.Name = "homeLabelBottom";
-            this.homeLabelBottom.Size = new System.Drawing.Size(312, 13);
+            this.homeLabelBottom.Size = new System.Drawing.Size(312, 16);
             this.homeLabelBottom.TabIndex = 9;
             this.homeLabelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -237,9 +237,12 @@
             // 
             // homeTextBoxGeneral
             // 
+            this.homeTextBoxGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.homeTextBoxGeneral.DetectUrls = false;
             this.homeTextBoxGeneral.Location = new System.Drawing.Point(324, 28);
             this.homeTextBoxGeneral.Name = "homeTextBoxGeneral";
             this.homeTextBoxGeneral.ReadOnly = true;
+            this.homeTextBoxGeneral.ShowSelectionMargin = true;
             this.homeTextBoxGeneral.Size = new System.Drawing.Size(312, 416);
             this.homeTextBoxGeneral.TabIndex = 11;
             this.homeTextBoxGeneral.Text = "";
@@ -247,34 +250,33 @@
             // 
             // homeLabelDLSpeed
             // 
-            this.homeLabelDLSpeed.Location = new System.Drawing.Point(200, 392);
+            this.homeLabelDLSpeed.Location = new System.Drawing.Point(204, 400);
             this.homeLabelDLSpeed.Name = "homeLabelDLSpeed";
-            this.homeLabelDLSpeed.Size = new System.Drawing.Size(121, 12);
+            this.homeLabelDLSpeed.Size = new System.Drawing.Size(117, 16);
             this.homeLabelDLSpeed.TabIndex = 12;
             this.homeLabelDLSpeed.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // homeLabelDLFile
             // 
-            this.homeLabelDLFile.Location = new System.Drawing.Point(4, 404);
+            this.homeLabelDLFile.Location = new System.Drawing.Point(4, 400);
             this.homeLabelDLFile.Name = "homeLabelDLFile";
-            this.homeLabelDLFile.Size = new System.Drawing.Size(192, 12);
+            this.homeLabelDLFile.Size = new System.Drawing.Size(196, 16);
             this.homeLabelDLFile.TabIndex = 13;
             this.homeLabelDLFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // homeLabelDLTotal
             // 
-            this.homeLabelDLTotal.Location = new System.Drawing.Point(200, 404);
+            this.homeLabelDLTotal.Location = new System.Drawing.Point(164, 388);
             this.homeLabelDLTotal.Name = "homeLabelDLTotal";
-            this.homeLabelDLTotal.Size = new System.Drawing.Size(121, 12);
+            this.homeLabelDLTotal.Size = new System.Drawing.Size(157, 16);
             this.homeLabelDLTotal.TabIndex = 12;
-            this.homeLabelDLTotal.Text = "- / -";
             this.homeLabelDLTotal.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // homeLabelDLTotalFile
             // 
-            this.homeLabelDLTotalFile.Location = new System.Drawing.Point(4, 392);
+            this.homeLabelDLTotalFile.Location = new System.Drawing.Point(4, 388);
             this.homeLabelDLTotalFile.Name = "homeLabelDLTotalFile";
-            this.homeLabelDLTotalFile.Size = new System.Drawing.Size(192, 12);
+            this.homeLabelDLTotalFile.Size = new System.Drawing.Size(156, 16);
             this.homeLabelDLTotalFile.TabIndex = 13;
             this.homeLabelDLTotalFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 

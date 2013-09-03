@@ -41,17 +41,21 @@ namespace AtomLauncher
             Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
             string argLocation = Program.config["minecraft_location"];
 
-            aD_DownloadFileSingle("http://s3.amazonaws.com/Minecraft.Download/versions/", argLocation, "versions.json");
+            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Checking Latest Version"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            aD_DownloadFileSingle("http://s3.amazonaws.com/Minecraft.Download/versions/versions.json", argLocation, "versions.json", true);
             mC_mcVersions = aJ_readJsonVer(argLocation + @"\versions.json");
-            //atomFileCode.queueDelete(argLocation + @"\versions.json");
+            atomFileCode.queueDelete(argLocation + @"\versions.json");
 
             if (homeCancel) return status;
             if (!File.Exists(argLocation + @"\versions\" + mC_mcVersions["latestids"][0] + @"\" + mC_mcVersions["latestids"][0] + ".json"))
             {
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Latest Version does not exist."); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                 aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + mC_mcVersions["latestids"][0] + "/", mC_mcVersions["latestids"][0] + ".json", @"versions\" + mC_mcVersions["latestids"][0] } } }, argLocation);
             }
+            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Scanning Jar Version"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
             mC_mcVerGame = aJ_readJsonGame(argLocation + @"\versions\" + mC_mcVersions["latestids"][0] + @"\" + mC_mcVersions["latestids"][0] + ".json");
             status = mC_mcVerGame["Status"][0] + ", " + mC_mcVerGame["Status"][1];
+            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(status); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
 
             if (homeCancel) return status;
 
@@ -61,12 +65,14 @@ namespace AtomLauncher
                 if (status == "Successful")
                 {
                     int x = 0;
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Placeing Trees"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                     foreach (string entry in mC_mcVerGame["Libraries"])
                     {
                         fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(mC_mcVerGame["Libraries"][x]).Replace(@"\", "/") + "/", Path.GetFileName(mC_mcVerGame["Libraries"][x]), @"libraries\" + Path.GetDirectoryName(mC_mcVerGame["Libraries"][x]) });
                         x++;
                     }
                     int y = 0;
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Throwing Eggs"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                     foreach (string entry in mC_mcVerGame["Natives"])
                     {
                         fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + Path.GetDirectoryName(mC_mcVerGame["Natives"][y]).Replace(@"\", "/") + "/", Path.GetFileName(mC_mcVerGame["Natives"][y]), @"libraries\" + Path.GetDirectoryName(mC_mcVerGame["Natives"][y]) });
@@ -75,7 +81,9 @@ namespace AtomLauncher
                     }
                     fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + mC_mcVerGame["ID"][0] + "/", mC_mcVerGame["ID"][0] + ".jar", @"versions\" + mC_mcVerGame["ID"][0] });
                     x++;
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Growing Wheat"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                     Dictionary<int, string[]> downloadInput = atomFileCode.checkReqFiles(fileInput, argLocation);
+                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Crafting Blocks"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                     aD_DownloadFileDict(downloadInput, argLocation);
                 }
             }
@@ -220,7 +228,7 @@ namespace AtomLauncher
 
             using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
             {
-                this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Connecting to Minecraft.net..."; }));
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Connecting Redstone... ... "); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                 try
                 {
                     System.Collections.Specialized.NameValueCollection urlData = new System.Collections.Specialized.NameValueCollection();
@@ -256,10 +264,12 @@ namespace AtomLauncher
                 {
                     atomFileCode.removeLoginLine(atomFileCode.usersFile, "minecraft", username);
                 }
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Lamp On"); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                 return "Successful";
             }
             else
             {
+                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("Minecraft No Like Redstone."); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
                 return mcURLData;
             }
         }

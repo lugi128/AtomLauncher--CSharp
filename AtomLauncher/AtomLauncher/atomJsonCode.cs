@@ -125,21 +125,21 @@ namespace AtomLauncher
             tmpDict["Libraries"] = tmpLibrariesArray;
             tmpDict["Natives"] = tmpNativeArray;
             tmpDict["Status"] = new string[] { "Successful", "GameVersion File Scanned" };
-            foreach (KeyValuePair<string, string[]> entry in tmpDict)
-            {
-                if (entry.Key == "Libraries" || entry.Key == "Natives")
-                {
-                    foreach (string line in entry.Value)
-                    {
-                        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(line); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                    }
-                }
-                else
-                {
-                    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Value[0]); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-                }
-                this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
-            }
+            //foreach (KeyValuePair<string, string[]> entry in tmpDict)
+            //{
+            //    if (entry.Key == "Libraries" || entry.Key == "Natives")
+            //    {
+            //        foreach (string line in entry.Value)
+            //        {
+            //            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(line); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //        }
+            //    }
+            //    else
+            //    {
+            //        this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(entry.Value[0]); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //    }
+            //    this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText("======================="); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+            //}
             return tmpDict;
         }
 
