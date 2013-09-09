@@ -118,6 +118,8 @@ namespace AtomLauncher
                 dict["minecraft_displayCMD"] = "False";
                 dict["minecraft_CPUPriority"] = "Normal";
                 dict["minecraft_onlineMode"] = "True";
+                dict["minecraft_offlineName"] = "Player";
+                dict["minecraft_selectVer"] = "1.6.2";
                 dict["minecraft_autoSelect"] = "True";
                 dict["minecraft_force64Bit"] = "False"; //other wise use 32bit
             }

@@ -18,6 +18,8 @@ namespace AtomLauncher
     public partial class Launcher : Form
     {
         string gameSelect = "minecraft";
+        bool luancherLoaded = false;
+
         public static bool homeCancel = false; // Varible that changes when cancel is pressed.
 
         public Launcher()
@@ -40,7 +42,7 @@ namespace AtomLauncher
 
         private void homeSaveLogin_CheckedChanged(object sender, EventArgs e)
         {
-            homeAutoLogin.Enabled = homeSaveLogin.Checked;
+            if (luancherLoaded) homeAutoLogin.Enabled = homeSaveLogin.Checked;
         }
 
         private void homeUserText_SelectedIndexChanged(object sender, EventArgs e)
@@ -101,6 +103,10 @@ namespace AtomLauncher
                 }
             }
 
+            Thread chkv = new Thread(mC_checkVersionList);
+            chkv.IsBackground = true;
+            chkv.Start();
+
             if (homeAutoLogin.Checked == true)
             {
                 Thread a = new Thread(autoLogin);          // Kick off a new thread
@@ -111,6 +117,7 @@ namespace AtomLauncher
             {
                 homeSetControl(true, true);
             }
+            luancherLoaded = true;
         }
 
         private void autoLogin()
@@ -155,7 +162,7 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
                 string threadString = "";
                 this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
-                string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
+                string openStatus = mC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
                 if (openStatus == "Successful")
                 {
                     this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
@@ -185,6 +192,7 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Cancel"; })); //Threading Friendly
             }
         }
+        
         public void enableControls(bool trufal)
         {
             this.Invoke(new MethodInvoker(delegate
