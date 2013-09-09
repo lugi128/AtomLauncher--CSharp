@@ -77,7 +77,7 @@ namespace AtomLauncher
                 {
                     mcLabelStatus.Text = "Note: 64bit Java Not Detected. Ram Limited.";
                 }
-                else
+                else if (mcSetStatus == "No32or64")
                 {
                     mcLabelStatus.Text = "WARNING!: No Java Detected.";
                 }
@@ -102,7 +102,7 @@ namespace AtomLauncher
             {
                 mcRadio32bitJava.Enabled = false;
                 mcRadio64bitJava.Enabled = false;
-                if (mcSetStatus == "No64")
+                if (mcSetStatus == "No64" || mcSetStatus == "No32or64")
                 {
                     resetRamCombo(ramAmmount32);
                 }
@@ -262,7 +262,7 @@ namespace AtomLauncher
             }
             else
             {
-                if (mcSetStatus == "No64")
+                if (mcSetStatus == "No64" || mcSetStatus == "No32or64")
                 {
                     resetRamCombo(ramAmmount32);
                 }
