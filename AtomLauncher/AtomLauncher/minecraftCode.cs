@@ -26,7 +26,9 @@ namespace AtomLauncher
                 {"Type"                , new string[] { "None" }},
                 {"ProcessArguments"    , new string[] { "None" }},
                 {"MinecraftArguments"  , new string[] { "None" }},
+              //{"Libraries"           , new string[] { "net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar" "etc" "etc" }},
                 {"Libraries"           , new string[] { "None" }},
+              //{"Natives"             , new string[] { "net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar" "etc" "etc" }},
                 {"Natives"             , new string[] { "None" }},
                 {"mainClass"           , new string[] { "None" }},
                 {"Status"              , new string[] { "None" , "Error Aj_vG_01" }}
@@ -34,7 +36,6 @@ namespace AtomLauncher
 
         string CMC_mcName = "";
         string CMC_mcSession = "";
-
         public string CMC_open(string username, string password, bool save, bool auto)
         {
             string status = "";
