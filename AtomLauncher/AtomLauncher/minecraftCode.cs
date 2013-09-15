@@ -233,11 +233,15 @@ namespace AtomLauncher
                     javaCMD = mainDrive + @"Windows\SysWOW64\" + javaCMD + ".exe";
                 }
             }
-            this.Invoke(new MethodInvoker(delegate { homeTextBoxGeneral.AppendText(javaCMD); homeTextBoxGeneral.AppendText(Environment.NewLine); }));
+
+            foreach (string entry in mC_mcVerGame["Natives"])
+            {
+                dotNetZip.Extract(mcLocation + @"\libraries\" + entry, mcLocation + @"\versions\" + mC_mcVerGame["ID"][0] + @"\" + mC_mcVerGame["ID"][0] + "-natives-AL74", "META-INF");
+            }
 
             string mcSrtRam = "-Xms" + Program.config["minecraft_startRam"] + "m ";
             string mcMaxRam = "-Xmx" + Program.config["minecraft_maxRam"] + "m ";
-            string mcNatives = "-Djava.library.path=" + mcLocation + @"\versions\" + mC_mcVerGame["ID"][0] + @"\" + mC_mcVerGame["ID"][0] + "-natives";
+            string mcNatives = "-Djava.library.path=" + mcLocation + @"\versions\" + mC_mcVerGame["ID"][0] + @"\" + mC_mcVerGame["ID"][0] + "-natives-AL74";
 
             string mcLibraries = "-cp ";
             foreach (string entry in mC_mcVerGame["Libraries"])
