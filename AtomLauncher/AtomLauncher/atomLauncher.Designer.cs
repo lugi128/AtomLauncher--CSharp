@@ -48,13 +48,17 @@
             this.homeUserText = new System.Windows.Forms.ComboBox();
             this.homeLabelTopBar = new System.Windows.Forms.Label();
             this.homeTextBoxGeneral = new System.Windows.Forms.RichTextBox();
+            this.homeLabelDLSpeed = new System.Windows.Forms.Label();
+            this.homeLabelDLFile = new System.Windows.Forms.Label();
+            this.homeLabelDLTotal = new System.Windows.Forms.Label();
+            this.homeLabelDLTotalFile = new System.Windows.Forms.Label();
             this.homeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // homeStartButton
             // 
             this.homeStartButton.Enabled = false;
-            this.homeStartButton.Location = new System.Drawing.Point(200, 72);
+            this.homeStartButton.Location = new System.Drawing.Point(232, 72);
             this.homeStartButton.Name = "homeStartButton";
             this.homeStartButton.Size = new System.Drawing.Size(87, 31);
             this.homeStartButton.TabIndex = 0;
@@ -67,7 +71,7 @@
             this.homeAutoLogin.AutoSize = true;
             this.homeAutoLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.homeAutoLogin.Enabled = false;
-            this.homeAutoLogin.Location = new System.Drawing.Point(204, 52);
+            this.homeAutoLogin.Location = new System.Drawing.Point(236, 52);
             this.homeAutoLogin.Name = "homeAutoLogin";
             this.homeAutoLogin.Size = new System.Drawing.Size(83, 17);
             this.homeAutoLogin.TabIndex = 1;
@@ -80,7 +84,7 @@
             this.homeSaveLogin.AutoSize = true;
             this.homeSaveLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.homeSaveLogin.Enabled = false;
-            this.homeSaveLogin.Location = new System.Drawing.Point(200, 28);
+            this.homeSaveLogin.Location = new System.Drawing.Point(232, 32);
             this.homeSaveLogin.Name = "homeSaveLogin";
             this.homeSaveLogin.Size = new System.Drawing.Size(86, 17);
             this.homeSaveLogin.TabIndex = 2;
@@ -91,10 +95,10 @@
             // 
             // homeBarTop
             // 
-            this.homeBarTop.Location = new System.Drawing.Point(4, 148);
+            this.homeBarTop.Location = new System.Drawing.Point(4, 416);
             this.homeBarTop.MarqueeAnimationSpeed = 10;
             this.homeBarTop.Name = "homeBarTop";
-            this.homeBarTop.Size = new System.Drawing.Size(284, 11);
+            this.homeBarTop.Size = new System.Drawing.Size(316, 11);
             this.homeBarTop.TabIndex = 3;
             this.homeBarTop.Tag = "";
             // 
@@ -104,7 +108,7 @@
             this.homePassText.Location = new System.Drawing.Point(8, 84);
             this.homePassText.Name = "homePassText";
             this.homePassText.PasswordChar = '*';
-            this.homePassText.Size = new System.Drawing.Size(188, 20);
+            this.homePassText.Size = new System.Drawing.Size(220, 20);
             this.homePassText.TabIndex = 5;
             this.homePassText.UseSystemPasswordChar = true;
             // 
@@ -137,7 +141,7 @@
             this.homeMenuTools});
             this.homeMenu.Location = new System.Drawing.Point(0, 0);
             this.homeMenu.Name = "homeMenu";
-            this.homeMenu.Size = new System.Drawing.Size(293, 24);
+            this.homeMenu.Size = new System.Drawing.Size(641, 24);
             this.homeMenu.TabIndex = 8;
             this.homeMenu.Text = "menuStrip1";
             // 
@@ -181,34 +185,34 @@
             // 
             // homeLabelBottom
             // 
-            this.homeLabelBottom.Location = new System.Drawing.Point(8, 128);
+            this.homeLabelBottom.Location = new System.Drawing.Point(8, 168);
             this.homeLabelBottom.Name = "homeLabelBottom";
-            this.homeLabelBottom.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelBottom.Size = new System.Drawing.Size(312, 16);
             this.homeLabelBottom.TabIndex = 9;
             this.homeLabelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeLabelTop
             // 
-            this.homeLabelTop.Location = new System.Drawing.Point(8, 108);
+            this.homeLabelTop.Location = new System.Drawing.Point(8, 128);
             this.homeLabelTop.Name = "homeLabelTop";
-            this.homeLabelTop.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelTop.Size = new System.Drawing.Size(312, 16);
             this.homeLabelTop.TabIndex = 9;
             this.homeLabelTop.Text = "^.^";
             this.homeLabelTop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeBarBottom
             // 
-            this.homeBarBottom.Location = new System.Drawing.Point(4, 184);
+            this.homeBarBottom.Location = new System.Drawing.Point(4, 432);
             this.homeBarBottom.Name = "homeBarBottom";
-            this.homeBarBottom.Size = new System.Drawing.Size(284, 11);
+            this.homeBarBottom.Size = new System.Drawing.Size(316, 11);
             this.homeBarBottom.TabIndex = 3;
             this.homeBarBottom.Tag = "";
             // 
             // homeLabelBottomBar
             // 
-            this.homeLabelBottomBar.Location = new System.Drawing.Point(8, 200);
+            this.homeLabelBottomBar.Location = new System.Drawing.Point(8, 148);
             this.homeLabelBottomBar.Name = "homeLabelBottomBar";
-            this.homeLabelBottomBar.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelBottomBar.Size = new System.Drawing.Size(312, 13);
             this.homeLabelBottomBar.TabIndex = 9;
             this.homeLabelBottomBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -218,33 +222,73 @@
             this.homeUserText.FormattingEnabled = true;
             this.homeUserText.Location = new System.Drawing.Point(8, 44);
             this.homeUserText.Name = "homeUserText";
-            this.homeUserText.Size = new System.Drawing.Size(188, 21);
+            this.homeUserText.Size = new System.Drawing.Size(220, 21);
             this.homeUserText.TabIndex = 10;
             this.homeUserText.SelectedIndexChanged += new System.EventHandler(this.homeUserText_SelectedIndexChanged);
             // 
             // homeLabelTopBar
             // 
-            this.homeLabelTopBar.Location = new System.Drawing.Point(8, 164);
+            this.homeLabelTopBar.Location = new System.Drawing.Point(8, 108);
             this.homeLabelTopBar.Name = "homeLabelTopBar";
-            this.homeLabelTopBar.Size = new System.Drawing.Size(280, 13);
+            this.homeLabelTopBar.Size = new System.Drawing.Size(312, 16);
             this.homeLabelTopBar.TabIndex = 9;
             this.homeLabelTopBar.Text = "Welcome!";
             this.homeLabelTopBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // homeTextBoxGeneral
             // 
-            this.homeTextBoxGeneral.Location = new System.Drawing.Point(4, 216);
+            this.homeTextBoxGeneral.BackColor = System.Drawing.SystemColors.Window;
+            this.homeTextBoxGeneral.DetectUrls = false;
+            this.homeTextBoxGeneral.Location = new System.Drawing.Point(324, 28);
             this.homeTextBoxGeneral.Name = "homeTextBoxGeneral";
-            this.homeTextBoxGeneral.Size = new System.Drawing.Size(284, 8);
+            this.homeTextBoxGeneral.ReadOnly = true;
+            this.homeTextBoxGeneral.ShowSelectionMargin = true;
+            this.homeTextBoxGeneral.Size = new System.Drawing.Size(312, 416);
             this.homeTextBoxGeneral.TabIndex = 11;
             this.homeTextBoxGeneral.Text = "";
-            this.homeTextBoxGeneral.Visible = false;
+            this.homeTextBoxGeneral.WordWrap = false;
+            // 
+            // homeLabelDLSpeed
+            // 
+            this.homeLabelDLSpeed.Location = new System.Drawing.Point(204, 400);
+            this.homeLabelDLSpeed.Name = "homeLabelDLSpeed";
+            this.homeLabelDLSpeed.Size = new System.Drawing.Size(117, 16);
+            this.homeLabelDLSpeed.TabIndex = 12;
+            this.homeLabelDLSpeed.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // homeLabelDLFile
+            // 
+            this.homeLabelDLFile.Location = new System.Drawing.Point(4, 400);
+            this.homeLabelDLFile.Name = "homeLabelDLFile";
+            this.homeLabelDLFile.Size = new System.Drawing.Size(196, 16);
+            this.homeLabelDLFile.TabIndex = 13;
+            this.homeLabelDLFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // homeLabelDLTotal
+            // 
+            this.homeLabelDLTotal.Location = new System.Drawing.Point(164, 388);
+            this.homeLabelDLTotal.Name = "homeLabelDLTotal";
+            this.homeLabelDLTotal.Size = new System.Drawing.Size(157, 16);
+            this.homeLabelDLTotal.TabIndex = 12;
+            this.homeLabelDLTotal.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
+            // homeLabelDLTotalFile
+            // 
+            this.homeLabelDLTotalFile.Location = new System.Drawing.Point(4, 388);
+            this.homeLabelDLTotalFile.Name = "homeLabelDLTotalFile";
+            this.homeLabelDLTotalFile.Size = new System.Drawing.Size(156, 16);
+            this.homeLabelDLTotalFile.TabIndex = 13;
+            this.homeLabelDLTotalFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // Launcher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(293, 221);
+            this.ClientSize = new System.Drawing.Size(641, 449);
+            this.Controls.Add(this.homeLabelDLTotalFile);
+            this.Controls.Add(this.homeLabelDLFile);
+            this.Controls.Add(this.homeLabelDLTotal);
+            this.Controls.Add(this.homeLabelDLSpeed);
             this.Controls.Add(this.homeTextBoxGeneral);
             this.Controls.Add(this.homeUserText);
             this.Controls.Add(this.homeLabelTop);
@@ -295,6 +339,10 @@
         private System.Windows.Forms.ComboBox homeUserText;
         public System.Windows.Forms.Label homeLabelTopBar;
         private System.Windows.Forms.RichTextBox homeTextBoxGeneral;
+        private System.Windows.Forms.Label homeLabelDLSpeed;
+        private System.Windows.Forms.Label homeLabelDLFile;
+        private System.Windows.Forms.Label homeLabelDLTotal;
+        private System.Windows.Forms.Label homeLabelDLTotalFile;
     }
 }
 

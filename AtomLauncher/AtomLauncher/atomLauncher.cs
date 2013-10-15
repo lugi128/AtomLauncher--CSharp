@@ -18,7 +18,9 @@ namespace AtomLauncher
     public partial class Launcher : Form
     {
         string gameSelect = "minecraft";
-        bool homeCancel = false; // Varible that changes when cancel is pressed.
+        bool luancherLoaded = false;
+
+        public static bool homeCancel = false; // Varible that changes when cancel is pressed.
 
         public Launcher()
         {
@@ -40,12 +42,12 @@ namespace AtomLauncher
 
         private void homeSaveLogin_CheckedChanged(object sender, EventArgs e)
         {
-            homeAutoLogin.Enabled = homeSaveLogin.Checked;
+            if (luancherLoaded) homeAutoLogin.Enabled = homeSaveLogin.Checked;
         }
 
         private void homeUserText_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] tmpPassAr = atomFile.readLoginFileUser(gameSelect, atomFile.usersFile, homeUserText.Text);
+            string[] tmpPassAr = atomFileCode.readLoginFileUser(gameSelect, atomFileCode.usersFile, homeUserText.Text);
             homePassText.Text = tmpPassAr[2];
         }
 
@@ -78,14 +80,14 @@ namespace AtomLauncher
 
         private void loadThread()
         {
-            atomFile.removeLoginLine(atomFile.usersFile, "", "");
-            Program.config = atomFile.loadConfFile(atomFile.conigFile);
+            atomFileCode.removeLoginLine(atomFileCode.usersFile, "", "");
+            Program.config = atomFileCode.loadConfFile(atomFileCode.conigFile);
 
-            if (File.Exists(atomFile.usersFile))
+            if (File.Exists(atomFileCode.usersFile))
             {
                 //configFile has Selected "minecraft"
                 //Change to form game type at this point.
-                string[,] tmpArray = atomFile.readLoginFileAll(gameSelect, atomFile.usersFile);
+                string[,] tmpArray = atomFileCode.readLoginFileAll(gameSelect, atomFileCode.usersFile);
                 if (tmpArray[0, 0] != "false")
                 {
                     for (int i = 0; i < tmpArray.GetLength(0); i++)
@@ -101,6 +103,10 @@ namespace AtomLauncher
                 }
             }
 
+            Thread chkv = new Thread(mC_checkVersionList);
+            chkv.IsBackground = true;
+            chkv.Start();
+
             if (homeAutoLogin.Checked == true)
             {
                 Thread a = new Thread(autoLogin);          // Kick off a new thread
@@ -111,6 +117,7 @@ namespace AtomLauncher
             {
                 homeSetControl(true, true);
             }
+            luancherLoaded = true;
         }
 
         private void autoLogin()
@@ -155,26 +162,22 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = "Working..."; })); //Threading Friendly
                 string threadString = "";
                 this.Invoke(new MethodInvoker(delegate { threadString = homeUserText.Text; })); //Threading Friendly, Required for some weird reason.
-                string openStatus = CMC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
-                //aD_DownloadFileDict(new Dictionary<int, string[]> { { 0, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/", "versions.json", @".\" } } }, @".\");
-                //aJ_mcVersions = aJ_readJsonVer(@".\versions.json");
-                //string openStatus = aJ_mcVersions["Status"][0] + ", " + aJ_mcVersions["Status"][1];
+                string openStatus = mC_open(threadString, homePassText.Text, homeSaveLogin.Checked, homeAutoLogin.Checked);
                 if (openStatus == "Successful")
                 {
                     this.Invoke(new MethodInvoker(delegate { this.Close(); })); //Threading Freindly, Basic code is "this.Close()"
                 }
                 else
                 {
+                    homeSetControl(true, true);
                     this.Invoke(new MethodInvoker(delegate { homeLabelTop.Text = openStatus; })); //Threading Friendly
                 }
-                homeSetControl(true, true);
             }
             finally
             {
                 Monitor.Exit(threadLock); //Unlock for use of other threads.
             }
         }
-
 
         private void homeSetControl(bool trufal, bool strbool)
         {
@@ -189,6 +192,7 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { homeStartButton.Text = "Cancel"; })); //Threading Friendly
             }
         }
+        
         public void enableControls(bool trufal)
         {
             this.Invoke(new MethodInvoker(delegate

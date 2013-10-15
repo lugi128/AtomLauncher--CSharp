@@ -2,18 +2,94 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.IO;
+using System.Windows.Forms;
 
 namespace AtomLauncher
 {
-    public class atomFile
+    public class atomFileCode
     {
         /////////////////////////////////////
         // Start - File Usage
-        
         // config File Location.
         public static string usersFile = @".\ALData";
         public static string conigFile = @".\ALConfig.alcfg";
+        
+        public static void queueDelete(string location)
+        {
+            Thread delQuT = new Thread(() => deleteThread(location));
+            delQuT.Start();
+        }
+        public static void deleteThread(string location)
+        {
+            int x = 0;
+            while (true)
+            {
+                try
+                {
+                    File.Delete(location);
+                }
+                catch (Exception ex)
+                {
+                    if (x > 10)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    else
+                    {
+                        x++;
+                        Thread.Sleep(1000);
+                    }
+                }
+                if (!File.Exists(location))
+                {
+                    break;
+                }
+            }
+        }
+
+        public static Dictionary<int, string[]> checkReqFiles(Dictionary<int, string[]> dict, string location)
+        {
+            Dictionary<int, string[]> tmpDict = new Dictionary<int, string[]>();
+            int l = 0;
+            int x = 0;
+            while (l < dict.Count) //Get File sizes before downloading everything.
+            {
+                if (File.Exists(location + @"\" + dict[l][2] + @"\" + dict[l][1]))
+                {
+                    //string localChecksum = "ff344e7bc6007fade349565d545fd3e7"; //Development Temp.
+                    //string fileChecksum = "";
+                    //using (var md5 = MD5.Create())
+                    //{
+                    //    using (var stream = File.OpenRead(location + @"\" + urlAddress[l][2] + @"\" + urlAddress[l][1]))
+                    //    {
+                    //        fileChecksum = BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", "").ToLower();
+                    //    }
+                    //}
+                    //if (l == 1)
+                    //{
+                    //    if (fileChecksum != localChecksum)
+                    //    {
+                    //        doSkip = true;
+                    //        tmpDict.Add(x, urlAddress[l]);
+                    //        x++;
+                    //    }
+                    //}
+                }
+                else
+                {
+                    tmpDict.Add(x, dict[l]);
+                    x++;
+                }
+                l++;
+                if (Launcher.homeCancel)
+                {
+                    break;
+                }
+            }
+            return tmpDict;
+        }
 
         public static void saveConfFile(string location, Dictionary<string, string> dict)
         {
@@ -42,6 +118,8 @@ namespace AtomLauncher
                 dict["minecraft_displayCMD"] = "False";
                 dict["minecraft_CPUPriority"] = "Normal";
                 dict["minecraft_onlineMode"] = "True";
+                dict["minecraft_offlineName"] = "Player";
+                dict["minecraft_selectVer"] = "1.6.2";
                 dict["minecraft_autoSelect"] = "True";
                 dict["minecraft_force64Bit"] = "False"; //other wise use 32bit
             }
@@ -94,12 +172,12 @@ namespace AtomLauncher
             return dict;
         }
 
-        // Username, Password, File name (Usually @"./AEUsers"), game ("minecraft")
+        // Username, Password, File name (Usually @"./ALData"), game ("minecraft")
         // possible multiple logins idea, return multiple dictionarys with array
         // also look for name of login as well. before saving.
         public static void writeLoginFile(string accName, string accPass, string location, string game, bool auto)
         {
-            string saveString = StringCipher.Encrypt(game + ":" + accName + ":" + accPass + ":" + auto.ToString(), StringCipher.uniqueMachineId());
+            string saveString = cipherCode.Encrypt(game + ":" + accName + ":" + accPass + ":" + auto.ToString(), cipherCode.uniqueMachineId());
             bool gameSaved = false;
             if (File.Exists(location))
             {
@@ -108,7 +186,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[i] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[i], cipherCode.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {
@@ -141,7 +219,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[i] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[i], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[i], cipherCode.uniqueMachineId());
                         string[] lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {
@@ -177,7 +255,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[x] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[x], cipherCode.uniqueMachineId());
                         lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game)
                         {
@@ -207,7 +285,7 @@ namespace AtomLauncher
                 {
                     if (EncryptedStrings[x] != "")
                     {
-                        string DecryptedString = StringCipher.Decrypt(EncryptedStrings[x], StringCipher.uniqueMachineId());
+                        string DecryptedString = cipherCode.Decrypt(EncryptedStrings[x], cipherCode.uniqueMachineId());
                         lineArray = DecryptedString.Split(new char[] { ':' }, 4);
                         if (lineArray[0] == game && lineArray[1] == accName)
                         {
@@ -229,9 +307,6 @@ namespace AtomLauncher
                     _arr[i, j] = Arr[i, j];
             Arr = _arr;
         }
-
-
-
         // End
         /////////////////////////////////////
     }

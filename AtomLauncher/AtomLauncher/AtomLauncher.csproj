@@ -90,6 +90,11 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>.\Ionic.Zip.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -103,21 +108,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="atomDownload.cs">
+    <Compile Include="atomDownloadCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="atomFile.cs" />
-    <Compile Include="atomJson.cs">
+    <Compile Include="atomFileCode.cs" />
+    <Compile Include="atomJsonCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CodeMinecraft.cs">
+    <Compile Include="dotNetZip.cs" />
+    <Compile Include="minecraftCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="gameSettings.cs">
+    <Compile Include="customGameSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="gameSettings.Designer.cs">
-      <DependentUpon>gameSettings.cs</DependentUpon>
+    <Compile Include="customGameSettings.Designer.cs">
+      <DependentUpon>customGameSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="minecraftSettings.cs">
       <SubType>Form</SubType>
@@ -125,17 +131,17 @@
     <Compile Include="minecraftSettings.Designer.cs">
       <DependentUpon>minecraftSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="StringCipher.cs" />
-    <Compile Include="Launcher.cs">
+    <Compile Include="cipherCode.cs" />
+    <Compile Include="atomLauncher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Launcher.Designer.cs">
-      <DependentUpon>Launcher.cs</DependentUpon>
+    <Compile Include="atomLauncher.Designer.cs">
+      <DependentUpon>atomLauncher.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Launcher.resx">
-      <DependentUpon>Launcher.cs</DependentUpon>
+    <EmbeddedResource Include="atomLauncher.resx">
+      <DependentUpon>atomLauncher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="minecraftSettings.resx">
       <DependentUpon>minecraftSettings.cs</DependentUpon>
@@ -174,6 +180,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Ionic.Zip.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

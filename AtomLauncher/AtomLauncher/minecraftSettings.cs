@@ -56,27 +56,41 @@ namespace AtomLauncher
             {
                 mcSetStatus = "No32";
             }
-            if (File.Exists(mainDrive + @"Windows\SysWOW64\javaw.exe"))
+            if (!File.Exists(mainDrive + @"Windows\SysWOW64\javaw.exe"))
+            {
+                if (mcSetStatus == "No32")
+                {
+                    mcSetStatus = "No32or64";
+                }
+                else
+                {
+                    mcSetStatus = "No64";
+                }
+            }
+            if (Program.is64Bit)
             {
                 if (mcSetStatus == "No32")
                 {
                     mcLabelStatus.Text = "Note: 32bit Java Not Detected.";
+                }
+                else if (mcSetStatus == "No64")
+                {
+                    mcLabelStatus.Text = "Note: 64bit Java Not Detected. Ram Limited.";
+                }
+                else if (mcSetStatus == "No32or64")
+                {
+                    mcLabelStatus.Text = "WARNING!: No Java Detected.";
                 }
             }
             else
             {
                 if (mcSetStatus == "No32")
                 {
-                    mcLabelStatus.Text = "WARNING!: No Java Detected.";
-                    if (Program.is64Bit)
-                    {
-                        mcSetStatus = "No32or64";
-                    }
+                    mcLabelStatus.Text = "WARNING!: No Java Detected. Running a 32bit Program.";
                 }
-                else if (Program.is64Bit)
+                else
                 {
-                    mcLabelStatus.Text = "Note: 64bit Java Not Detected.";
-                    mcSetStatus = "No64";
+                    mcLabelStatus.Text = "Note: Running a 32bit Program.";
                 }
             }
             fillForm();
@@ -88,7 +102,7 @@ namespace AtomLauncher
             {
                 mcRadio32bitJava.Enabled = false;
                 mcRadio64bitJava.Enabled = false;
-                if (mcSetStatus == "No64")
+                if (mcSetStatus == "No64" || mcSetStatus == "No32or64")
                 {
                     resetRamCombo(ramAmmount32);
                 }
@@ -189,7 +203,7 @@ namespace AtomLauncher
 
         private void mcButtonDefaults_Click(object sender, EventArgs e)
         {
-            Program.config = atomFile.loadConfDefaults("minecraft");
+            Program.config = atomFileCode.loadConfDefaults("minecraft");
             fillForm();
         }
 
@@ -207,10 +221,12 @@ namespace AtomLauncher
             Program.config["minecraft_maxRam"] = mcComboMaxRam.Text;
             Program.config["minecraft_displayCMD"] = mcCheckCMD.Checked.ToString();
             Program.config["minecraft_CPUPriority"] = mcComboCPUPri.Text;
+            Program.config["minecraft_selectVer"] = "LatestVersion";
+            Program.config["minecraft_offlineName"] = "Player";
             Program.config["minecraft_onlineMode"] = mcCheckOnline.Checked.ToString();
             Program.config["minecraft_autoSelect"] = mcCheckAutoJava.Checked.ToString();
             Program.config["minecraft_force64Bit"] = mcRadio64bitJava.Checked.ToString();
-            atomFile.saveConfFile(atomFile.conigFile, Program.config);
+            atomFileCode.saveConfFile(atomFileCode.conigFile, Program.config);
             //Possibly add a way to keep the dialog from makeing the main window from falling.
             //Like Launcher.Activate(); or sotmhing.
             this.Close();
@@ -246,7 +262,7 @@ namespace AtomLauncher
             }
             else
             {
-                if (mcSetStatus == "No64")
+                if (mcSetStatus == "No64" || mcSetStatus == "No32or64")
                 {
                     resetRamCombo(ramAmmount32);
                 }
