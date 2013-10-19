@@ -12,12 +12,18 @@ Compiled Launcher - Download Link (Not Ready)
 - Add an unlimited ammount of games/applications to the list.
 - Each game/application uses there own database of users. They do not share. So, for example, you need to login to minecraft again on a new minecraft addition.
 
+___
+|Feel free to use this repository to boost your own projects. 
+---------------
+|If you decide to use this code or launcher for your projects or servers, I would love to know about it.
+
 ![alt tag](https://github.com/TrinaryAtom/AtomLauncher--Minecraft--/blob/Release/AtomLauncher/AtomLauncher/Resources/launcherpic.png?raw=true)
 
 =====
 To Do List
 
 - [ ] Customize the background image. Use your own.
+- [ ] Build the Atom Packager.
 
 -----------------
 -----------------
@@ -43,10 +49,3 @@ Launch any program's Executable. Whether it be a game or application.
 - Under construction
 
 -----------------
-___
-|Feel free to use this repository to boost your own projects.
-|If you decide to use this code or launcher for your projects or servers, I would love to know about it.
-----------------------
-
-----------------------
-More plans in the future involved including another program that creates the database or file structure of which this can get updates from, automatically. (Atom Packager)
