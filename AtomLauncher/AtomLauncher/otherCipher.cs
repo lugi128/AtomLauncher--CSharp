@@ -26,26 +26,13 @@ namespace AtomLauncher
     //                                                                                                                                  //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /////////////////////////////////////
-    // Start - 'string' Extensions. Example: randomString.Truncate(4)
-        public static class StringExt
-        {
-            public static string Truncate(this string value, int maxLength)
-            {
-                return value.Length <= maxLength ? value : value.Substring(0, maxLength);
-            }
-        }
-    // End
-    /////////////////////////////////////
-
     /////////////////////////////////////
     // Start - Encrypt Section
-        public static class cipherCode
+        class otherCipher
         {
             /////////////////////////////////////
             // Start - Get Machine Id for Encrypt
-                public static string machineIDLookup(bool reqHardware = false)
+                internal static string machineIDLookup(bool reqHardware = false)
                 {
                     string theHardware = "BaseBoard";
                     if (reqHardware == false)
@@ -71,7 +58,7 @@ namespace AtomLauncher
 
             /////////////////////////////////////
             // Start - Combine IDs
-                public static string uniqueMachineId()
+                internal static string uniqueMachineId()
                 {
                     return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)
                 }
@@ -80,23 +67,23 @@ namespace AtomLauncher
 
             ////////////////////
             ////////////////////////////////////////
-                // Section below is code that was extracted from other online sources and changed to work here.
-                // The below code is slightly unknown.
+            // Section below is code that was extracted from other online sources and changed to work here.
+            // The below code is slightly unknown.
             ////////////////////////////////////////
             ////////////////////
 
             /////////////////////////////////////
             // Start - Encrypt Code
-                // This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
-                // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
-                // 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
+            // This constant string is used as a "salt" value for the PasswordDeriveBytes function calls.
+            // This size of the IV (in bytes) must = (keysize / 8).  Default keysize is 256, so the IV must be
+            // 32 bytes long.  Using a 16 character string here gives us 32 bytes when converted to a byte array.
                 private const string initVector = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.
-                private const int vectorInt = 16; // Max Character length of string. Don,t change unless you know what your doing.
+                private const int vectorInt = 16; // Max Character length of string. Don't change unless you know what your doing.
 
                 // This constant is used to determine the keysize of the encryption algorithm.
                 private const int keysize = 256;
 
-                public static string Encrypt(string plainText, string passPhrase)
+                internal static string Encrypt(string plainText, string passPhrase)
                 {
                     byte[] initVectorBytes = Encoding.UTF8.GetBytes(initVector.Truncate(vectorInt));
                     byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -115,7 +102,7 @@ namespace AtomLauncher
                     return Convert.ToBase64String(cipherTextBytes);
                 }
 
-                public static string Decrypt(string cipherText, string passPhrase)
+                internal static string Decrypt(string cipherText, string passPhrase)
                 {
                     byte[] initVectorBytes = Encoding.ASCII.GetBytes(initVector.Truncate(vectorInt));
                     byte[] cipherTextBytes = Convert.FromBase64String(cipherText);

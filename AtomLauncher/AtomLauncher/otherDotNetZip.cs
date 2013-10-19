@@ -7,12 +7,18 @@ using Ionic.Zip;
 
 namespace AtomLauncher
 {
-    class dotNetZip
+    class otherDotNetZip
     {
-        public static void Extract(string zipFileName, string outputDirectory, string excludeCard = "RandomExcludeString74")
+        /// <summary>
+        /// Decompress a zip file to a specified directory. Exclude by matching string.
+        /// </summary>
+        /// <param name="zipFileName">Location and file name of the zip file. Example: "C:\LOCATION\file.zip"</param>
+        /// <param name="outputDirectory">Output of the files extracted. Example: "C:\LOCATION\"</param>
+        /// <param name="excludeCard">Anything that matches any part of this string will not get extracted. Example: "blah"</param>
+        public static void Extract(string zipFileName, string outputDirectory, string excludeCard = "")
         {
             bool exclude = true;
-            if (excludeCard == "RandomExcludeString74")
+            if (excludeCard == "")
             {
                 exclude = false;
             }
