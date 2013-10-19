@@ -23,7 +23,7 @@ namespace AtomLauncher
         // This launcher is looking for a version number and a download url on the URL
         // Version:::URL
         // 000.000.000:::http://www.url.com
-        // Be aware in the file atomFileData.cs contains the version number in the launcher. (The config file, if present, overwrites it).
+        // The version number is controlled by the properties window. (The config file, if present, overwrites it).
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public static bool cancelPressed = false;
         public static Dictionary<string, Dictionary<string, string[]>> gameData = new Dictionary<string, Dictionary<string, string[]>>();
@@ -105,7 +105,6 @@ namespace AtomLauncher
             settingsGame = button.Name.Replace("atomButtonSettings", "");
             atomMinecraftSettings mcSet = new atomMinecraftSettings();
             mcSet.ShowDialog();
-            mcSet.Dispose();
             setRightPanel();
         }
 
@@ -149,9 +148,36 @@ namespace AtomLauncher
             updateF.IsBackground = true;
             updateF.Start();
         }
+
         private void formButtonUpdateStatus_Click(object sender, EventArgs e)
         {
             MessageBox.Show(updateStatus, "Update Status");
+        }
+
+        private void formCheckSaveLogin_CheckedChanged(object sender, EventArgs e)
+        {
+            formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
+            if (formCheckSaveLogin.Checked)
+            {
+                if (gameData.ContainsKey(gameSelect))
+                {
+                    if (gameData[gameSelect]["autoLoginUser"][0] != "")
+                    {
+                        formComboUsername.Text = gameData[gameSelect]["autoLoginUser"][0];
+                        formCheckAutoLogin.Checked = true;
+                    }
+                }
+            }
+            else
+            {
+                formCheckAutoLogin.Checked = false;
+            }
+        }
+
+        private void formButtonAbout_Click(object sender, EventArgs e)
+        {
+            atomAboutBox box = new atomAboutBox();
+            box.ShowDialog();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -213,6 +239,10 @@ namespace AtomLauncher
                         string[] ALUpdateStrings = ALUpdateData.Split(splitCharacter, StringSplitOptions.None);
                         downloadVersion = ALUpdateStrings[0];
                         launcherDownload = ALUpdateStrings[1];
+                        string[] downVerSplit = downloadVersion.Split('.');
+                        //Major.Minor.Build.Revision
+                        //Version v = Assembly.GetExecutingAssembly().GetName().Version;
+                        //string About = string.Format(CultureInfo.InvariantCulture, @"YourApp Version {0}.{1}.{2} (r{3})", v.Major, v.Minor, v.Build, v.Revision);
                     }
                     catch (Exception ex)
                     {
@@ -225,7 +255,7 @@ namespace AtomLauncher
                             this.Invoke(new MethodInvoker(delegate
                             {
                                 formButtonUpdate.BackColor = System.Drawing.Color.White;
-                                formButtonUpdate.Location = new System.Drawing.Point(852, 4);
+                                formButtonUpdate.Location = new System.Drawing.Point(828, 4);
                                 formButtonUpdate.Size = new System.Drawing.Size(116, 20);
                                 formButtonUpdate.Text = "Update Available";
                                 formButtonUpdate.Click += new System.EventHandler(this.formButtonUpdate_Click);
@@ -611,26 +641,6 @@ namespace AtomLauncher
                     return;
             }
             base.WndProc(ref m);
-        }
-
-        private void formCheckSaveLogin_CheckedChanged(object sender, EventArgs e)
-        {
-            formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
-            if (formCheckSaveLogin.Checked)
-            {
-                if (gameData.ContainsKey(gameSelect))
-                {
-                    if (gameData[gameSelect]["autoLoginUser"][0] != "")
-                    {
-                        formComboUsername.Text = gameData[gameSelect]["autoLoginUser"][0];
-                        formCheckAutoLogin.Checked = true;
-                    }
-                }
-            }
-            else
-            {
-                formCheckAutoLogin.Checked = false;
-            }
         }
     }
 }

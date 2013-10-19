@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Reflection;
 using System.IO.Compression;
 using System.Threading;
 
@@ -65,7 +66,7 @@ namespace AtomLauncher
         {
             Dictionary<string, string> dict = new Dictionary<string, string> {
                 {"lastSelectedGame", "Minecraft"},
-                {"launcherVersion","001.000.000"},
+                {"launcherVersion", Assembly.GetExecutingAssembly().GetName().Version.ToString()},
                 {"debug", "false"}
             };
             return dict;
