@@ -8,6 +8,8 @@ Compiled Launcher - Download Link (Not Ready)
 - Before compiling this please follow the warning at the top of "StringCipher.cs".
 - Do you want to make your own launcher from this? Be aware that you can create your own automatic update by changing the URL at the top of "atomLauncher.cs".
 
+![alt tag](https://github.com/TrinaryAtom/AtomLauncher--Minecraft--/blob/Release/AtomLauncher/AtomLauncher/Resources/launcherpic.png?raw=true)
+
 -----------------
 -----------------
 Minecraft
@@ -20,6 +22,8 @@ Launch Minecraft directly from this launcher.
 - You don't need minecraft to be installed already.
 - No need to make a natives folder, the launcher does it automatically.
 - Works exactly as intended. Allows ONLY people who bought Minecraft to login and launches straight into Minecraft. The offline mode works, only if you have logged in before.
+
+![alt tag](https://github.com/TrinaryAtom/AtomLauncher--Minecraft--/blob/Release/AtomLauncher/AtomLauncher/Resources/mc.png?raw=true)
 
 -----------------
 -----------------
