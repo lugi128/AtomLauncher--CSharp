@@ -6,7 +6,7 @@ The point to using this launcher is for extra configurations, features, and auto
 Compiled Launcher - Download Link (Not Ready)
 
 - Before compiling this please follow the warning at the top of "StringCipher.cs".
-- Do you want to make your own launcher from this? Be aware that can create your own automatic update by changing the URL at the top of "atomLauncher.cs".
+- Do you want to make your own launcher from this? Be aware that you can create your own automatic update by changing the URL at the top of "atomLauncher.cs".
 
 -----------------
 -----------------
