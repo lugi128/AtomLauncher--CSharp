@@ -52,6 +52,7 @@
             this.formLabelGameSelectTitle = new System.Windows.Forms.Label();
             this.formButtonAddGame = new System.Windows.Forms.Button();
             this.formButtonUpdate = new System.Windows.Forms.Button();
+            this.formButtonAbout = new System.Windows.Forms.Button();
             this.formPanelBottom.SuspendLayout();
             this.formPanelLeft.SuspendLayout();
             this.formPanelRight.SuspendLayout();
@@ -353,7 +354,7 @@
             this.formButtonUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formButtonUpdate.ForeColor = System.Drawing.Color.Black;
-            this.formButtonUpdate.Location = new System.Drawing.Point(960, 4);
+            this.formButtonUpdate.Location = new System.Drawing.Point(936, 4);
             this.formButtonUpdate.Margin = new System.Windows.Forms.Padding(0);
             this.formButtonUpdate.Name = "formButtonUpdate";
             this.formButtonUpdate.Size = new System.Drawing.Size(8, 8);
@@ -361,6 +362,23 @@
             this.formButtonUpdate.TabStop = false;
             this.formButtonUpdate.UseVisualStyleBackColor = false;
             this.formButtonUpdate.Click += new System.EventHandler(this.formButtonUpdateStatus_Click);
+            // 
+            // formButtonAbout
+            // 
+            this.formButtonAbout.BackColor = System.Drawing.Color.White;
+            this.formButtonAbout.FlatAppearance.BorderSize = 0;
+            this.formButtonAbout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonAbout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonAbout.ForeColor = System.Drawing.Color.Black;
+            this.formButtonAbout.Location = new System.Drawing.Point(948, 4);
+            this.formButtonAbout.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonAbout.Name = "formButtonAbout";
+            this.formButtonAbout.Size = new System.Drawing.Size(20, 20);
+            this.formButtonAbout.TabIndex = 8;
+            this.formButtonAbout.TabStop = false;
+            this.formButtonAbout.Text = "a";
+            this.formButtonAbout.UseVisualStyleBackColor = false;
+            this.formButtonAbout.Click += new System.EventHandler(this.formButtonAbout_Click);
             // 
             // atomLauncher
             // 
@@ -374,6 +392,7 @@
             this.Controls.Add(this.formPanelLeft);
             this.Controls.Add(this.formButtonUpdate);
             this.Controls.Add(this.formPanelBottom);
+            this.Controls.Add(this.formButtonAbout);
             this.Controls.Add(this.atomButtonMinimize);
             this.Controls.Add(this.formButtonClose);
             this.Controls.Add(this.formLabelTitle);
@@ -418,6 +437,7 @@
         private System.Windows.Forms.Label formLabelGameSelected;
         private System.Windows.Forms.Button formButtonUpdate;
         private System.Windows.Forms.Label formLabelUnderConstruct;
+        private System.Windows.Forms.Button formButtonAbout;
     }
 }
 
