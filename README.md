@@ -45,6 +45,7 @@ Launch any program's Executable. Whether it be a game or application.
 -----------------
 ___
 |Feel free to use this repository to boost your own projects.
+|If you decide to use this code or launcher for your projects or servers, I would love to know about it.
 ----------------------
 
 ----------------------
