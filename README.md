@@ -5,10 +5,19 @@ The point to using this launcher is for extra configurations, features, and auto
 
 Compiled Launcher - Download Link (Not Ready)
 
+<strong>Features:</strong>
 - Before compiling this please follow the warning at the top of "StringCipher.cs".
 - Do you want to make your own launcher from this? Be aware that you can create your own automatic update by changing the URL at the top of "atomLauncher.cs".
+- Customize the game images. Use your own. Will auto resize the image to fit (Not stretch). Size of image is 260x80. Supports PNG Alpha.
+- Add an unlimited ammount of games/applications to the list.
+- Each game/application uses there own database of users. They do not share. So, for example, you need to login to minecraft again on a new minecraft addition.
 
 ![alt tag](https://github.com/TrinaryAtom/AtomLauncher--Minecraft--/blob/Release/AtomLauncher/AtomLauncher/Resources/launcherpic.png?raw=true)
+
+=====
+To Do List
+
+- [ ] Customize the background image. Use your own.
 
 -----------------
 -----------------
