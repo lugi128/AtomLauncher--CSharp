@@ -1,6 +1,6 @@
 ﻿namespace AtomLauncher
 {
-    partial class Launcher
+    partial class atomLauncher
     {
         /// <summary>
         /// Required designer variable.
@@ -28,321 +28,396 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.homeStartButton = new System.Windows.Forms.Button();
-            this.homeAutoLogin = new System.Windows.Forms.CheckBox();
-            this.homeSaveLogin = new System.Windows.Forms.CheckBox();
-            this.homeBarTop = new System.Windows.Forms.ProgressBar();
-            this.homePassText = new System.Windows.Forms.TextBox();
-            this.homeUserTitle = new System.Windows.Forms.Label();
-            this.homePassTitle = new System.Windows.Forms.Label();
-            this.homeMenu = new System.Windows.Forms.MenuStrip();
-            this.homeMenuMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeMenuGame = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeMenuTools = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeMenuToolsLauncherConfig = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeMenuToolsGameSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.homeLabelBottom = new System.Windows.Forms.Label();
-            this.homeLabelTop = new System.Windows.Forms.Label();
-            this.homeBarBottom = new System.Windows.Forms.ProgressBar();
-            this.homeLabelBottomBar = new System.Windows.Forms.Label();
-            this.homeUserText = new System.Windows.Forms.ComboBox();
-            this.homeLabelTopBar = new System.Windows.Forms.Label();
-            this.homeTextBoxGeneral = new System.Windows.Forms.RichTextBox();
-            this.homeLabelDLSpeed = new System.Windows.Forms.Label();
-            this.homeLabelDLFile = new System.Windows.Forms.Label();
-            this.homeLabelDLTotal = new System.Windows.Forms.Label();
-            this.homeLabelDLTotalFile = new System.Windows.Forms.Label();
-            this.homeMenu.SuspendLayout();
+            this.formLabelTitle = new System.Windows.Forms.Label();
+            this.formButtonClose = new System.Windows.Forms.Button();
+            this.formButtonLogin = new System.Windows.Forms.Button();
+            this.formBarBottom = new System.Windows.Forms.ProgressBar();
+            this.formBarTop = new System.Windows.Forms.ProgressBar();
+            this.formTextPass = new System.Windows.Forms.TextBox();
+            this.formLabelStatus = new System.Windows.Forms.Label();
+            this.atomButtonMinimize = new System.Windows.Forms.Button();
+            this.formLabelTotalMB = new System.Windows.Forms.Label();
+            this.formLabelFileMB = new System.Windows.Forms.Label();
+            this.formLabelDLSpeed = new System.Windows.Forms.Label();
+            this.formLabelDLFile = new System.Windows.Forms.Label();
+            this.formPanelBottom = new System.Windows.Forms.Panel();
+            this.formComboUsername = new System.Windows.Forms.ComboBox();
+            this.formCheckAutoLogin = new System.Windows.Forms.CheckBox();
+            this.formCheckSaveLogin = new System.Windows.Forms.CheckBox();
+            this.formPanelLeft = new System.Windows.Forms.Panel();
+            this.formLabelUnderConstruct = new System.Windows.Forms.Label();
+            this.formLabelNewsTitle = new System.Windows.Forms.Label();
+            this.formPanelRight = new System.Windows.Forms.Panel();
+            this.formLabelGameSelected = new System.Windows.Forms.Label();
+            this.formLabelGameSelectTitle = new System.Windows.Forms.Label();
+            this.formButtonAddGame = new System.Windows.Forms.Button();
+            this.formButtonUpdate = new System.Windows.Forms.Button();
+            this.formPanelBottom.SuspendLayout();
+            this.formPanelLeft.SuspendLayout();
+            this.formPanelRight.SuspendLayout();
             this.SuspendLayout();
             // 
-            // homeStartButton
+            // formLabelTitle
             // 
-            this.homeStartButton.Enabled = false;
-            this.homeStartButton.Location = new System.Drawing.Point(232, 72);
-            this.homeStartButton.Name = "homeStartButton";
-            this.homeStartButton.Size = new System.Drawing.Size(87, 31);
-            this.homeStartButton.TabIndex = 0;
-            this.homeStartButton.Text = "Login";
-            this.homeStartButton.UseVisualStyleBackColor = true;
-            this.homeStartButton.Click += new System.EventHandler(this.homeStartButton_Click);
+            this.formLabelTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.formLabelTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formLabelTitle.ForeColor = System.Drawing.Color.White;
+            this.formLabelTitle.Location = new System.Drawing.Point(4, 4);
+            this.formLabelTitle.Name = "formLabelTitle";
+            this.formLabelTitle.Size = new System.Drawing.Size(100, 20);
+            this.formLabelTitle.TabIndex = 1;
+            this.formLabelTitle.Text = "Atom Launcher";
+            this.formLabelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // homeAutoLogin
+            // formButtonClose
             // 
-            this.homeAutoLogin.AutoSize = true;
-            this.homeAutoLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.homeAutoLogin.Enabled = false;
-            this.homeAutoLogin.Location = new System.Drawing.Point(236, 52);
-            this.homeAutoLogin.Name = "homeAutoLogin";
-            this.homeAutoLogin.Size = new System.Drawing.Size(83, 17);
-            this.homeAutoLogin.TabIndex = 1;
-            this.homeAutoLogin.Text = "Auto Login?";
-            this.homeAutoLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.homeAutoLogin.UseVisualStyleBackColor = true;
+            this.formButtonClose.BackColor = System.Drawing.Color.White;
+            this.formButtonClose.FlatAppearance.BorderSize = 0;
+            this.formButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonClose.ForeColor = System.Drawing.Color.Black;
+            this.formButtonClose.Location = new System.Drawing.Point(996, 4);
+            this.formButtonClose.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonClose.Name = "formButtonClose";
+            this.formButtonClose.Size = new System.Drawing.Size(20, 20);
+            this.formButtonClose.TabIndex = 2;
+            this.formButtonClose.TabStop = false;
+            this.formButtonClose.Text = "X";
+            this.formButtonClose.UseVisualStyleBackColor = false;
+            this.formButtonClose.Click += new System.EventHandler(this.atomButtonClose_Click);
             // 
-            // homeSaveLogin
+            // formButtonLogin
             // 
-            this.homeSaveLogin.AutoSize = true;
-            this.homeSaveLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.homeSaveLogin.Enabled = false;
-            this.homeSaveLogin.Location = new System.Drawing.Point(232, 32);
-            this.homeSaveLogin.Name = "homeSaveLogin";
-            this.homeSaveLogin.Size = new System.Drawing.Size(86, 17);
-            this.homeSaveLogin.TabIndex = 2;
-            this.homeSaveLogin.Text = "Save Login?";
-            this.homeSaveLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.homeSaveLogin.UseVisualStyleBackColor = true;
-            this.homeSaveLogin.CheckedChanged += new System.EventHandler(this.homeSaveLogin_CheckedChanged);
+            this.formButtonLogin.BackColor = System.Drawing.Color.White;
+            this.formButtonLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonLogin.Location = new System.Drawing.Point(932, 16);
+            this.formButtonLogin.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonLogin.Name = "formButtonLogin";
+            this.formButtonLogin.Size = new System.Drawing.Size(76, 40);
+            this.formButtonLogin.TabIndex = 3;
+            this.formButtonLogin.Text = "Login";
+            this.formButtonLogin.UseVisualStyleBackColor = false;
+            this.formButtonLogin.Click += new System.EventHandler(this.formButtonLogin_Click);
             // 
-            // homeBarTop
+            // formBarBottom
             // 
-            this.homeBarTop.Location = new System.Drawing.Point(4, 416);
-            this.homeBarTop.MarqueeAnimationSpeed = 10;
-            this.homeBarTop.Name = "homeBarTop";
-            this.homeBarTop.Size = new System.Drawing.Size(316, 11);
-            this.homeBarTop.TabIndex = 3;
-            this.homeBarTop.Tag = "";
+            this.formBarBottom.BackColor = System.Drawing.Color.Black;
+            this.formBarBottom.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.formBarBottom.Location = new System.Drawing.Point(4, 44);
+            this.formBarBottom.Name = "formBarBottom";
+            this.formBarBottom.Size = new System.Drawing.Size(500, 11);
+            this.formBarBottom.TabIndex = 4;
             // 
-            // homePassText
+            // formBarTop
             // 
-            this.homePassText.Enabled = false;
-            this.homePassText.Location = new System.Drawing.Point(8, 84);
-            this.homePassText.Name = "homePassText";
-            this.homePassText.PasswordChar = '*';
-            this.homePassText.Size = new System.Drawing.Size(220, 20);
-            this.homePassText.TabIndex = 5;
-            this.homePassText.UseSystemPasswordChar = true;
+            this.formBarTop.BackColor = System.Drawing.Color.Black;
+            this.formBarTop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.formBarTop.Location = new System.Drawing.Point(4, 28);
+            this.formBarTop.Name = "formBarTop";
+            this.formBarTop.Size = new System.Drawing.Size(500, 11);
+            this.formBarTop.TabIndex = 5;
             // 
-            // homeUserTitle
+            // formTextPass
             // 
-            this.homeUserTitle.AutoSize = true;
-            this.homeUserTitle.Enabled = false;
-            this.homeUserTitle.Location = new System.Drawing.Point(8, 28);
-            this.homeUserTitle.Name = "homeUserTitle";
-            this.homeUserTitle.Size = new System.Drawing.Size(55, 13);
-            this.homeUserTitle.TabIndex = 6;
-            this.homeUserTitle.Text = "Username";
+            this.formTextPass.BackColor = System.Drawing.Color.White;
+            this.formTextPass.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.formTextPass.Location = new System.Drawing.Point(848, 36);
+            this.formTextPass.Margin = new System.Windows.Forms.Padding(0);
+            this.formTextPass.Name = "formTextPass";
+            this.formTextPass.Size = new System.Drawing.Size(80, 20);
+            this.formTextPass.TabIndex = 2;
+            this.formTextPass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.formTextPass.UseSystemPasswordChar = true;
             // 
-            // homePassTitle
+            // formLabelStatus
             // 
-            this.homePassTitle.AutoSize = true;
-            this.homePassTitle.Enabled = false;
-            this.homePassTitle.Location = new System.Drawing.Point(8, 68);
-            this.homePassTitle.Name = "homePassTitle";
-            this.homePassTitle.Size = new System.Drawing.Size(53, 13);
-            this.homePassTitle.TabIndex = 7;
-            this.homePassTitle.Text = "Password";
+            this.formLabelStatus.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelStatus.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formLabelStatus.ForeColor = System.Drawing.Color.White;
+            this.formLabelStatus.Location = new System.Drawing.Point(4, 0);
+            this.formLabelStatus.Name = "formLabelStatus";
+            this.formLabelStatus.Size = new System.Drawing.Size(1004, 15);
+            this.formLabelStatus.TabIndex = 7;
+            this.formLabelStatus.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // homeMenu
+            // atomButtonMinimize
             // 
-            this.homeMenu.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.homeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.homeMenuMenu,
-            this.homeMenuGame,
-            this.homeMenuTools});
-            this.homeMenu.Location = new System.Drawing.Point(0, 0);
-            this.homeMenu.Name = "homeMenu";
-            this.homeMenu.Size = new System.Drawing.Size(641, 24);
-            this.homeMenu.TabIndex = 8;
-            this.homeMenu.Text = "menuStrip1";
+            this.atomButtonMinimize.BackColor = System.Drawing.Color.White;
+            this.atomButtonMinimize.FlatAppearance.BorderSize = 0;
+            this.atomButtonMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.atomButtonMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.atomButtonMinimize.ForeColor = System.Drawing.Color.Black;
+            this.atomButtonMinimize.Location = new System.Drawing.Point(972, 4);
+            this.atomButtonMinimize.Margin = new System.Windows.Forms.Padding(0);
+            this.atomButtonMinimize.Name = "atomButtonMinimize";
+            this.atomButtonMinimize.Size = new System.Drawing.Size(20, 20);
+            this.atomButtonMinimize.TabIndex = 8;
+            this.atomButtonMinimize.TabStop = false;
+            this.atomButtonMinimize.Text = "-";
+            this.atomButtonMinimize.UseVisualStyleBackColor = false;
+            this.atomButtonMinimize.Click += new System.EventHandler(this.atomButtonMinimize_Click);
             // 
-            // homeMenuMenu
+            // formLabelTotalMB
             // 
-            this.homeMenuMenu.Enabled = false;
-            this.homeMenuMenu.Name = "homeMenuMenu";
-            this.homeMenuMenu.Size = new System.Drawing.Size(50, 20);
-            this.homeMenuMenu.Text = "Menu";
+            this.formLabelTotalMB.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelTotalMB.ForeColor = System.Drawing.Color.White;
+            this.formLabelTotalMB.Location = new System.Drawing.Point(504, 40);
+            this.formLabelTotalMB.Name = "formLabelTotalMB";
+            this.formLabelTotalMB.Size = new System.Drawing.Size(200, 16);
+            this.formLabelTotalMB.TabIndex = 12;
+            this.formLabelTotalMB.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // homeMenuGame
+            // formLabelFileMB
             // 
-            this.homeMenuGame.Enabled = false;
-            this.homeMenuGame.Name = "homeMenuGame";
-            this.homeMenuGame.Size = new System.Drawing.Size(50, 20);
-            this.homeMenuGame.Text = "Game";
+            this.formLabelFileMB.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelFileMB.ForeColor = System.Drawing.Color.White;
+            this.formLabelFileMB.Location = new System.Drawing.Point(504, 24);
+            this.formLabelFileMB.Name = "formLabelFileMB";
+            this.formLabelFileMB.Size = new System.Drawing.Size(200, 16);
+            this.formLabelFileMB.TabIndex = 12;
+            this.formLabelFileMB.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // homeMenuTools
+            // formLabelDLSpeed
             // 
-            this.homeMenuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.homeMenuToolsLauncherConfig,
-            this.homeMenuToolsGameSettings});
-            this.homeMenuTools.Enabled = false;
-            this.homeMenuTools.Name = "homeMenuTools";
-            this.homeMenuTools.Size = new System.Drawing.Size(48, 20);
-            this.homeMenuTools.Text = "Tools";
+            this.formLabelDLSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelDLSpeed.ForeColor = System.Drawing.Color.White;
+            this.formLabelDLSpeed.Location = new System.Drawing.Point(4, 12);
+            this.formLabelDLSpeed.Name = "formLabelDLSpeed";
+            this.formLabelDLSpeed.Size = new System.Drawing.Size(152, 16);
+            this.formLabelDLSpeed.TabIndex = 12;
+            this.formLabelDLSpeed.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // homeMenuToolsLauncherConfig
+            // formLabelDLFile
             // 
-            this.homeMenuToolsLauncherConfig.Enabled = false;
-            this.homeMenuToolsLauncherConfig.Name = "homeMenuToolsLauncherConfig";
-            this.homeMenuToolsLauncherConfig.Size = new System.Drawing.Size(162, 22);
-            this.homeMenuToolsLauncherConfig.Text = "Launcher Config";
+            this.formLabelDLFile.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelDLFile.ForeColor = System.Drawing.Color.White;
+            this.formLabelDLFile.Location = new System.Drawing.Point(156, 12);
+            this.formLabelDLFile.Name = "formLabelDLFile";
+            this.formLabelDLFile.Size = new System.Drawing.Size(348, 16);
+            this.formLabelDLFile.TabIndex = 12;
+            this.formLabelDLFile.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // homeMenuToolsGameSettings
+            // formPanelBottom
             // 
-            this.homeMenuToolsGameSettings.Name = "homeMenuToolsGameSettings";
-            this.homeMenuToolsGameSettings.Size = new System.Drawing.Size(162, 22);
-            this.homeMenuToolsGameSettings.Text = "Game Settings";
-            this.homeMenuToolsGameSettings.Click += new System.EventHandler(this.gameSettingsToolStripMenuItem_Click);
+            this.formPanelBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.formPanelBottom.Controls.Add(this.formComboUsername);
+            this.formPanelBottom.Controls.Add(this.formCheckAutoLogin);
+            this.formPanelBottom.Controls.Add(this.formCheckSaveLogin);
+            this.formPanelBottom.Controls.Add(this.formLabelStatus);
+            this.formPanelBottom.Controls.Add(this.formLabelDLSpeed);
+            this.formPanelBottom.Controls.Add(this.formButtonLogin);
+            this.formPanelBottom.Controls.Add(this.formBarBottom);
+            this.formPanelBottom.Controls.Add(this.formBarTop);
+            this.formPanelBottom.Controls.Add(this.formTextPass);
+            this.formPanelBottom.Controls.Add(this.formLabelTotalMB);
+            this.formPanelBottom.Controls.Add(this.formLabelDLFile);
+            this.formPanelBottom.Controls.Add(this.formLabelFileMB);
+            this.formPanelBottom.Location = new System.Drawing.Point(4, 516);
+            this.formPanelBottom.Name = "formPanelBottom";
+            this.formPanelBottom.Size = new System.Drawing.Size(1012, 60);
+            this.formPanelBottom.TabIndex = 13;
             // 
-            // homeLabelBottom
+            // formComboUsername
             // 
-            this.homeLabelBottom.Location = new System.Drawing.Point(8, 168);
-            this.homeLabelBottom.Name = "homeLabelBottom";
-            this.homeLabelBottom.Size = new System.Drawing.Size(312, 16);
-            this.homeLabelBottom.TabIndex = 9;
-            this.homeLabelBottom.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formComboUsername.BackColor = System.Drawing.Color.White;
+            this.formComboUsername.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.formComboUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formComboUsername.ForeColor = System.Drawing.Color.Black;
+            this.formComboUsername.FormattingEnabled = true;
+            this.formComboUsername.Location = new System.Drawing.Point(704, 36);
+            this.formComboUsername.Name = "formComboUsername";
+            this.formComboUsername.Size = new System.Drawing.Size(140, 20);
+            this.formComboUsername.TabIndex = 15;
+            this.formComboUsername.SelectedIndexChanged += new System.EventHandler(this.formComboUsername_SelectedIndexChanged);
             // 
-            // homeLabelTop
+            // formCheckAutoLogin
             // 
-            this.homeLabelTop.Location = new System.Drawing.Point(8, 128);
-            this.homeLabelTop.Name = "homeLabelTop";
-            this.homeLabelTop.Size = new System.Drawing.Size(312, 16);
-            this.homeLabelTop.TabIndex = 9;
-            this.homeLabelTop.Text = "^.^";
-            this.homeLabelTop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formCheckAutoLogin.AutoSize = true;
+            this.formCheckAutoLogin.BackColor = System.Drawing.Color.Transparent;
+            this.formCheckAutoLogin.ForeColor = System.Drawing.Color.White;
+            this.formCheckAutoLogin.Location = new System.Drawing.Point(704, 16);
+            this.formCheckAutoLogin.Name = "formCheckAutoLogin";
+            this.formCheckAutoLogin.Size = new System.Drawing.Size(77, 17);
+            this.formCheckAutoLogin.TabIndex = 13;
+            this.formCheckAutoLogin.Text = "Auto Login";
+            this.formCheckAutoLogin.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.formCheckAutoLogin.UseVisualStyleBackColor = false;
             // 
-            // homeBarBottom
+            // formCheckSaveLogin
             // 
-            this.homeBarBottom.Location = new System.Drawing.Point(4, 432);
-            this.homeBarBottom.Name = "homeBarBottom";
-            this.homeBarBottom.Size = new System.Drawing.Size(316, 11);
-            this.homeBarBottom.TabIndex = 3;
-            this.homeBarBottom.Tag = "";
+            this.formCheckSaveLogin.AutoSize = true;
+            this.formCheckSaveLogin.BackColor = System.Drawing.Color.Transparent;
+            this.formCheckSaveLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.formCheckSaveLogin.ForeColor = System.Drawing.Color.White;
+            this.formCheckSaveLogin.Location = new System.Drawing.Point(848, 16);
+            this.formCheckSaveLogin.Name = "formCheckSaveLogin";
+            this.formCheckSaveLogin.Size = new System.Drawing.Size(80, 17);
+            this.formCheckSaveLogin.TabIndex = 13;
+            this.formCheckSaveLogin.Text = "Save Login";
+            this.formCheckSaveLogin.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.formCheckSaveLogin.UseVisualStyleBackColor = false;
+            this.formCheckSaveLogin.CheckedChanged += new System.EventHandler(this.formCheckSaveLogin_CheckedChanged);
             // 
-            // homeLabelBottomBar
+            // formPanelLeft
             // 
-            this.homeLabelBottomBar.Location = new System.Drawing.Point(8, 148);
-            this.homeLabelBottomBar.Name = "homeLabelBottomBar";
-            this.homeLabelBottomBar.Size = new System.Drawing.Size(312, 13);
-            this.homeLabelBottomBar.TabIndex = 9;
-            this.homeLabelBottomBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formPanelLeft.BackColor = System.Drawing.Color.Transparent;
+            this.formPanelLeft.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.formPanelLeft.Controls.Add(this.formLabelUnderConstruct);
+            this.formPanelLeft.Controls.Add(this.formLabelNewsTitle);
+            this.formPanelLeft.Location = new System.Drawing.Point(4, 28);
+            this.formPanelLeft.Name = "formPanelLeft";
+            this.formPanelLeft.Size = new System.Drawing.Size(716, 484);
+            this.formPanelLeft.TabIndex = 14;
             // 
-            // homeUserText
+            // formLabelUnderConstruct
             // 
-            this.homeUserText.Enabled = false;
-            this.homeUserText.FormattingEnabled = true;
-            this.homeUserText.Location = new System.Drawing.Point(8, 44);
-            this.homeUserText.Name = "homeUserText";
-            this.homeUserText.Size = new System.Drawing.Size(220, 21);
-            this.homeUserText.TabIndex = 10;
-            this.homeUserText.SelectedIndexChanged += new System.EventHandler(this.homeUserText_SelectedIndexChanged);
+            this.formLabelUnderConstruct.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelUnderConstruct.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formLabelUnderConstruct.ForeColor = System.Drawing.Color.White;
+            this.formLabelUnderConstruct.Location = new System.Drawing.Point(4, 24);
+            this.formLabelUnderConstruct.Name = "formLabelUnderConstruct";
+            this.formLabelUnderConstruct.Size = new System.Drawing.Size(708, 64);
+            this.formLabelUnderConstruct.TabIndex = 2;
+            this.formLabelUnderConstruct.Text = "Under Construction";
+            this.formLabelUnderConstruct.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // homeLabelTopBar
+            // formLabelNewsTitle
             // 
-            this.homeLabelTopBar.Location = new System.Drawing.Point(8, 108);
-            this.homeLabelTopBar.Name = "homeLabelTopBar";
-            this.homeLabelTopBar.Size = new System.Drawing.Size(312, 16);
-            this.homeLabelTopBar.TabIndex = 9;
-            this.homeLabelTopBar.Text = "Welcome!";
-            this.homeLabelTopBar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formLabelNewsTitle.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelNewsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formLabelNewsTitle.ForeColor = System.Drawing.Color.White;
+            this.formLabelNewsTitle.Location = new System.Drawing.Point(4, 4);
+            this.formLabelNewsTitle.Name = "formLabelNewsTitle";
+            this.formLabelNewsTitle.Size = new System.Drawing.Size(708, 16);
+            this.formLabelNewsTitle.TabIndex = 1;
+            this.formLabelNewsTitle.Text = "News / Information";
+            this.formLabelNewsTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // homeTextBoxGeneral
+            // formPanelRight
             // 
-            this.homeTextBoxGeneral.BackColor = System.Drawing.SystemColors.Window;
-            this.homeTextBoxGeneral.DetectUrls = false;
-            this.homeTextBoxGeneral.Location = new System.Drawing.Point(324, 28);
-            this.homeTextBoxGeneral.Name = "homeTextBoxGeneral";
-            this.homeTextBoxGeneral.ReadOnly = true;
-            this.homeTextBoxGeneral.ShowSelectionMargin = true;
-            this.homeTextBoxGeneral.Size = new System.Drawing.Size(312, 416);
-            this.homeTextBoxGeneral.TabIndex = 11;
-            this.homeTextBoxGeneral.Text = "";
-            this.homeTextBoxGeneral.WordWrap = false;
+            this.formPanelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.formPanelRight.Controls.Add(this.formLabelGameSelected);
+            this.formPanelRight.Controls.Add(this.formLabelGameSelectTitle);
+            this.formPanelRight.Controls.Add(this.formButtonAddGame);
+            this.formPanelRight.Location = new System.Drawing.Point(724, 28);
+            this.formPanelRight.Name = "formPanelRight";
+            this.formPanelRight.Size = new System.Drawing.Size(292, 484);
+            this.formPanelRight.TabIndex = 14;
+            this.formPanelRight.Click += new System.EventHandler(this.formPanelRight_Click);
             // 
-            // homeLabelDLSpeed
+            // formLabelGameSelected
             // 
-            this.homeLabelDLSpeed.Location = new System.Drawing.Point(204, 400);
-            this.homeLabelDLSpeed.Name = "homeLabelDLSpeed";
-            this.homeLabelDLSpeed.Size = new System.Drawing.Size(117, 16);
-            this.homeLabelDLSpeed.TabIndex = 12;
-            this.homeLabelDLSpeed.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.formLabelGameSelected.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelGameSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formLabelGameSelected.ForeColor = System.Drawing.Color.White;
+            this.formLabelGameSelected.Location = new System.Drawing.Point(4, 24);
+            this.formLabelGameSelected.Name = "formLabelGameSelected";
+            this.formLabelGameSelected.Size = new System.Drawing.Size(283, 16);
+            this.formLabelGameSelected.TabIndex = 1;
+            this.formLabelGameSelected.Text = "Game: Loading";
+            this.formLabelGameSelected.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // homeLabelDLFile
+            // formLabelGameSelectTitle
             // 
-            this.homeLabelDLFile.Location = new System.Drawing.Point(4, 400);
-            this.homeLabelDLFile.Name = "homeLabelDLFile";
-            this.homeLabelDLFile.Size = new System.Drawing.Size(196, 16);
-            this.homeLabelDLFile.TabIndex = 13;
-            this.homeLabelDLFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.formLabelGameSelectTitle.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelGameSelectTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formLabelGameSelectTitle.ForeColor = System.Drawing.Color.White;
+            this.formLabelGameSelectTitle.Location = new System.Drawing.Point(4, 4);
+            this.formLabelGameSelectTitle.Name = "formLabelGameSelectTitle";
+            this.formLabelGameSelectTitle.Size = new System.Drawing.Size(284, 16);
+            this.formLabelGameSelectTitle.TabIndex = 1;
+            this.formLabelGameSelectTitle.Text = "Pick a game to play.";
+            this.formLabelGameSelectTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // homeLabelDLTotal
+            // formButtonAddGame
             // 
-            this.homeLabelDLTotal.Location = new System.Drawing.Point(164, 388);
-            this.homeLabelDLTotal.Name = "homeLabelDLTotal";
-            this.homeLabelDLTotal.Size = new System.Drawing.Size(157, 16);
-            this.homeLabelDLTotal.TabIndex = 12;
-            this.homeLabelDLTotal.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.formButtonAddGame.BackColor = System.Drawing.Color.White;
+            this.formButtonAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonAddGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonAddGame.ForeColor = System.Drawing.Color.Black;
+            this.formButtonAddGame.Location = new System.Drawing.Point(4, 44);
+            this.formButtonAddGame.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonAddGame.Name = "formButtonAddGame";
+            this.formButtonAddGame.Size = new System.Drawing.Size(136, 24);
+            this.formButtonAddGame.TabIndex = 8;
+            this.formButtonAddGame.TabStop = false;
+            this.formButtonAddGame.Text = "Add Custom Game";
+            this.formButtonAddGame.UseVisualStyleBackColor = false;
+            this.formButtonAddGame.Click += new System.EventHandler(this.formButtonAddGame_Click);
             // 
-            // homeLabelDLTotalFile
+            // formButtonUpdate
             // 
-            this.homeLabelDLTotalFile.Location = new System.Drawing.Point(4, 388);
-            this.homeLabelDLTotalFile.Name = "homeLabelDLTotalFile";
-            this.homeLabelDLTotalFile.Size = new System.Drawing.Size(156, 16);
-            this.homeLabelDLTotalFile.TabIndex = 13;
-            this.homeLabelDLTotalFile.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.formButtonUpdate.BackColor = System.Drawing.Color.Cyan;
+            this.formButtonUpdate.FlatAppearance.BorderSize = 0;
+            this.formButtonUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonUpdate.ForeColor = System.Drawing.Color.Black;
+            this.formButtonUpdate.Location = new System.Drawing.Point(960, 4);
+            this.formButtonUpdate.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonUpdate.Name = "formButtonUpdate";
+            this.formButtonUpdate.Size = new System.Drawing.Size(8, 8);
+            this.formButtonUpdate.TabIndex = 8;
+            this.formButtonUpdate.TabStop = false;
+            this.formButtonUpdate.UseVisualStyleBackColor = false;
+            this.formButtonUpdate.Click += new System.EventHandler(this.formButtonUpdateStatus_Click);
             // 
-            // Launcher
+            // atomLauncher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(641, 449);
-            this.Controls.Add(this.homeLabelDLTotalFile);
-            this.Controls.Add(this.homeLabelDLFile);
-            this.Controls.Add(this.homeLabelDLTotal);
-            this.Controls.Add(this.homeLabelDLSpeed);
-            this.Controls.Add(this.homeTextBoxGeneral);
-            this.Controls.Add(this.homeUserText);
-            this.Controls.Add(this.homeLabelTop);
-            this.Controls.Add(this.homeLabelTopBar);
-            this.Controls.Add(this.homeLabelBottomBar);
-            this.Controls.Add(this.homeLabelBottom);
-            this.Controls.Add(this.homePassTitle);
-            this.Controls.Add(this.homeUserTitle);
-            this.Controls.Add(this.homePassText);
-            this.Controls.Add(this.homeBarBottom);
-            this.Controls.Add(this.homeBarTop);
-            this.Controls.Add(this.homeSaveLogin);
-            this.Controls.Add(this.homeAutoLogin);
-            this.Controls.Add(this.homeStartButton);
-            this.Controls.Add(this.homeMenu);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.MainMenuStrip = this.homeMenu;
-            this.Name = "Launcher";
+            this.BackColor = System.Drawing.Color.Black;
+            this.BackgroundImage = global::AtomLauncher.Properties.Resources.background;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(1020, 580);
+            this.Controls.Add(this.formPanelRight);
+            this.Controls.Add(this.formPanelLeft);
+            this.Controls.Add(this.formButtonUpdate);
+            this.Controls.Add(this.formPanelBottom);
+            this.Controls.Add(this.atomButtonMinimize);
+            this.Controls.Add(this.formButtonClose);
+            this.Controls.Add(this.formLabelTitle);
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "atomLauncher";
+            this.Opacity = 0D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Atom Launcher";
-            this.Load += new System.EventHandler(this.Home_Load);
-            this.homeMenu.ResumeLayout(false);
-            this.homeMenu.PerformLayout();
+            this.Load += new System.EventHandler(this.atomLauncher_Load);
+            this.formPanelBottom.ResumeLayout(false);
+            this.formPanelBottom.PerformLayout();
+            this.formPanelLeft.ResumeLayout(false);
+            this.formPanelRight.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button homeStartButton;
-        private System.Windows.Forms.TextBox homePassText;
-        private System.Windows.Forms.Label homeUserTitle;
-        private System.Windows.Forms.Label homePassTitle;
-        private System.Windows.Forms.MenuStrip homeMenu;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuMenu;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuTools;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuGame;
-        public System.Windows.Forms.CheckBox homeSaveLogin;
-        public System.Windows.Forms.CheckBox homeAutoLogin;
-        public System.Windows.Forms.ProgressBar homeBarTop;
-        public System.Windows.Forms.ProgressBar homeBarBottom;
-        public System.Windows.Forms.Label homeLabelBottom;
-        public System.Windows.Forms.Label homeLabelTop;
-        public System.Windows.Forms.Label homeLabelBottomBar;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuToolsLauncherConfig;
-        private System.Windows.Forms.ToolStripMenuItem homeMenuToolsGameSettings;
-        private System.Windows.Forms.ComboBox homeUserText;
-        public System.Windows.Forms.Label homeLabelTopBar;
-        private System.Windows.Forms.RichTextBox homeTextBoxGeneral;
-        private System.Windows.Forms.Label homeLabelDLSpeed;
-        private System.Windows.Forms.Label homeLabelDLFile;
-        private System.Windows.Forms.Label homeLabelDLTotal;
-        private System.Windows.Forms.Label homeLabelDLTotalFile;
+        private System.Windows.Forms.Label formLabelTitle;
+        private System.Windows.Forms.Button formButtonClose;
+        private System.Windows.Forms.Button formButtonLogin;
+        private System.Windows.Forms.TextBox formTextPass;
+        private System.Windows.Forms.Button atomButtonMinimize;
+        private System.Windows.Forms.Panel formPanelBottom;
+        private System.Windows.Forms.Panel formPanelLeft;
+        private System.Windows.Forms.Panel formPanelRight;
+        private System.Windows.Forms.Label formLabelGameSelectTitle;
+        private System.Windows.Forms.Label formLabelNewsTitle;
+        internal System.Windows.Forms.ProgressBar formBarBottom;
+        internal System.Windows.Forms.ProgressBar formBarTop;
+        internal System.Windows.Forms.Label formLabelStatus;
+        internal System.Windows.Forms.Label formLabelTotalMB;
+        internal System.Windows.Forms.Label formLabelFileMB;
+        internal System.Windows.Forms.Label formLabelDLSpeed;
+        internal System.Windows.Forms.Label formLabelDLFile;
+        private System.Windows.Forms.CheckBox formCheckSaveLogin;
+        private System.Windows.Forms.CheckBox formCheckAutoLogin;
+        private System.Windows.Forms.Button formButtonAddGame;
+        private System.Windows.Forms.ComboBox formComboUsername;
+        private System.Windows.Forms.Label formLabelGameSelected;
+        private System.Windows.Forms.Button formButtonUpdate;
+        private System.Windows.Forms.Label formLabelUnderConstruct;
     }
 }
 
