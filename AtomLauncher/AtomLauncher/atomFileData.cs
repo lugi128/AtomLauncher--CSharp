@@ -91,12 +91,8 @@ namespace AtomLauncher
                         dict[splitArray[0]] = splitArray[1];
                     }
                 }
-                return dict;
             }
-            else
-            {
-                return dict;
-            }
+            return dict;
         }
         /// <summary>
         /// Save the the dictonary to a config file.
@@ -323,34 +319,55 @@ namespace AtomLauncher
         
         public static void queueDelete(string pathFILE)
         {
-            Thread delQuT = new Thread(() => deleteThread(pathFILE));
+            Thread delQuT = new Thread(() => deleteLoop(pathFILE, true));
             delQuT.Start();
         }
-        public static void deleteThread(string pathFILE)
+        public static string deleteLoop(string pathFILE, bool runByThread = false)
         {
+            string status = "";
             int x = 0;
             while (true)
+            {
+                bool tempBool = tryToDelete(pathFILE);
+                if (tempBool)
+                {
+                    break;
+                }
+                Thread.Sleep(1000);
+                if (x > 10)
+                {
+                    try
+                    {
+                        File.Delete(pathFILE);
+                    }
+                    catch (Exception ex)
+                    {
+                        status = ex.Message;
+                        if (runByThread) MessageBox.Show(ex.Message);
+                    }
+                    break;
+                }
+                x++;
+            }
+            return status;
+        }
+        public static bool tryToDelete(string pathFILE)
+        {
+            if (File.Exists(pathFILE))
             {
                 try
                 {
                     File.Delete(pathFILE);
+                    return true;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    if (x > 30)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    else
-                    {
-                        x++;
-                        Thread.Sleep(1000);
-                    }
+                    return false;
                 }
-                if (!File.Exists(pathFILE))
-                {
-                    break;
-                }
+            }
+            else
+            {
+                return true;
             }
         }
     }

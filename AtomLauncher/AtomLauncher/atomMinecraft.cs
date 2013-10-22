@@ -60,7 +60,7 @@ namespace AtomLauncher
         internal static string start(string username = "", string password = "", bool saveLogin = false, bool autoLogin = false)
         {
             string status = "Successful";
-            string gameLocation = atomLauncher.gameData[atomLauncher.gameSelect]["location"][0];
+            string gameLocation = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["location"][0];
             int step = 0;
             while (step <= 8)
             {
@@ -68,9 +68,9 @@ namespace AtomLauncher
                 if (step == 0)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Versions...");
-                    if (atomLauncher.gameData[atomLauncher.gameSelect]["selectVer"][0].StartsWith("Latest: "))
+                    if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["selectVer"][0].StartsWith("Latest: "))
                     {
-                        status = getVersion(atomLauncher.gameSelect);
+                        status = getVersion(atomProgram.config["lastSelectedGame"]);
                     }
                     else
                     {
@@ -185,15 +185,15 @@ namespace AtomLauncher
             try
             {
                 if (atomLauncher.cancelPressed) { throw new System.Exception("Loading Settings"); }
-                mcLocation = atomLauncher.gameData[atomLauncher.gameSelect]["location"][0];
-                mcSave = atomLauncher.gameData[atomLauncher.gameSelect]["saveLoc"][0];
-                mcStartRam = "-Xms" + atomLauncher.gameData[atomLauncher.gameSelect]["startRam"][0] + "m ";
-                mcMaxRam = "-Xmx" + atomLauncher.gameData[atomLauncher.gameSelect]["maxRam"][0] + "m ";
-                mcDisplayCMD = Convert.ToBoolean(atomLauncher.gameData[atomLauncher.gameSelect]["displayCMD"][0]);
-                mcCPUPriority = atomLauncher.gameData[atomLauncher.gameSelect]["CPUPriority"][0];
-                mcOnlineMode = Convert.ToBoolean(atomLauncher.gameData[atomLauncher.gameSelect]["onlineMode"][0]);
-                mcOfflineName = atomLauncher.gameData[atomLauncher.gameSelect]["offlineName"][0];
-                mcSelectVer = atomLauncher.gameData[atomLauncher.gameSelect]["selectVer"][0];
+                mcLocation = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["location"][0];
+                mcSave = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["saveLoc"][0];
+                mcStartRam = "-Xms" + atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["startRam"][0] + "m ";
+                mcMaxRam = "-Xmx" + atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["maxRam"][0] + "m ";
+                mcDisplayCMD = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["displayCMD"][0]);
+                mcCPUPriority = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["CPUPriority"][0];
+                mcOnlineMode = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["onlineMode"][0]);
+                mcOfflineName = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["offlineName"][0];
+                mcSelectVer = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["selectVer"][0];
                 if (mcSelectVer.StartsWith("Latest: "))
                 {
                     if (mcSelectVer.EndsWith(" Recommended"))
@@ -205,9 +205,9 @@ namespace AtomLauncher
                         mcSelectVer = versionList["AL_LatestID"][1];
                     }
                 }
-                mcAutoSelect = Convert.ToBoolean(atomLauncher.gameData[atomLauncher.gameSelect]["autoSelect"][0]);
-                mcUseNightly = Convert.ToBoolean(atomLauncher.gameData[atomLauncher.gameSelect]["useNightly"][0]);
-                mcForce64Bit = Convert.ToBoolean(atomLauncher.gameData[atomLauncher.gameSelect]["force64Bit"][0]);
+                mcAutoSelect = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoSelect"][0]);
+                mcUseNightly = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["useNightly"][0]);
+                mcForce64Bit = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["force64Bit"][0]);
             }
             catch (Exception ex)
             {
@@ -312,11 +312,11 @@ namespace AtomLauncher
                     if (atomLauncher.cancelPressed) throw new System.Exception("Saving Launcher Data");
                     if (saveLogin)
                     {
-                        if (!atomLauncher.userData.ContainsKey(atomLauncher.gameSelect))
+                        if (!atomLauncher.userData.ContainsKey(atomProgram.config["lastSelectedGame"]))
                         {
-                            atomLauncher.userData.Add(atomLauncher.gameSelect, new Dictionary<string, string[]>());
+                            atomLauncher.userData.Add(atomProgram.config["lastSelectedGame"], new Dictionary<string, string[]>());
                         }
-                        atomLauncher.userData[atomLauncher.gameSelect][username] = new string[]
+                        atomLauncher.userData[atomProgram.config["lastSelectedGame"]][username] = new string[]
                         {
                             propperUsername,
                             otherCipher.Encrypt(password, otherCipher.uniqueMachineId()),
@@ -327,32 +327,32 @@ namespace AtomLauncher
                     }
                     else
                     {
-                        if (atomLauncher.userData.ContainsKey(atomLauncher.gameSelect))
+                        if (atomLauncher.userData.ContainsKey(atomProgram.config["lastSelectedGame"]))
                         {
-                            if (atomLauncher.userData[atomLauncher.gameSelect].ContainsKey(username))
+                            if (atomLauncher.userData[atomProgram.config["lastSelectedGame"]].ContainsKey(username))
                             {
-                                atomLauncher.userData[atomLauncher.gameSelect].Remove(username);
+                                atomLauncher.userData[atomProgram.config["lastSelectedGame"]].Remove(username);
                                 atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
                             }
                         }
                     }
                     if (autoLogin)
                     {
-                        if (!atomLauncher.gameData.ContainsKey(atomLauncher.gameSelect))
+                        if (!atomLauncher.gameData.ContainsKey(atomProgram.config["lastSelectedGame"]))
                         {
-                            atomLauncher.gameData.Add(atomLauncher.gameSelect, new Dictionary<string, string[]>());
+                            atomLauncher.gameData.Add(atomProgram.config["lastSelectedGame"], new Dictionary<string, string[]>());
                         }
-                        if (atomLauncher.gameData[atomLauncher.gameSelect]["autoLoginUser"][0] != username)
+                        if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != username)
                         {
-                            atomLauncher.gameData[atomLauncher.gameSelect]["autoLoginUser"][0] = username;
+                            atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] = username;
                             atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
                         }
                     }
                     else
                     {
-                        if (atomLauncher.gameData[atomLauncher.gameSelect]["autoLoginUser"][0] != "")
+                        if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
                         {
-                            atomLauncher.gameData[atomLauncher.gameSelect]["autoLoginUser"][0] = "";
+                            atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] = "";
                             atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
                         }
                     }

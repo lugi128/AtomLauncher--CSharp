@@ -144,7 +144,7 @@ namespace AtomLauncher
             catch (Exception ex)
             {
                 cancelDownload = true;
-                throw new System.Exception("Error: " + ex.Message);
+                throw new System.Exception(ex.Message);
             }
                 /////////////////////
             if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Downloading File");
@@ -158,7 +158,7 @@ namespace AtomLauncher
             catch (Exception ex)
             {
                 cancelDownload = true;
-                throw new System.Exception("Error: " + ex.Message);
+                throw new System.Exception(ex.Message);
             }
                 /////////////////////
             if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Downloading File");
@@ -176,8 +176,6 @@ namespace AtomLauncher
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
             atomLauncher.atomLaunch.formText("formLabelTotalMB", "");
             atomLauncher.atomLaunch.barValues(100, 100);
-                /////////////////////
-            if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Downloading File");
         }
 
         /// <summary>
@@ -203,7 +201,7 @@ namespace AtomLauncher
                 }
                 catch (Exception ex)
                 {
-                    throw new System.Exception("Error: " + ex.Message);
+                    throw new System.Exception(ex.Message);
                 }
             }
         }
