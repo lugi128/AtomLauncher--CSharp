@@ -279,7 +279,7 @@ namespace AtomLauncher
             {
                 if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
                 {
-                    status = "Error: Internet Disconnected.";
+                    status = "Error: Internet Disconnected. Use Offline Mode in order to play without internet.";
                 }
                 else if (atomLauncher.cancelPressed)
                 {
@@ -436,7 +436,7 @@ namespace AtomLauncher
             string status = "Successful";
             try
             {
-                if (atomLauncher.cancelPressed) throw new System.Exception("Downloading Files");
+                if (atomLauncher.cancelPressed) throw new System.Exception("Checking Minecraft Files");
                 Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
                 int x = 0;
                 foreach (string entry in versionData["libraries"]) //maybe fix this to a proper for loop.
@@ -458,19 +458,29 @@ namespace AtomLauncher
                 }
                 if (File.Exists(fileName))
                 {
-                    XDocument doc = XDocument.Load(fileName);
-
-                    foreach (XElement el in doc.Root.Elements())
+                    try
                     {
-                        foreach (XElement element in el.Elements())
+                        XDocument doc = XDocument.Load(fileName);
+                        foreach (XElement el in doc.Root.Elements())
                         {
-                            if (element.Name.LocalName == "Key")
+                            foreach (XElement element in el.Elements())
                             {
-                                if (!element.Value.EndsWith("/"))
+                                if (element.Name.LocalName == "Key")
                                 {
-                                    fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Resources/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
+                                    if (!element.Value.EndsWith("/"))
+                                    {
+                                        fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Resources/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
+                                    }
                                 }
                             }
+                        }
+                    }
+                    catch
+                    {
+                        status = atomFileData.deleteLoop(fileName);
+                        if (status == "")
+                        {
+                            status = "Minecraft Resources Error: Please login again.";
                         }
                     }
                 }
@@ -478,17 +488,20 @@ namespace AtomLauncher
                 {
                     status = subString + " / Resource File Missing.";
                 }
-                fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + versionData["id"][0] + "/" + versionData["id"][0] + ".jar", @"versions\" + versionData["id"][0] + @"\" + versionData["id"][0] + ".jar" }); x++;
-                Dictionary<int, string[]> downloadInput = atomFileData.fileCheck(fileInput, mcLocation);
-                if (mcOnlineMode)
+                if (status == "Successful")
                 {
-                    atomDownloading.Multi(downloadInput, mcLocation);
-                }
-                else
-                {
-                    if (downloadInput.Count > 0)
+                    fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + versionData["id"][0] + "/" + versionData["id"][0] + ".jar", @"versions\" + versionData["id"][0] + @"\" + versionData["id"][0] + ".jar" }); x++;
+                    Dictionary<int, string[]> downloadInput = atomFileData.fileCheck(fileInput, mcLocation);
+                    if (mcOnlineMode)
                     {
-                        status = "Offline Mode, Files Missing. You need to login and download first, before offline mode can be used.";
+                        atomDownloading.Multi(downloadInput, mcLocation);
+                    }
+                    else
+                    {
+                        if (downloadInput.Count > 0)
+                        {
+                            status = "Offline Mode, Files Missing. You need to login and download first, before offline mode can be used.";
+                        }
                     }
                 }
             }
@@ -500,7 +513,7 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    status = "Error: Downloading Files: " + ex.Message;
+                    status = "Error: Checking Minecraft Files: " + ex.Message;
                 }
             }
             return status;
@@ -562,13 +575,13 @@ namespace AtomLauncher
                         javaFile = mainDrive + @"Windows\System32\" + javaFile + ".exe";
                     }
                 }
-                string mcNatives = "-Djava.library.path=" + mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + "-natives-AL74";
+                string mcNatives = "-Djava.library.path=\"" + mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + "-natives-AL74\"";
                 string mcLibraries = "-cp ";
                 foreach (string entry in versionData["libraries"])
                 {
-                    mcLibraries = mcLibraries + mcLocation + @"\libraries\" + entry + ";";
+                    mcLibraries = mcLibraries + "\"" + mcLocation + @"\libraries\" + entry + "\";";
                 }
-                string mcJar = mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".jar";
+                string mcJar = "\"" + mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".jar\"";
                 string mcClass = versionData["mainClass"][0];
                 string mcArgs = versionData["minecraftArguments"][0];
                 mcArgs = mcArgs.Replace("${auth_player_name}", mcPropperUsername);
@@ -581,8 +594,8 @@ namespace AtomLauncher
                     mcArgs = mcArgs.Replace("--session ${auth_session}", "");
                 }
                 mcArgs = mcArgs.Replace("${version_name}", mcSelectVer);
-                mcArgs = mcArgs.Replace("${game_directory}", mcSave);
-                mcArgs = mcArgs.Replace("${game_assets}", mcLocation + @"\assets");
+                mcArgs = mcArgs.Replace("${game_directory}", "\"" + mcSave + "\"");
+                mcArgs = mcArgs.Replace("${game_assets}", "\"" + mcLocation + "\\assets\"");
                 buildArguments = mcStartRam + " " + mcMaxRam + " " + mcNatives + " " + mcLibraries + mcJar + " " + mcClass + " " + mcArgs;
             }
             catch (Exception ex)

@@ -49,7 +49,7 @@
             this.formLabelNewsTitle = new System.Windows.Forms.Label();
             this.formPanelRight = new System.Windows.Forms.Panel();
             this.formLabelGameSelected = new System.Windows.Forms.Label();
-            this.formLabelGameSelectTitle = new System.Windows.Forms.Label();
+            this.formButtonLauncherSettings = new System.Windows.Forms.Button();
             this.formButtonAddGame = new System.Windows.Forms.Button();
             this.formButtonUpdate = new System.Windows.Forms.Button();
             this.formButtonAbout = new System.Windows.Forms.Button();
@@ -162,6 +162,7 @@
             // formLabelTotalMB
             // 
             this.formLabelTotalMB.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelTotalMB.Font = new System.Drawing.Font("Lucida Console", 7F);
             this.formLabelTotalMB.ForeColor = System.Drawing.Color.White;
             this.formLabelTotalMB.Location = new System.Drawing.Point(504, 40);
             this.formLabelTotalMB.Name = "formLabelTotalMB";
@@ -172,6 +173,7 @@
             // formLabelFileMB
             // 
             this.formLabelFileMB.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelFileMB.Font = new System.Drawing.Font("Lucida Console", 7F);
             this.formLabelFileMB.ForeColor = System.Drawing.Color.White;
             this.formLabelFileMB.Location = new System.Drawing.Point(504, 24);
             this.formLabelFileMB.Name = "formLabelFileMB";
@@ -182,20 +184,22 @@
             // formLabelDLSpeed
             // 
             this.formLabelDLSpeed.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelDLSpeed.Font = new System.Drawing.Font("Lucida Console", 7F);
             this.formLabelDLSpeed.ForeColor = System.Drawing.Color.White;
             this.formLabelDLSpeed.Location = new System.Drawing.Point(4, 12);
             this.formLabelDLSpeed.Name = "formLabelDLSpeed";
-            this.formLabelDLSpeed.Size = new System.Drawing.Size(152, 16);
+            this.formLabelDLSpeed.Size = new System.Drawing.Size(92, 16);
             this.formLabelDLSpeed.TabIndex = 12;
             this.formLabelDLSpeed.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // formLabelDLFile
             // 
             this.formLabelDLFile.BackColor = System.Drawing.Color.Transparent;
+            this.formLabelDLFile.Font = new System.Drawing.Font("Lucida Console", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formLabelDLFile.ForeColor = System.Drawing.Color.White;
-            this.formLabelDLFile.Location = new System.Drawing.Point(156, 12);
+            this.formLabelDLFile.Location = new System.Drawing.Point(92, 12);
             this.formLabelDLFile.Name = "formLabelDLFile";
-            this.formLabelDLFile.Size = new System.Drawing.Size(348, 16);
+            this.formLabelDLFile.Size = new System.Drawing.Size(412, 16);
             this.formLabelDLFile.TabIndex = 12;
             this.formLabelDLFile.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
@@ -299,7 +303,7 @@
             // 
             this.formPanelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.formPanelRight.Controls.Add(this.formLabelGameSelected);
-            this.formPanelRight.Controls.Add(this.formLabelGameSelectTitle);
+            this.formPanelRight.Controls.Add(this.formButtonLauncherSettings);
             this.formPanelRight.Controls.Add(this.formButtonAddGame);
             this.formPanelRight.Location = new System.Drawing.Point(724, 28);
             this.formPanelRight.Name = "formPanelRight";
@@ -312,24 +316,28 @@
             this.formLabelGameSelected.BackColor = System.Drawing.Color.Transparent;
             this.formLabelGameSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formLabelGameSelected.ForeColor = System.Drawing.Color.White;
-            this.formLabelGameSelected.Location = new System.Drawing.Point(4, 24);
+            this.formLabelGameSelected.Location = new System.Drawing.Point(4, 4);
             this.formLabelGameSelected.Name = "formLabelGameSelected";
             this.formLabelGameSelected.Size = new System.Drawing.Size(283, 16);
             this.formLabelGameSelected.TabIndex = 1;
             this.formLabelGameSelected.Text = "Game: Loading";
             this.formLabelGameSelected.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // formLabelGameSelectTitle
+            // formButtonLauncherSettings
             // 
-            this.formLabelGameSelectTitle.BackColor = System.Drawing.Color.Transparent;
-            this.formLabelGameSelectTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formLabelGameSelectTitle.ForeColor = System.Drawing.Color.White;
-            this.formLabelGameSelectTitle.Location = new System.Drawing.Point(4, 4);
-            this.formLabelGameSelectTitle.Name = "formLabelGameSelectTitle";
-            this.formLabelGameSelectTitle.Size = new System.Drawing.Size(284, 16);
-            this.formLabelGameSelectTitle.TabIndex = 1;
-            this.formLabelGameSelectTitle.Text = "Pick a game to play.";
-            this.formLabelGameSelectTitle.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.formButtonLauncherSettings.BackColor = System.Drawing.Color.White;
+            this.formButtonLauncherSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonLauncherSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formButtonLauncherSettings.ForeColor = System.Drawing.Color.Black;
+            this.formButtonLauncherSettings.Location = new System.Drawing.Point(148, 24);
+            this.formButtonLauncherSettings.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonLauncherSettings.Name = "formButtonLauncherSettings";
+            this.formButtonLauncherSettings.Size = new System.Drawing.Size(140, 24);
+            this.formButtonLauncherSettings.TabIndex = 8;
+            this.formButtonLauncherSettings.TabStop = false;
+            this.formButtonLauncherSettings.Text = "Launcher Settings";
+            this.formButtonLauncherSettings.UseVisualStyleBackColor = false;
+            this.formButtonLauncherSettings.Click += new System.EventHandler(this.formButtonLauncherSettings_Click);
             // 
             // formButtonAddGame
             // 
@@ -337,10 +345,10 @@
             this.formButtonAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonAddGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formButtonAddGame.ForeColor = System.Drawing.Color.Black;
-            this.formButtonAddGame.Location = new System.Drawing.Point(4, 44);
+            this.formButtonAddGame.Location = new System.Drawing.Point(4, 24);
             this.formButtonAddGame.Margin = new System.Windows.Forms.Padding(0);
             this.formButtonAddGame.Name = "formButtonAddGame";
-            this.formButtonAddGame.Size = new System.Drawing.Size(136, 24);
+            this.formButtonAddGame.Size = new System.Drawing.Size(140, 24);
             this.formButtonAddGame.TabIndex = 8;
             this.formButtonAddGame.TabStop = false;
             this.formButtonAddGame.Text = "Add Custom Game";
@@ -421,7 +429,6 @@
         private System.Windows.Forms.Panel formPanelBottom;
         private System.Windows.Forms.Panel formPanelLeft;
         private System.Windows.Forms.Panel formPanelRight;
-        private System.Windows.Forms.Label formLabelGameSelectTitle;
         private System.Windows.Forms.Label formLabelNewsTitle;
         internal System.Windows.Forms.ProgressBar formBarBottom;
         internal System.Windows.Forms.ProgressBar formBarTop;
@@ -438,6 +445,7 @@
         private System.Windows.Forms.Button formButtonUpdate;
         private System.Windows.Forms.Label formLabelUnderConstruct;
         private System.Windows.Forms.Button formButtonAbout;
+        private System.Windows.Forms.Button formButtonLauncherSettings;
     }
 }
 

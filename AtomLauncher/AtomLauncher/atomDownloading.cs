@@ -59,7 +59,7 @@ namespace AtomLauncher
             {
                 if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Checking Remote Files");
                 int contentLength = 0;
-                atomLauncher.atomLaunch.formText("formLabelDLFile", (entry.Value[0]).TruncateDots(60));
+                atomLauncher.atomLaunch.formText("formLabelDLFile", (entry.Value[0]).TruncateDots(67));
                 try
                 {
                     System.Net.WebRequest req = System.Net.HttpWebRequest.Create(entry.Value[0]);
@@ -122,7 +122,7 @@ namespace AtomLauncher
             bytesRecieved = 0;
             downloadingFile = "NoFile";
             atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Remote File");
-            atomLauncher.atomLaunch.formText("formLabelDLFile", urlFilePATH.TruncateDots(60));
+            atomLauncher.atomLaunch.formText("formLabelDLFile", urlFilePATH.TruncateDots(67));
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
             atomLauncher.atomLaunch.formText("formLabelTotalMB", "");
@@ -232,22 +232,22 @@ namespace AtomLauncher
                         atomLauncher.atomLaunch.barValues(0, 0);
                         downloadAmmount = Convert.ToDouble(e.BytesReceived) - downloadAmmount; //Refine this. To more accuratly show appropriot speed. Espesially in low bandwidth situations.
                         timeAmmount = sw.Elapsed.TotalSeconds - timeAmmount;
-                        atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile.TruncateDots(60));
+                        atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile.TruncateDots(67));
                         if (atomLauncher.atomLaunch.formLabelDLSpeed.Text != (downloadAmmount / 1024 / timeAmmount).ToString("0.00"))
                         {
-                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", (downloadAmmount / 1024 / timeAmmount).ToString("0.00") + " kb/s");
+                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", (downloadAmmount / 1024 / timeAmmount).ToString("0.00") + " kB/s");
                         }
                         if (atomLauncher.atomLaunch.formBarTop.Value != e.ProgressPercentage)
                         {
                             atomLauncher.atomLaunch.barValues(e.ProgressPercentage, Convert.ToInt32(compileReceivedBytes * 100 / totalBytes));
-                            atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " Mb's " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " Mb's");
-                            atomLauncher.atomLaunch.formText("formLabelTotalMB", (Convert.ToDouble(compileReceivedBytes) / 1024 / 1024).ToString("0.00") + " Mb's " + "/ " + (Convert.ToDouble(totalBytes) / 1024 / 1024).ToString("0.00") + " Mb's");
+                            atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
+                            atomLauncher.atomLaunch.formText("formLabelTotalMB", (Convert.ToDouble(compileReceivedBytes) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(totalBytes) / 1024 / 1024).ToString("0.00") + " MB");
                         }
                     }
                     else
                     {
                         atomLauncher.atomLaunch.barValues(100, Convert.ToInt32(compileReceivedBytes * 100 / totalBytes));
-                        atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " Mb's " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " Mb's");
+                        atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
                     }
                 }
             }

@@ -22,9 +22,11 @@ namespace AtomLauncher
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // This launcher is looking for a version number and a download url on the URL
         // Version:::URL
-        // 000.000.000:::http://www.url.com
+        // 0.0.0.0:::http://www.url.com
+        // MajorChange.StandardAdd.MinorAdd.BugFix
         // The version number is controlled by the properties window. (The config file, if present, overwrites it).
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public static string fileChangeVersion = "1.0.3.15"; // Last version of which the code for the saved data was changed.
         public static bool cancelPressed = false;
         public static Dictionary<string, Dictionary<string, string[]>> gameData = new Dictionary<string, Dictionary<string, string[]>>();
         public static Dictionary<string, Dictionary<string, string[]>> userData = new Dictionary<string, Dictionary<string, string[]>>();
@@ -79,7 +81,7 @@ namespace AtomLauncher
 
         private void formPanelRight_Click(object sender, EventArgs e)
         {
-            if (formLabelGameSelectTitle.Enabled)
+            if (formLabelGameSelected.Enabled)
             {
                 foreach (Control x in this.formPanelRight.Controls)
                 {
@@ -92,7 +94,7 @@ namespace AtomLauncher
                     }
                 }
                 atomProgram.config["lastSelectedGame"] = "";
-                formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
+                formLabelGameSelected.Text = "Pick one to launch.";
                 setInputBoxes();
             }
         }
@@ -142,6 +144,7 @@ namespace AtomLauncher
 
         private void formButtonUpdate_Click(object sender, EventArgs e)
         {
+            // Should Create a form for this. For better control.
             DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomProgram.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
             if (updateDialog == DialogResult.Yes)
             {
@@ -186,6 +189,20 @@ namespace AtomLauncher
         {
             atomAboutBox box = new atomAboutBox();
             box.ShowDialog();
+        }
+
+        private void formButtonLauncherSettings_Click(object sender, EventArgs e)
+        {
+            // Create Settings for Launcher here.
+            //    Settings List.
+            //    Change idle background image.
+            //    Update Url Change.
+            //    Debug on/off.
+            //    Version Number Change.
+            //    Manual Select Game.
+            //    Delete User Data.
+            //    Delete Game Data.
+            //    Set all to Defaults.
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -265,14 +282,7 @@ namespace AtomLauncher
                     }
                     if (status == "")
                     {
-                        string[] verSplit = atomProgram.config["launcherVersion"].Split('.');//MajorChange.StandardAdd.MinorAdd.BugFix
-                        string[] downSplit = downloadVersion.Split('.');
-                        int verLength = 0;
-                        foreach (string entry in verSplit){if (verLength < entry.Length){verLength = entry.Length;}}
-                        foreach (string entry in downSplit){if (verLength < entry.Length){verLength = entry.Length;}}
-                        for (int i = 0; i < verSplit.Length; i++){verSplit[i] = verSplit[i].PadLeft(verLength, '0');}
-                        for (int i = 0; i < downSplit.Length; i++){downSplit[i] = downSplit[i].PadLeft(verLength, '0');}
-                        if (Convert.ToDouble(string.Concat(verSplit)) < Convert.ToDouble(string.Concat(downSplit)))
+                        if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], downloadVersion))
                         {
                             this.Invoke(new MethodInvoker(delegate
                             {
@@ -336,6 +346,17 @@ namespace AtomLauncher
             else
             {
                 atomProgram.config = atomFileData.loadConfFile(atomFileData.configFile);
+                //if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], fileChangeVersion))
+                //{
+                //    string status = atomFileData.deleteLoop(atomFileData.gameDataFile);
+                //    status = status + atomFileData.deleteLoop(atomFileData.userDataFile);
+                //    status = status + atomFileData.deleteLoop(atomFileData.configFile);
+                //    if (status != "")
+                //    {
+                //        MessageBox.Show("File Error: Deleting File Data: " + status, "Data File");
+                //    }
+                //    MessageBox.Show("Update Notification: Updates to the opening and saveing of files have changed. The files saved to the computer have been deleted. Sorry for the inconvience.", "Update Notification");
+                //}
                 gameData = atomFileData.getGameData(atomFileData.gameDataFile);
                 userData = atomFileData.getUserData(atomFileData.userDataFile);
                 atomProgram.debugApp = Convert.ToBoolean(atomProgram.config["debug"]);
@@ -376,7 +397,8 @@ namespace AtomLauncher
             this.Invoke(new MethodInvoker(delegate
             {
                 formPanelRight.Controls.Clear();
-                formPanelRight.Controls.Add(this.formLabelGameSelectTitle);
+                formPanelRight.Controls.Add(this.formButtonAddGame);
+                formPanelRight.Controls.Add(this.formButtonLauncherSettings);
                 formPanelRight.Controls.Add(this.formLabelGameSelected);
                 formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
                 formPanelRight.VerticalScroll.Visible = false;
@@ -391,7 +413,7 @@ namespace AtomLauncher
                 {
                     picture.ImageLocation = gameData[entry.Key]["thumbnailLoc"][0];
                 }
-                picture.Location = new System.Drawing.Point(4, 44 + (84 * x));
+                picture.Location = new System.Drawing.Point(4, 52 + (84 * x));
                 picture.Name = "formPicture" + entry.Key;
                 picture.Size = new System.Drawing.Size(260, 80);
                 picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -406,7 +428,7 @@ namespace AtomLauncher
                 setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 setting.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 setting.ForeColor = System.Drawing.Color.Black;
-                setting.Location = new System.Drawing.Point(264, 44 + (84 * x));
+                setting.Location = new System.Drawing.Point(264, 52 + (84 * x));
                 setting.Margin = new System.Windows.Forms.Padding(0);
                 setting.Name = "atomButtonSettings" + entry.Key;
                 setting.Size = new System.Drawing.Size(24, 40);
@@ -431,7 +453,7 @@ namespace AtomLauncher
                 trash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 trash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 trash.ForeColor = System.Drawing.Color.Black;
-                trash.Location = new System.Drawing.Point(264, 84 + (84 * x));
+                trash.Location = new System.Drawing.Point(264, 92 + (84 * x));
                 trash.Margin = new System.Windows.Forms.Padding(0);
                 trash.Name = "atomButtonTrash" + entry.Key;
                 trash.Size = new System.Drawing.Size(24, 40);
@@ -443,7 +465,6 @@ namespace AtomLauncher
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(trash); }));
                 x++;
             }
-            this.Invoke(new MethodInvoker(delegate { this.formButtonAddGame.Location = new System.Drawing.Point(4, 44 + (84 * x)); formPanelRight.Controls.Add(this.formButtonAddGame); }));
             foreach (Control c in this.formPanelRight.Controls)
             {
                 if (c is PictureBox)
@@ -510,16 +531,13 @@ namespace AtomLauncher
                 {
                     foreach (KeyValuePair<string, string[]> dict in userData[atomProgram.config["lastSelectedGame"]])
                     {
-                        if (dict.Key != "AL_DICTONARYAMMOUNT")
+                        formComboUsername.Items.Add(dict.Key);
+                        formCheckSaveLogin.Checked = true;
+                        if (x == 0)
                         {
-                            formComboUsername.Items.Add(dict.Key);
-                            formCheckSaveLogin.Checked = true;
-                            if (x == 0)
-                            {
-                                formComboUsername.Text = dict.Key;
-                            }
-                            x++;
+                            formComboUsername.Text = dict.Key;
                         }
+                        x++;
                     }
                 }
             }
@@ -586,6 +604,7 @@ namespace AtomLauncher
                 Monitor.Exit(threadLock); //Unlock for use of other threads.
             }
         }
+        
         /// <summary>
         /// Controls the form to be disabled or enabled. Also changes the main button text.
         /// </summary>
