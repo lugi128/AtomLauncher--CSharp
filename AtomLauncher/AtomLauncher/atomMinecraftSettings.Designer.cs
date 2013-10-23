@@ -75,14 +75,14 @@
             this.Java = new System.Windows.Forms.TabPage();
             this.Program = new System.Windows.Forms.TabPage();
             this.Delete = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.formButtonDeleteAll = new System.Windows.Forms.Button();
+            this.formButtonDeleteVerList = new System.Windows.Forms.Button();
+            this.formButtonDeleteVerFiles = new System.Windows.Forms.Button();
+            this.formButtonDeleteNatives = new System.Windows.Forms.Button();
+            this.formButtonDeleteSaves = new System.Windows.Forms.Button();
+            this.formButtonDeleteAssets = new System.Windows.Forms.Button();
+            this.formButtonDeleteAllButSaves = new System.Windows.Forms.Button();
+            this.formButtonDeleteLibraries = new System.Windows.Forms.Button();
             this.formPanel = new System.Windows.Forms.Panel();
             this.formLabelMinecraftSettingsTitle = new System.Windows.Forms.Label();
             this.formButtonClose = new System.Windows.Forms.Button();
@@ -591,14 +591,14 @@
             // 
             // Delete
             // 
-            this.Delete.Controls.Add(this.button4);
-            this.Delete.Controls.Add(this.button3);
-            this.Delete.Controls.Add(this.button2);
-            this.Delete.Controls.Add(this.button5);
-            this.Delete.Controls.Add(this.button8);
-            this.Delete.Controls.Add(this.button7);
-            this.Delete.Controls.Add(this.button6);
-            this.Delete.Controls.Add(this.button1);
+            this.Delete.Controls.Add(this.formButtonDeleteAll);
+            this.Delete.Controls.Add(this.formButtonDeleteVerList);
+            this.Delete.Controls.Add(this.formButtonDeleteVerFiles);
+            this.Delete.Controls.Add(this.formButtonDeleteNatives);
+            this.Delete.Controls.Add(this.formButtonDeleteSaves);
+            this.Delete.Controls.Add(this.formButtonDeleteAssets);
+            this.Delete.Controls.Add(this.formButtonDeleteAllButSaves);
+            this.Delete.Controls.Add(this.formButtonDeleteLibraries);
             this.Delete.Location = new System.Drawing.Point(4, 22);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(272, 166);
@@ -606,85 +606,85 @@
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // formButtonDeleteAll
             // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(8, 136);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(256, 24);
-            this.button4.TabIndex = 11;
-            this.button4.Text = "Delete All";
-            this.button4.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAll.Location = new System.Drawing.Point(8, 136);
+            this.formButtonDeleteAll.Name = "formButtonDeleteAll";
+            this.formButtonDeleteAll.Size = new System.Drawing.Size(256, 24);
+            this.formButtonDeleteAll.TabIndex = 11;
+            this.formButtonDeleteAll.Text = "Delete All";
+            this.formButtonDeleteAll.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAll.Click += new System.EventHandler(this.formButtonDeleteAll_Click);
             // 
-            // button3
+            // formButtonDeleteVerList
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(144, 8);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(120, 24);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Delete Version List";
-            this.button3.UseVisualStyleBackColor = false;
+            this.formButtonDeleteVerList.Location = new System.Drawing.Point(144, 8);
+            this.formButtonDeleteVerList.Name = "formButtonDeleteVerList";
+            this.formButtonDeleteVerList.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteVerList.TabIndex = 11;
+            this.formButtonDeleteVerList.Text = "Delete Version List";
+            this.formButtonDeleteVerList.UseVisualStyleBackColor = false;
+            this.formButtonDeleteVerList.Click += new System.EventHandler(this.formButtonDeleteVerList_Click);
             // 
-            // button2
+            // formButtonDeleteVerFiles
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(8, 8);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(120, 24);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Delete Version File";
-            this.button2.UseVisualStyleBackColor = false;
+            this.formButtonDeleteVerFiles.Location = new System.Drawing.Point(8, 8);
+            this.formButtonDeleteVerFiles.Name = "formButtonDeleteVerFiles";
+            this.formButtonDeleteVerFiles.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteVerFiles.TabIndex = 11;
+            this.formButtonDeleteVerFiles.Text = "Delete Version Files";
+            this.formButtonDeleteVerFiles.UseVisualStyleBackColor = false;
+            this.formButtonDeleteVerFiles.Click += new System.EventHandler(this.formButtonDeleteVerFiles_Click);
             // 
-            // button5
+            // formButtonDeleteNatives
             // 
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(144, 40);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(120, 24);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Delete Natives";
-            this.button5.UseVisualStyleBackColor = false;
+            this.formButtonDeleteNatives.Location = new System.Drawing.Point(144, 40);
+            this.formButtonDeleteNatives.Name = "formButtonDeleteNatives";
+            this.formButtonDeleteNatives.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteNatives.TabIndex = 11;
+            this.formButtonDeleteNatives.Text = "Delete Natives";
+            this.formButtonDeleteNatives.UseVisualStyleBackColor = false;
+            this.formButtonDeleteNatives.Click += new System.EventHandler(this.formButtonDeleteNatives_Click);
             // 
-            // button8
+            // formButtonDeleteSaves
             // 
-            this.button8.Enabled = false;
-            this.button8.Location = new System.Drawing.Point(144, 72);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(120, 24);
-            this.button8.TabIndex = 11;
-            this.button8.Text = "Delete Saves";
-            this.button8.UseVisualStyleBackColor = false;
+            this.formButtonDeleteSaves.Location = new System.Drawing.Point(144, 72);
+            this.formButtonDeleteSaves.Name = "formButtonDeleteSaves";
+            this.formButtonDeleteSaves.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteSaves.TabIndex = 11;
+            this.formButtonDeleteSaves.Text = "Delete Saves";
+            this.formButtonDeleteSaves.UseVisualStyleBackColor = false;
+            this.formButtonDeleteSaves.Click += new System.EventHandler(this.formButtonDeleteSaves_Click);
             // 
-            // button7
+            // formButtonDeleteAssets
             // 
-            this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(8, 72);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(120, 24);
-            this.button7.TabIndex = 11;
-            this.button7.Text = "Delete Assets";
-            this.button7.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAssets.Location = new System.Drawing.Point(8, 72);
+            this.formButtonDeleteAssets.Name = "formButtonDeleteAssets";
+            this.formButtonDeleteAssets.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteAssets.TabIndex = 11;
+            this.formButtonDeleteAssets.Text = "Delete Assets";
+            this.formButtonDeleteAssets.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAssets.Click += new System.EventHandler(this.formButtonDeleteAssets_Click);
             // 
-            // button6
+            // formButtonDeleteAllButSaves
             // 
-            this.button6.Enabled = false;
-            this.button6.Location = new System.Drawing.Point(8, 104);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(256, 24);
-            this.button6.TabIndex = 11;
-            this.button6.Text = "Delete All Except Saves";
-            this.button6.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAllButSaves.Location = new System.Drawing.Point(8, 104);
+            this.formButtonDeleteAllButSaves.Name = "formButtonDeleteAllButSaves";
+            this.formButtonDeleteAllButSaves.Size = new System.Drawing.Size(256, 24);
+            this.formButtonDeleteAllButSaves.TabIndex = 11;
+            this.formButtonDeleteAllButSaves.Text = "Delete All Except Saves";
+            this.formButtonDeleteAllButSaves.UseVisualStyleBackColor = false;
+            this.formButtonDeleteAllButSaves.Click += new System.EventHandler(this.formButtonDeleteAllButSaves_Click);
             // 
-            // button1
+            // formButtonDeleteLibraries
             // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(8, 40);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(120, 24);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Delete Libraries";
-            this.button1.UseVisualStyleBackColor = false;
+            this.formButtonDeleteLibraries.Location = new System.Drawing.Point(8, 40);
+            this.formButtonDeleteLibraries.Name = "formButtonDeleteLibraries";
+            this.formButtonDeleteLibraries.Size = new System.Drawing.Size(120, 24);
+            this.formButtonDeleteLibraries.TabIndex = 11;
+            this.formButtonDeleteLibraries.Text = "Delete Libraries";
+            this.formButtonDeleteLibraries.UseVisualStyleBackColor = false;
+            this.formButtonDeleteLibraries.Click += new System.EventHandler(this.formButtonDeleteLibraries_Click);
             // 
             // formPanel
             // 
@@ -799,14 +799,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label formLabelVersionStatus;
         private System.Windows.Forms.TabPage Delete;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button formButtonDeleteLibraries;
+        private System.Windows.Forms.Button formButtonDeleteAll;
+        private System.Windows.Forms.Button formButtonDeleteVerList;
+        private System.Windows.Forms.Button formButtonDeleteVerFiles;
+        private System.Windows.Forms.Button formButtonDeleteNatives;
+        private System.Windows.Forms.Button formButtonDeleteAllButSaves;
+        private System.Windows.Forms.Button formButtonDeleteSaves;
+        private System.Windows.Forms.Button formButtonDeleteAssets;
         private System.Windows.Forms.Button formButtonThumbnail;
         private System.Windows.Forms.Label formLabelThumbnail;
         private System.Windows.Forms.TextBox formTextThumbnail;

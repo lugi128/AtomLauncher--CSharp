@@ -16,7 +16,6 @@ namespace AtomLauncher
         internal static string gameDataFile = @".\ALGData";
         internal static string configFile = @".\ALConfig.alcfg";
 
-
         public static Dictionary<int, string[]> fileCheck(Dictionary<int, string[]> dict, string location)
         {
             Dictionary<int, string[]> tmpDict = new Dictionary<int, string[]>();
@@ -56,7 +55,6 @@ namespace AtomLauncher
             return tmpDict;
         }
 
-
         /// <summary>
         /// Return defaults for the config file or Dictonary config.
         /// </summary>
@@ -91,12 +89,8 @@ namespace AtomLauncher
                         dict[splitArray[0]] = splitArray[1];
                     }
                 }
-                return dict;
             }
-            else
-            {
-                return dict;
-            }
+            return dict;
         }
         /// <summary>
         /// Save the the dictonary to a config file.
@@ -131,8 +125,7 @@ namespace AtomLauncher
             Dictionary<string, Dictionary<string, string[]>> defaultDict = new Dictionary<string, Dictionary<string, string[]>>{
                 {
                     "Minecraft", new Dictionary<string, string[]> { 
-                        { "AL_DICTONARYAMMOUNT",    new string[] { "12" } }, //# = how many other Keys are present in this section.
-                        { "gameType",      new string[] { "Minecraft" } },
+                        { "gameType",      new string[] { "Minecraft" } }, //Used to Reference Defaults
                         { "location",      new string[] { atomProgram.appData + @"\.minecraft" } },
                         { "saveLoc",       new string[] { atomProgram.appData + @"\.minecraft" } },
                         { "thumbnailLoc",  new string[] { "" } },
@@ -190,8 +183,7 @@ namespace AtomLauncher
             Dictionary<string, Dictionary<string, string[]>> defaultDict = new Dictionary<string, Dictionary<string, string[]>>{
                 {
                     "Minecraft", new Dictionary<string, string[]> { 
-                        { "AL_DICTONARYAMMOUNT",    new string[] { "0","","","" } }
-                        //{ "UserLogin", new string[] { "Propper Username", "Encrypted Password", "Last Session ID", "Last Session ID Date and Time" } }
+                        //{ "UserName", new string[] { "Propper Username", "Encrypted Password", "Last Session ID", "Last Session ID Date and Time" } }
                     } 
                 }
             };
@@ -222,45 +214,15 @@ namespace AtomLauncher
         /// <param name="arrayThree">The Format of the dictonary to save. UserData is true. GameData is false</param>
         internal static void saveDictonary(string pathFile, Dictionary<string, Dictionary<string, string[]>> inData, bool arrayFour = false)
         {
-            Dictionary<string, Dictionary<string, string[]>> data = new Dictionary<string, Dictionary<string, string[]>>();
-            foreach (KeyValuePair<string, Dictionary<string, string[]>> section in inData)
-            {
-                data.Add(section.Key, new Dictionary<string, string[]>());
-                int x = 0;
-                foreach (KeyValuePair<string, string[]> item in section.Value)
-                {
-                    if (item.Key != "AL_DICTONARYAMMOUNT")
-                    {
-                        x++;
-                    }
-                }
-                if (arrayFour)
-                {
-                    data[section.Key]["AL_DICTONARYAMMOUNT"] = new string[] { x.ToString(), "", "", "" };
-                }
-                else
-                {
-                    data[section.Key]["AL_DICTONARYAMMOUNT"] = new string[] { x.ToString() };
-                }
-            }
-            foreach (KeyValuePair<string, Dictionary<string, string[]>> section in inData)
-            {
-                foreach (KeyValuePair<string, string[]> item in section.Value)
-                {
-                    if (item.Key != "AL_DICTONARYAMMOUNT")
-                    {
-                        data[section.Key][item.Key] = item.Value;
-                    }
-                }
-            }
             using (var file = File.Create(pathFile))
             using (var deflate = new DeflateStream(file, CompressionMode.Compress))
             using (var writer = new BinaryWriter(deflate))
             {
-                writer.Write(data.Count);
-                foreach (var pair in data)
+                writer.Write(inData.Count);
+                foreach (var pair in inData)
                 {
                     writer.Write(pair.Key);
+                    writer.Write(pair.Value.Count);
                     foreach (var subpair in pair.Value)
                     {
                         writer.Write(subpair.Key);
@@ -293,18 +255,8 @@ namespace AtomLauncher
                 {
                     Dictionary<string, string[]> subdata = new Dictionary<string, string[]>();
                     string stringDict = reader.ReadString();
-                    string getAmmName = reader.ReadString();
-                    string number = reader.ReadString();
-                    int dictonaryAmm = Convert.ToInt32(number);
-                    if (arrayFour)
-                    {
-                        subdata.Add(getAmmName, new string[] { dictonaryAmm.ToString(), reader.ReadString(), reader.ReadString(), reader.ReadString() });
-                    }
-                    else 
-                    { 
-                        subdata.Add(getAmmName, new string[] { dictonaryAmm.ToString() }); 
-                    };
-                    while (dictonaryAmm-- > 0)
+                    int subCount = reader.ReadInt32();
+                    while (subCount-- > 0)
                     {
                         if (arrayFour) 
                         {
@@ -323,34 +275,55 @@ namespace AtomLauncher
         
         public static void queueDelete(string pathFILE)
         {
-            Thread delQuT = new Thread(() => deleteThread(pathFILE));
+            Thread delQuT = new Thread(() => deleteLoop(pathFILE, true));
             delQuT.Start();
         }
-        public static void deleteThread(string pathFILE)
+        public static string deleteLoop(string pathFILE, bool runByThread = false)
         {
+            string status = "";
             int x = 0;
             while (true)
+            {
+                bool tempBool = tryToDelete(pathFILE);
+                if (tempBool)
+                {
+                    break;
+                }
+                Thread.Sleep(1000);
+                if (x > 10)
+                {
+                    try
+                    {
+                        File.Delete(pathFILE);
+                    }
+                    catch (Exception ex)
+                    {
+                        status = ex.Message;
+                        if (runByThread) MessageBox.Show(ex.Message);
+                    }
+                    break;
+                }
+                x++;
+            }
+            return status;
+        }
+        public static bool tryToDelete(string pathFILE)
+        {
+            if (File.Exists(pathFILE))
             {
                 try
                 {
                     File.Delete(pathFILE);
+                    return true;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    if (x > 30)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                    else
-                    {
-                        x++;
-                        Thread.Sleep(1000);
-                    }
+                    return false;
                 }
-                if (!File.Exists(pathFILE))
-                {
-                    break;
-                }
+            }
+            else
+            {
+                return true;
             }
         }
     }
