@@ -346,17 +346,17 @@ namespace AtomLauncher
             else
             {
                 atomProgram.config = atomFileData.loadConfFile(atomFileData.configFile);
-                //if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], fileChangeVersion))
-                //{
-                //    string status = atomFileData.deleteLoop(atomFileData.gameDataFile);
-                //    status = status + atomFileData.deleteLoop(atomFileData.userDataFile);
-                //    status = status + atomFileData.deleteLoop(atomFileData.configFile);
-                //    if (status != "")
-                //    {
-                //        MessageBox.Show("File Error: Deleting File Data: " + status, "Data File");
-                //    }
-                //    MessageBox.Show("Update Notification: Updates to the opening and saveing of files have changed. The files saved to the computer have been deleted. Sorry for the inconvience.", "Update Notification");
-                //}
+                if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], fileChangeVersion))
+                {
+                    string status = atomFileData.deleteLoop(atomFileData.gameDataFile);
+                    status = status + atomFileData.deleteLoop(atomFileData.userDataFile);
+                    status = status + atomFileData.deleteLoop(atomFileData.configFile);
+                    if (status != "")
+                    {
+                        MessageBox.Show("File Error: Deleting File Data: " + status, "Data File");
+                    }
+                    MessageBox.Show("Update Notification: Updates to the opening and saveing of files have changed. The files saved to the computer have been deleted. Sorry for the inconvience.", "Update Notification");
+                }
                 gameData = atomFileData.getGameData(atomFileData.gameDataFile);
                 userData = atomFileData.getUserData(atomFileData.userDataFile);
                 atomProgram.debugApp = Convert.ToBoolean(atomProgram.config["debug"]);
