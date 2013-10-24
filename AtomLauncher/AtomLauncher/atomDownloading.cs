@@ -23,7 +23,7 @@ namespace AtomLauncher
         static double totalBytes = 0;
         static double bytesRecievedTotal = 0;
         static double bytesRecieved = 0;
-        static string downloadingFile = "NoFile";
+        static string downloadingFile = "";
 
         static public Dictionary<int, string[]> testDictionary = new Dictionary<int, string[]>{
             {0, new string[] { "http://trinaryatom.com/_web_downloads/Test/test0.zip", @"Folder\test0.zip" }},
@@ -48,7 +48,7 @@ namespace AtomLauncher
             totalBytes = 0;
             bytesRecievedTotal = 0;
             bytesRecieved = 0;
-            downloadingFile = "NoFile";
+            downloadingFile = "";
             atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Remote Files");
             atomLauncher.atomLaunch.formText("formLabelDLFile", "");
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
@@ -120,7 +120,7 @@ namespace AtomLauncher
             totalBytes = 0;
             bytesRecievedTotal = 0;
             bytesRecieved = 0;
-            downloadingFile = "NoFile";
+            downloadingFile = "";
             atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Remote File");
             atomLauncher.atomLaunch.formText("formLabelDLFile", urlFilePATH.TruncateDots(67));
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
@@ -278,8 +278,8 @@ namespace AtomLauncher
             }
             else
             {
+                downloadingFile = "";
                 downloadBusy = false;
-                downloadingFile = "NoFile";
             }
         }
     }
