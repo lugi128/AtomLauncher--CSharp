@@ -20,7 +20,7 @@ namespace AtomLauncher
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         string launcherUpdateURL = "http://launcher.atomicelectronics.net";
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // This launcher is looking for a version number and a download url on the URL
+        // This launcher is looking for a version number and a download url from the launcherUpdateURL
         // Version:::URL
         // 0.0.0.0:::http://www.url.com
         // MajorChange.StandardAdd.MinorAdd.BugFix
@@ -94,7 +94,14 @@ namespace AtomLauncher
                     }
                 }
                 atomProgram.config["lastSelectedGame"] = "";
-                formLabelGameSelected.Text = "Pick one to launch.";
+                if (gameData.Count < 1)
+                {
+                    formLabelGameSelected.Text = "No Games Added, Add one to launch.";
+                }
+                else
+                {
+                    formLabelGameSelected.Text = "Pick one to launch.";
+                }
                 setInputBoxes();
             }
         }
@@ -361,7 +368,6 @@ namespace AtomLauncher
                 userData = atomFileData.getUserData(atomFileData.userDataFile);
                 atomProgram.debugApp = Convert.ToBoolean(atomProgram.config["debug"]);
                 setRightPanel();
-                this.Invoke(new MethodInvoker(delegate { setInputBoxes(); }));
                 Thread versionF = new Thread(versionThread);
                 versionF.IsBackground = true;
                 versionF.Start();
@@ -378,7 +384,12 @@ namespace AtomLauncher
                         autoLogin();
                     }
                 }
-                this.Invoke(new MethodInvoker(delegate { formSetControl(true, true); }));
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    formSetControl(true, true);
+                    setInputBoxes();
+                }));
+
             }
         }
 
@@ -400,7 +411,21 @@ namespace AtomLauncher
                 formPanelRight.Controls.Add(this.formButtonAddGame);
                 formPanelRight.Controls.Add(this.formButtonLauncherSettings);
                 formPanelRight.Controls.Add(this.formLabelGameSelected);
-                formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
+                if (atomProgram.config["lastSelectedGame"] == "")
+                {
+                    if (gameData.Count < 1)
+                    {
+                        formLabelGameSelected.Text = "No Games Added, Add one to launch.";
+                    }
+                    else
+                    {
+                        formLabelGameSelected.Text = "Pick one to launch.";
+                    }
+                }
+                else
+                {
+                    formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
+                }
                 formPanelRight.VerticalScroll.Visible = false;
             }));
             int x = 0;
@@ -438,18 +463,12 @@ namespace AtomLauncher
                 setting.UseVisualStyleBackColor = false;
                 setting.Click += new System.EventHandler(this.atomButtonSettings_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(setting); }));
+
                 Button trash = new Button();
-                if (entry.Key == "Minecraft")
-                {
-                    trash.Enabled = false;
-                    trash.BackColor = System.Drawing.Color.LightGray;
-                    trash.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
-                }
-                else
-                {
-                    trash.BackColor = System.Drawing.Color.White;
-                    trash.FlatAppearance.BorderColor = System.Drawing.Color.White;
-                }
+                trash.BackColor = System.Drawing.Color.White;
+                trash.FlatAppearance.BorderColor = System.Drawing.Color.White;
+                trash.Click += new System.EventHandler(this.atomButtonTrash_Click);
+                trash.Text = "T";
                 trash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 trash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 trash.ForeColor = System.Drawing.Color.Black;
@@ -459,9 +478,7 @@ namespace AtomLauncher
                 trash.Size = new System.Drawing.Size(24, 40);
                 trash.TabIndex = 8;
                 trash.TabStop = false;
-                trash.Text = "T";
                 trash.UseVisualStyleBackColor = false;
-                trash.Click += new System.EventHandler(this.atomButtonTrash_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(trash); }));
                 x++;
             }

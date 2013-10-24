@@ -52,13 +52,8 @@ namespace AtomLauncher
         private void loadVer()
         {
             fadeIn();
-            string gameName = atomLauncher.settingsGame;
-            if (gameName == "AL_AddNewGame")
-            {
-                gameName = "Minecraft";
-            }
             this.Invoke(new MethodInvoker(delegate { formButtonOK.Enabled = false; formButtonCancel.Enabled = false; formButtonClose.Enabled = false; formLabelVersionStatus.Text = "Version List Staus: Getting Version list... ... "; }));
-            string status = atomMinecraft.getVersion(gameName);
+            string status = atomMinecraft.getVersion(atomLauncher.settingsGame);
             if (status == "Successful")
             {
                 foreach (KeyValuePair<string, string[]> entry in atomMinecraft.versionList)
@@ -79,9 +74,8 @@ namespace AtomLauncher
 
         private void fillForm(Dictionary<string, Dictionary<string, string[]>> dict, string gameName)
         {
-            if (atomLauncher.settingsGame == "AL_AddNewGame")
+            if (gameName == "AL_AddNewGame")
             {
-                gameName = "Minecraft";
                 formTextGameName.Text = "";
             }
             else
@@ -194,15 +188,6 @@ namespace AtomLauncher
         
         private void minecraftSettings_Load(object sender, EventArgs e)
         {
-            if (atomLauncher.settingsGame == "Minecraft")
-            {
-                formTextGameName.Enabled = false;
-                formLabelGameName.Enabled = false;
-                formTextAdditionalFiles.Enabled = false;
-                formLabelAdditionalFiles.Enabled = false;
-                formComboRunAddVersion.Enabled = false;
-                formLabelRunAddVersion.Enabled = false;
-            }
             ramAmmount = segmentRam();
             string mainDrive = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
             if (!File.Exists(mainDrive + @"Windows\System32\javaw.exe"))
@@ -246,7 +231,16 @@ namespace AtomLauncher
                     formLabelStatus.Text = "Note: Running a 32bit Program.";
                 }
             }
-            fillForm(atomLauncher.gameData, atomLauncher.settingsGame);
+            if (atomLauncher.settingsGame == "AL_AddNewGame")
+            {
+                Dictionary<string, Dictionary<string, string[]>> tmpDict = new Dictionary<string, Dictionary<string, string[]>>();
+                tmpDict = atomFileData.getGameData(atomFileData.gameDataFile, atomLauncher.settingsGame, tmpDict, "Minecraft");
+                fillForm(tmpDict, atomLauncher.settingsGame);
+            }
+            else
+            {
+                fillForm(atomLauncher.gameData, atomLauncher.settingsGame);
+            }
             Thread webVer = new Thread(loadVer);
             webVer.IsBackground = true;
             webVer.Start();
@@ -339,14 +333,9 @@ namespace AtomLauncher
 
         private void formButtonDefaults_Click(object sender, EventArgs e)
         {
-            string gameName = atomLauncher.settingsGame;
-            if (atomLauncher.settingsGame == "AL_AddNewGame")
-            {
-                gameName = "Minecraft";
-            }
             Dictionary<string, Dictionary<string, string[]>> tmpDict = new Dictionary<string, Dictionary<string, string[]>>();
-            tmpDict = atomFileData.getGameData(atomFileData.gameDataFile, gameName, tmpDict, "Minecraft");
-            fillForm(tmpDict, gameName);
+            tmpDict = atomFileData.getGameData(atomFileData.gameDataFile, atomLauncher.settingsGame, tmpDict, "Minecraft");
+            fillForm(tmpDict, atomLauncher.settingsGame);
         }
 
         private void formButtonCancel_Click(object sender, EventArgs e)
@@ -366,22 +355,15 @@ namespace AtomLauncher
             {
                 formLabelStatus.Text = "Cannot use that 'Custom Game Name'";
             }
-            else if (atomLauncher.settingsGame != "Minecraft" && formTextGameName.Text == "Minecraft")
-            {
-                formLabelStatus.Text = "Cannot use that 'Custom Game Name'";
-            }
             else
             {
-                if (!atomLauncher.gameData.ContainsKey(formTextGameName.Text))
-                {
-                    atomLauncher.gameData.Add(formTextGameName.Text, new Dictionary<string, string[]>());
-                }
                 if (atomLauncher.gameData.ContainsKey(atomLauncher.settingsGame))
                 {
                     atomLauncher.gameData[formTextGameName.Text] = atomLauncher.gameData[atomLauncher.settingsGame];
                 }
                 else
                 {
+                    atomLauncher.gameData.Add(formTextGameName.Text, new Dictionary<string, string[]>());
                     atomLauncher.gameData = atomFileData.getGameData(atomFileData.gameDataFile, formTextGameName.Text, atomLauncher.gameData, "Minecraft");
                 }
                 atomLauncher.gameData[formTextGameName.Text]["gameType"] = new string[] { "Minecraft" };
@@ -403,10 +385,10 @@ namespace AtomLauncher
                 {
                     atomLauncher.gameData.Remove(atomLauncher.settingsGame);
                 }
+                Thread close = new Thread(fadeOutClose);
+                close.IsBackground = true;
+                close.Start();
             }
-            Thread close = new Thread(fadeOutClose);
-            close.IsBackground = true;
-            close.Start();
         }
 
         private void formCheckOnline_CheckedChanged(object sender, EventArgs e)

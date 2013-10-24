@@ -63,7 +63,7 @@ namespace AtomLauncher
         internal static Dictionary<string, string> loadConfDefaults()
         {
             Dictionary<string, string> dict = new Dictionary<string, string> {
-                {"lastSelectedGame", "Minecraft"},
+                {"lastSelectedGame", ""},
                 {"launcherVersion", Assembly.GetExecutingAssembly().GetName().Version.ToString()},
                 {"debug", "false"}
             };
@@ -117,8 +117,9 @@ namespace AtomLauncher
         /// Load and set the Game Data and Settings
         /// </summary>
         /// <param name="pathFile">Set this to the file that stores the data.</param>
-        /// <param name="defaultGame">Set this to the game you wish to reset. If this is set, it will not load from file. It requires a dictonary to be input.</param>
+        /// <param name="defaultGame">Input game you wish to reset. If this is set, it will not load from file. It requires a dictonary to be input.</param>
         /// <param name="returnDict">Input dictonary to be parsed and defaults set for a specific game.</param>
+        /// <param name="gameType">Input the name to get the defaults of.</param>
         /// <returns></returns>
         internal static Dictionary<string, Dictionary<string, string[]>> getGameData(string pathFile, string defaultGame = "", Dictionary<string, Dictionary<string, string[]>> returnDict = null, string gameType = "")
         {
@@ -154,11 +155,11 @@ namespace AtomLauncher
                     throw new System.Exception("Error: Select Game Type");
                 }
                 returnDict[defaultGame] = defaultDict[gameType];
+                return returnDict;
             }
             else
             {
                 Dictionary<string, Dictionary<string, string[]>> loadedDict = new Dictionary<string, Dictionary<string, string[]>>();
-                returnDict = defaultDict;
                 if (File.Exists(pathFile))
                 {
                     loadedDict = loadDictonary(pathFile);
@@ -173,37 +174,24 @@ namespace AtomLauncher
                             }
                         }
                     }
-                    return loadedDict;
                 }
+                return loadedDict;
             }
-            return returnDict;
         }
         internal static Dictionary<string, Dictionary<string, string[]>> getUserData(string pathFile)
         {
-            Dictionary<string, Dictionary<string, string[]>> defaultDict = new Dictionary<string, Dictionary<string, string[]>>{
-                {
-                    "Minecraft", new Dictionary<string, string[]> { 
-                        //{ "UserName", new string[] { "Propper Username", "Encrypted Password", "Last Session ID", "Last Session ID Date and Time" } }
-                    } 
-                }
-            };
-            Dictionary<string, Dictionary<string, string[]>> loadedDict = new Dictionary<string, Dictionary<string, string[]>>();
+            Dictionary<string, Dictionary<string, string[]>> loadedDict = new Dictionary<string, Dictionary<string, string[]>>();//{
+            //    {
+            //        "Minecraft", new Dictionary<string, string[]> { 
+            //            { "UserName", new string[] { "Propper Username", "Encrypted Password", "Last Session ID", "Last Session ID Date and Time" } }
+            //        } 
+            //    }
+            //};
             if (File.Exists(pathFile))
             {
                 loadedDict = loadDictonary(pathFile, true);
-                foreach (KeyValuePair<string, Dictionary<string, string[]>> section in loadedDict)
-                {
-                    foreach (KeyValuePair<string, string[]> item in section.Value)
-                    {
-                        if (!defaultDict.ContainsKey(section.Key))
-                        {
-                            defaultDict.Add(section.Key, new Dictionary<string, string[]>());
-                        }
-                        defaultDict[section.Key][item.Key] = item.Value;
-                    }
-                }
             }
-            return defaultDict;
+            return loadedDict;
         }
         
         /// <summary>
