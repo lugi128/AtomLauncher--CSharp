@@ -140,7 +140,15 @@ namespace AtomLauncher
             try
             {
                 if (atomLauncher.cancelPressed) throw new System.Exception("Load Version List");
-                string fileName = atomLauncher.gameData[selectedGame]["location"][0] + @"\versions\LatestVerList\versions.json";
+                string fileName = "";
+                if (selectedGame == "AL_AddNewGame")
+                {
+                    fileName = atomProgram.appData + @"\.minecraft\versions\LatestVerList\versions.json";
+                }
+                else
+                {
+                    fileName = atomLauncher.gameData[selectedGame]["location"][0] + @"\versions\LatestVerList\versions.json";
+                }
                 if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
                 {
                     try

@@ -544,6 +544,8 @@
             // 
             // formTextThumbnail
             // 
+            this.formTextThumbnail.BackColor = System.Drawing.Color.White;
+            this.formTextThumbnail.ForeColor = System.Drawing.Color.Black;
             this.formTextThumbnail.Location = new System.Drawing.Point(8, 24);
             this.formTextThumbnail.Name = "formTextThumbnail";
             this.formTextThumbnail.ReadOnly = true;

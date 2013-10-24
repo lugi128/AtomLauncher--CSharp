@@ -90,6 +90,7 @@
             // formButtonLogin
             // 
             this.formButtonLogin.BackColor = System.Drawing.Color.White;
+            this.formButtonLogin.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.formButtonLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formButtonLogin.Location = new System.Drawing.Point(932, 16);
@@ -326,6 +327,7 @@
             // formButtonLauncherSettings
             // 
             this.formButtonLauncherSettings.BackColor = System.Drawing.Color.White;
+            this.formButtonLauncherSettings.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.formButtonLauncherSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonLauncherSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formButtonLauncherSettings.ForeColor = System.Drawing.Color.Black;
@@ -342,6 +344,7 @@
             // formButtonAddGame
             // 
             this.formButtonAddGame.BackColor = System.Drawing.Color.White;
+            this.formButtonAddGame.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.formButtonAddGame.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonAddGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.formButtonAddGame.ForeColor = System.Drawing.Color.Black;
