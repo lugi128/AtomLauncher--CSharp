@@ -482,6 +482,7 @@ namespace AtomLauncher
                                 }
                             }
                         }
+                        //BUG! Add sounds.json parsing to this. It contains more usefull files needed by minecraft.
                     }
                     catch
                     {
