@@ -158,7 +158,7 @@ namespace AtomLauncher
                 DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomProgram.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
                 if (changelog == DialogResult.Yes)
                 {
-                    Process.Start("http://launcher.atomicelectronics.net/?page=changelog"); // possibly store change log on string downloads
+                    Process.Start("http://launcher.atomicelectronics.net/?page=changelog.php"); // possibly store change log on string downloads
                 }
                 cancelPressed = false;
                 Thread updateF = new Thread(updateThread);
@@ -244,8 +244,8 @@ namespace AtomLauncher
             else
             {
                 MessageBox.Show(status, "Update Download Error");
+                this.Invoke(new MethodInvoker(delegate { formSetControl(true, true); }));
             }
-            this.Invoke(new MethodInvoker(delegate { formSetControl(true, true); }));
         }
 
         private void versionThread()

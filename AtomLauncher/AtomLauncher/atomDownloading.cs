@@ -274,7 +274,7 @@ namespace AtomLauncher
             {
                 cancelDownload = true;
                 atomFileData.queueDelete(downloadingFile);
-                MessageBox.Show("Error: " + e.Error.Message + " : " + e.Error.InnerException.Message + " Please Report this. (Error - atomDownloading.completed)");
+                MessageBox.Show("Error: " + e.Error.Message);
             }
             else
             {
