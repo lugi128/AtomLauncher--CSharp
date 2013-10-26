@@ -18,9 +18,8 @@ namespace AtomLauncher
         static Stopwatch sw = new Stopwatch();// The stopwatch which we will be using to calculate the download speed
         static bool downloadBusy = false;
         static bool cancelDownload = false;
-        static double downloadAmmount = 0;
-        static double timeAmmount = 0;
         static double totalBytes = 0;
+        static double previousByteCount = 0;
         static double bytesRecievedTotal = 0;
         static double bytesRecieved = 0;
         static string downloadingFile = "";
@@ -43,8 +42,6 @@ namespace AtomLauncher
         internal static void Multi(Dictionary<int,string[]> urlFilePath, string filePATH)
         {
             cancelDownload = false;
-            downloadAmmount = 0;
-            timeAmmount = 0;
             totalBytes = 0;
             bytesRecievedTotal = 0;
             bytesRecieved = 0;
@@ -77,6 +74,7 @@ namespace AtomLauncher
                 totalBytes = totalBytes + contentLength;
             }
             atomLauncher.atomLaunch.formText("formLabelStatus", "Downloading Files");
+            sw.Restart();
             foreach (KeyValuePair<int, string[]> entry in urlFilePath)
             {
                 if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Downloading Files");
@@ -99,6 +97,7 @@ namespace AtomLauncher
                     }
                 }
             }
+            sw.Reset();
             atomLauncher.atomLaunch.formText("formLabelDLFile", "");
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
@@ -115,8 +114,6 @@ namespace AtomLauncher
         internal static void Single(string urlFilePATH, string filePATH)
         {
             cancelDownload = false;
-            downloadAmmount = 0;
-            timeAmmount = 0;
             totalBytes = 0;
             bytesRecievedTotal = 0;
             bytesRecieved = 0;
@@ -150,6 +147,8 @@ namespace AtomLauncher
             if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Downloading File");
                 /////////////////////
             atomLauncher.atomLaunch.formText("formLabelStatus", "Downloading File");
+            sw.Reset();
+            sw.Start();
             downloadBusy = true;
             try
             {
@@ -171,6 +170,7 @@ namespace AtomLauncher
                     break;
                 }
             }
+            sw.Reset();
             atomLauncher.atomLaunch.formText("formLabelDLFile", "");
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
@@ -187,7 +187,6 @@ namespace AtomLauncher
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filePATH));
             downloadingFile = filePATH;
-            sw.Reset();
             if (atomLauncher.cancelPressed || cancelDownload) return;
             using (webConnect = new WebClient())
             {
@@ -196,7 +195,6 @@ namespace AtomLauncher
                 try
                 {
                     Uri URL = new Uri(urlFilePATH);
-                    sw.Start();
                     webConnect.DownloadFileAsync(URL, downloadingFile);
                 }
                 catch (Exception ex)
@@ -229,25 +227,28 @@ namespace AtomLauncher
                     double compileReceivedBytes = bytesRecievedTotal + bytesRecieved;
                     if (e.ProgressPercentage != 100)
                     {
-                        atomLauncher.atomLaunch.barValues(0, 0);
-                        downloadAmmount = Convert.ToDouble(e.BytesReceived) - downloadAmmount; //Refine this. To more accuratly show appropriot speed. Espesially in low bandwidth situations.
-                        timeAmmount = sw.Elapsed.TotalSeconds - timeAmmount;
                         atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile.TruncateDots(67));
-                        if (atomLauncher.atomLaunch.formLabelDLSpeed.Text != (downloadAmmount / 1024 / timeAmmount).ToString("0.00"))
+                        if (sw.Elapsed.TotalSeconds >= 5)
                         {
-                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", (downloadAmmount / 1024 / timeAmmount).ToString("0.00") + " kB/s");
+                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", ((compileReceivedBytes - previousByteCount) / 1024 / 5).ToString("0.00") + " kB/s");
+                            sw.Restart();
+                            previousByteCount = compileReceivedBytes;
+                        }
+                        else if (previousByteCount == 0)
+                        {
+                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", (compileReceivedBytes / 1024 / sw.Elapsed.TotalSeconds).ToString("0.00") + " kB/s");
                         }
                         if (atomLauncher.atomLaunch.formBarTop.Value != e.ProgressPercentage)
                         {
                             atomLauncher.atomLaunch.barValues(e.ProgressPercentage, Convert.ToInt32(compileReceivedBytes * 100 / totalBytes));
-                            atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
+                            atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(bytesRecieved) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
                             atomLauncher.atomLaunch.formText("formLabelTotalMB", (Convert.ToDouble(compileReceivedBytes) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(totalBytes) / 1024 / 1024).ToString("0.00") + " MB");
                         }
                     }
                     else
                     {
                         atomLauncher.atomLaunch.barValues(100, Convert.ToInt32(compileReceivedBytes * 100 / totalBytes));
-                        atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(e.BytesReceived) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
+                        atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(bytesRecieved) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");
                     }
                 }
             }
@@ -265,7 +266,6 @@ namespace AtomLauncher
         internal static void completed(object sender, AsyncCompletedEventArgs e)
         {
             bytesRecievedTotal = bytesRecievedTotal + bytesRecieved;
-            sw.Reset();
             if (e.Cancelled == true)
             {
                 atomFileData.queueDelete(downloadingFile);
