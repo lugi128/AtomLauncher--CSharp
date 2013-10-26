@@ -21,10 +21,11 @@ namespace AtomLauncher
             //Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.Run(new atomLauncher());
         }
-        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)//includes required included libraries.
+        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args) //includes required included libraries.
         {
             String resourceName = "AtomLauncher." + new AssemblyName(args.Name).Name + ".dll";
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
