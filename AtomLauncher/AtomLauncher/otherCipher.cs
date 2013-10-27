@@ -9,13 +9,13 @@ namespace AtomLauncher
 {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                                             ATTENTION                                                            // 
+    //                                                             ATTENTION                                                            //
     //                                            --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!--                                           //
-    //                                                        WARNING NOT SECURE                                                        //                                     //
+    //                                                        WARNING NOT SECURE                                                        //
     //                                                                                                                                  //
     //      To secure this programs encyption                                                                                           //
     //      change the string in line                                                                                                   //
-    //      return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)                       //
+    //      string builtString = "" + builder.ToString(); // Change the "" as needed. (Strongest change)                                //
     //      or                                                                                                                          //
     //      private const string initVector = "" + "8dfn27c6vhd81j9s"; // Change the "" as needed. Uses only up to 16 characters.       //
     //      to somthing else other than                                                                                                 //
@@ -32,45 +32,48 @@ namespace AtomLauncher
         {
             /////////////////////////////////////
             // Start - Get Machine Id for Encrypt
-                internal static string machineIDLookup(bool reqHardware = false)
+                internal static string machineIDLookup()
                 {
-                    string theHardware = "BaseBoard";
-                    if (reqHardware == false)
-                    {
-                        theHardware = "DiskDrive";
-                    }
+                    string[][] theHardware = { //Edit hardware here (if you know what your doing) to make this a different encryption id.
+                        new string[] { "Win32_BaseBoard", "SerialNumber" },
+                        new string[] { "Win32_Processor", "ProcessorId" }
+                    };
+                    int x = theHardware.Length;
                     StringBuilder builder = new StringBuilder();
-                    String query = "SELECT * FROM Win32_" + theHardware;
-                    ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
-                    foreach (ManagementObject item in searcher.Get())
+                    foreach (string[] entry in theHardware)
                     {
-                        Object obj = item["SerialNumber"];
-                        builder.Append(Convert.ToString(obj));
+                        try
+                        {
+                            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM " + entry[0]);
+                            foreach (ManagementObject item in searcher.Get())
+                            {
+                                Object obj = item[entry[1]];
+                                builder.Append(Convert.ToString(obj));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex.Message == "Not found ")
+                            {
+                                x--;
+                                if (x <= 0)
+                                {
+                                    throw new System.Exception("Cipher: Could not detect a number to use from any of the system devices.");
+                                }
+                            }
+                            else
+                            {
+                                throw new System.Exception(ex.Message);
+                            }
+                        }
                     }
-                    string builtString = builder.ToString();
+                    string builtString = "" + builder.ToString(); // Change the "" as needed. (Strongest change) 
                     builtString = Regex.Replace(builtString, "[^a-z0-9A-Z]", "");
                     builtString = builtString.ToLower();
-
                     return builtString;
                 }
             // End
             /////////////////////////////////////
-
-            /////////////////////////////////////
-            // Start - Combine IDs
-                internal static string uniqueMachineId()
-                {
-                    return "" + machineIDLookup() + machineIDLookup(true); // Change the "" as needed. (Strongest change)
-                }
-            // End
-            /////////////////////////////////////
-
-            ////////////////////
-            ////////////////////////////////////////
-            // Section below is code that was extracted from other online sources and changed to work here.
-            // The below code is slightly unknown.
-            ////////////////////////////////////////
-            ////////////////////
 
             /////////////////////////////////////
             // Start - Encrypt Code
