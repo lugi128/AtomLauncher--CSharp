@@ -138,7 +138,7 @@ namespace AtomLauncher
 
         private void formComboUsername_SelectedIndexChanged(object sender, EventArgs e)
         {
-            formTextPass.Text = otherCipher.Decrypt(userData[atomProgram.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.uniqueMachineId());
+            formTextPass.Text = otherCipher.Decrypt(userData[atomProgram.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
         }
 
         private void formButtonAddGame_Click(object sender, EventArgs e)

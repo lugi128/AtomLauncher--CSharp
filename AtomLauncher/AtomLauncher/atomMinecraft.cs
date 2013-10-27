@@ -327,7 +327,7 @@ namespace AtomLauncher
                         atomLauncher.userData[atomProgram.config["lastSelectedGame"]][username] = new string[]
                         {
                             propperUsername,
-                            otherCipher.Encrypt(password, otherCipher.uniqueMachineId()),
+                            otherCipher.Encrypt(password, otherCipher.machineIDLookup()),
                             mcSessionID,
                             DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss")
                         };
