@@ -633,6 +633,7 @@ namespace AtomLauncher
                 if (atomLauncher.cancelPressed) throw new System.Exception("Starting Game");
                 Process mcProc = new Process();
                 mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on my laptop. // Get more info on this and perhaps make it automatic and/or optional.
+                mcProc.StartInfo.WorkingDirectory = mcLocation;
                 mcProc.StartInfo.FileName = javaFile;
                 mcProc.StartInfo.Arguments = buildArguments;
                 mcProc.Start();
