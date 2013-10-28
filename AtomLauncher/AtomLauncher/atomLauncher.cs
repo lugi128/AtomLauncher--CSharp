@@ -28,7 +28,7 @@ namespace AtomLauncher
         // MajorChange.StandardAdd.MinorAdd.BugFix
         // The version number is controlled by the properties window. (The config file, if present, overwrites it).
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public static string fileChangeVersion = "1.3.11.35"; // Last version of which the code for the saved data was changed.
+        public static string fileChangeVersion = "1.3.12.39"; // Last version of which the code for the saved data was changed.
         public static bool cancelPressed = false;
         public static Dictionary<string, Dictionary<string, string[]>> gameData = new Dictionary<string, Dictionary<string, string[]>>();
         public static Dictionary<string, Dictionary<string, string[]>> userData = new Dictionary<string, Dictionary<string, string[]>>();
