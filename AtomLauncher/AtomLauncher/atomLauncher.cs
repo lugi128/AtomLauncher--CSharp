@@ -17,6 +17,8 @@ namespace AtomLauncher
     {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Change this to suite your needs.
+        // Change it to "" for it to ignore updateing.
+        // Or, in the config file change the version to some high number, like 999.0.0.0
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         string launcherUpdateURL = "http://launcher.atomicelectronics.net";
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,7 @@ namespace AtomLauncher
         // MajorChange.StandardAdd.MinorAdd.BugFix
         // The version number is controlled by the properties window. (The config file, if present, overwrites it).
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public static string fileChangeVersion = "1.3.11.35"; // Last version of which the code for the saved data was changed.
+        public static string fileChangeVersion = "1.3.12.39"; // Last version of which the code for the saved data was changed.
         public static bool cancelPressed = false;
         public static Dictionary<string, Dictionary<string, string[]>> gameData = new Dictionary<string, Dictionary<string, string[]>>();
         public static Dictionary<string, Dictionary<string, string[]>> userData = new Dictionary<string, Dictionary<string, string[]>>();
@@ -73,9 +75,9 @@ namespace AtomLauncher
         {
             formPanelRight_Click(sender, e);
             PictureBox pic = (PictureBox)sender;
-            atomProgram.config["lastSelectedGame"] = pic.Name.Replace("formPicture", "");
+            atomFileData.config["lastSelectedGame"] = pic.Name.Replace("formPicture", "");
             pic.BackColor = selectColor;
-            formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
+            formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
             setInputBoxes();
         }
 
@@ -93,7 +95,7 @@ namespace AtomLauncher
                         }
                     }
                 }
-                atomProgram.config["lastSelectedGame"] = "";
+                atomFileData.config["lastSelectedGame"] = "";
                 if (gameData.Count < 1)
                 {
                     formLabelGameSelected.Text = "No Games Added, Add one to launch.";
@@ -128,9 +130,9 @@ namespace AtomLauncher
             userData.Remove(trashGame);
             atomFileData.saveDictonary(atomFileData.userDataFile, userData, true);
             atomFileData.saveDictonary(atomFileData.gameDataFile, gameData);
-            if (trashGame == atomProgram.config["lastSelectedGame"])
+            if (trashGame == atomFileData.config["lastSelectedGame"])
             {
-                atomProgram.config["lastSelectedGame"] = "";
+                atomFileData.config["lastSelectedGame"] = "";
                 setInputBoxes();
             }
             setRightPanel();
@@ -138,7 +140,7 @@ namespace AtomLauncher
 
         private void formComboUsername_SelectedIndexChanged(object sender, EventArgs e)
         {
-            formTextPass.Text = otherCipher.Decrypt(userData[atomProgram.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
+            formTextPass.Text = otherCipher.Decrypt(userData[atomFileData.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
         }
 
         private void formButtonAddGame_Click(object sender, EventArgs e)
@@ -152,10 +154,10 @@ namespace AtomLauncher
         private void formButtonUpdate_Click(object sender, EventArgs e)
         {
             // Should Create a form for this. For better control.
-            DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomProgram.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
+            DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
             if (updateDialog == DialogResult.Yes)
             {
-                DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomProgram.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
+                DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
                 if (changelog == DialogResult.Yes)
                 {
                     Process.Start("http://launcher.atomicelectronics.net/?page=changelog.php"); // possibly store change log on string downloads
@@ -169,7 +171,7 @@ namespace AtomLauncher
 
         private void formButtonUpdateStatus_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Status: " + updateStatus + "\n" + "Current Version: " + atomProgram.config["launcherVersion"] + "\n" + "Latest Version: " + downloadVersion, "Update Status");
+            MessageBox.Show("Status: " + updateStatus + "\n" + "Current Version: " + atomFileData.config["launcherVersion"] + "\n" + "Latest Version: " + downloadVersion, "Update Status");
         }
 
         private void formCheckSaveLogin_CheckedChanged(object sender, EventArgs e)
@@ -177,11 +179,11 @@ namespace AtomLauncher
             formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
             if (formCheckSaveLogin.Checked)
             {
-                if (gameData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                 {
-                    if (gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
+                    if (gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
                     {
-                        formComboUsername.Text = gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0];
+                        formComboUsername.Text = gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0];
                         formCheckAutoLogin.Checked = true;
                     }
                 }
@@ -253,8 +255,8 @@ namespace AtomLauncher
             if (File.Exists("Update" + Path.GetFileName(atomProgram.appDirectory)))
             {
                 Dictionary<string, string> dict = atomFileData.loadConfDefaults();
-                atomProgram.config["launcherVersion"] = dict["launcherVersion"];
-                atomFileData.saveConfFile(atomFileData.configFile, atomProgram.config);
+                atomFileData.config["launcherVersion"] = dict["launcherVersion"];
+                atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
                 string status = atomFileData.deleteLoop("Update" + Path.GetFileName(atomProgram.appDirectory));
                 if (status != "")
                 {
@@ -289,7 +291,7 @@ namespace AtomLauncher
                     }
                     if (status == "")
                     {
-                        if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], downloadVersion))
+                        if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], downloadVersion))
                         {
                             this.Invoke(new MethodInvoker(delegate
                             {
@@ -352,8 +354,8 @@ namespace AtomLauncher
             }
             else
             {
-                atomProgram.config = atomFileData.loadConfFile(atomFileData.configFile);
-                if (atomUtility.compareVersions(atomProgram.config["launcherVersion"], fileChangeVersion))
+                atomFileData.config = atomFileData.loadConfFile(atomFileData.configFile);
+                if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], fileChangeVersion))
                 {
                     string status = atomFileData.deleteLoop(atomFileData.gameDataFile);
                     status = status + atomFileData.deleteLoop(atomFileData.userDataFile);
@@ -366,7 +368,7 @@ namespace AtomLauncher
                 }
                 gameData = atomFileData.getGameData(atomFileData.gameDataFile);
                 userData = atomFileData.getUserData(atomFileData.userDataFile);
-                atomProgram.debugApp = Convert.ToBoolean(atomProgram.config["debug"]);
+                atomProgram.debugApp = Convert.ToBoolean(atomFileData.config["debug"]);
                 setRightPanel();
                 Thread versionF = new Thread(versionThread);
                 versionF.IsBackground = true;
@@ -377,9 +379,9 @@ namespace AtomLauncher
                     this.Invoke(new MethodInvoker(delegate { this.Opacity += .04; }));
                 }
                 this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); }));
-                if (gameData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                 {
-                    if (gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
+                    if (gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
                     {
                         autoLogin();
                     }
@@ -411,7 +413,7 @@ namespace AtomLauncher
                 formPanelRight.Controls.Add(this.formButtonAddGame);
                 formPanelRight.Controls.Add(this.formButtonLauncherSettings);
                 formPanelRight.Controls.Add(this.formLabelGameSelected);
-                if (atomProgram.config["lastSelectedGame"] == "")
+                if (atomFileData.config["lastSelectedGame"] == "")
                 {
                     if (gameData.Count < 1)
                     {
@@ -424,7 +426,7 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    formLabelGameSelected.Text = atomProgram.config["lastSelectedGame"];
+                    formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
                 }
                 formPanelRight.VerticalScroll.Visible = false;
             }));
@@ -486,7 +488,7 @@ namespace AtomLauncher
             {
                 if (c is PictureBox)
                 {
-                    if (c.Name == "formPicture" + atomProgram.config["lastSelectedGame"])
+                    if (c.Name == "formPicture" + atomFileData.config["lastSelectedGame"])
                     {
                         c.BackColor = selectColor;
                         break;
@@ -522,7 +524,7 @@ namespace AtomLauncher
 
         private void setInputBoxes()
         {
-            if (atomProgram.config["lastSelectedGame"] == "")
+            if (atomFileData.config["lastSelectedGame"] == "")
             {
                 formComboUsername.Items.Clear();
                 formComboUsername.Text = "";
@@ -544,9 +546,9 @@ namespace AtomLauncher
                     formCheckSaveLogin.Enabled = true;
                 }
                 int x = 0;
-                if (userData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                if (userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                 {
-                    foreach (KeyValuePair<string, string[]> dict in userData[atomProgram.config["lastSelectedGame"]])
+                    foreach (KeyValuePair<string, string[]> dict in userData[atomFileData.config["lastSelectedGame"]])
                     {
                         formComboUsername.Items.Add(dict.Key);
                         formCheckSaveLogin.Checked = true;
@@ -573,15 +575,15 @@ namespace AtomLauncher
             {
                 string status = "Failed: Game Code Error.";
                 
-                    if (atomProgram.config["lastSelectedGame"] == "")
+                    if (atomFileData.config["lastSelectedGame"] == "")
                     {
                         status = "Failed: No Game Selected.";
                     }
-                    else if (!gameData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                    else if (!gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                     {
-                        status = "Failed: Game " + atomProgram.config["lastSelectedGame"] + " does not Exist in Database";
+                        status = "Failed: Game " + atomFileData.config["lastSelectedGame"] + " does not Exist in Database";
                     }
-                    else if (gameData[atomProgram.config["lastSelectedGame"]]["gameType"][0] == "Minecraft")
+                    else if (gameData[atomFileData.config["lastSelectedGame"]]["gameType"][0] == "Minecraft")
                     {
                         string username = "";
                         this.Invoke(new MethodInvoker(delegate { username = formComboUsername.Text; }));

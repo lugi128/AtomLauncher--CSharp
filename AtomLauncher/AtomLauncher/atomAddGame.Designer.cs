@@ -62,18 +62,18 @@
             // 
             this.formButtonAddGeneral.Enabled = false;
             this.formButtonAddGeneral.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddGeneral.Location = new System.Drawing.Point(104, 72);
+            this.formButtonAddGeneral.Location = new System.Drawing.Point(88, 40);
             this.formButtonAddGeneral.Name = "formButtonAddGeneral";
-            this.formButtonAddGeneral.Size = new System.Drawing.Size(64, 24);
+            this.formButtonAddGeneral.Size = new System.Drawing.Size(72, 24);
             this.formButtonAddGeneral.TabIndex = 5;
             this.formButtonAddGeneral.Text = "General";
             this.formButtonAddGeneral.UseVisualStyleBackColor = true;
             // 
             // formButtonCancel
             // 
-            this.formButtonCancel.Location = new System.Drawing.Point(176, 72);
+            this.formButtonCancel.Location = new System.Drawing.Point(168, 40);
             this.formButtonCancel.Name = "formButtonCancel";
-            this.formButtonCancel.Size = new System.Drawing.Size(64, 24);
+            this.formButtonCancel.Size = new System.Drawing.Size(72, 24);
             this.formButtonCancel.TabIndex = 6;
             this.formButtonCancel.Text = "Cancel";
             this.formButtonCancel.UseVisualStyleBackColor = true;
@@ -83,40 +83,43 @@
             // 
             this.formButtonAddCubeworld.Enabled = false;
             this.formButtonAddCubeworld.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddCubeworld.Location = new System.Drawing.Point(8, 72);
+            this.formButtonAddCubeworld.Location = new System.Drawing.Point(232, 64);
             this.formButtonAddCubeworld.Name = "formButtonAddCubeworld";
             this.formButtonAddCubeworld.Size = new System.Drawing.Size(88, 24);
             this.formButtonAddCubeworld.TabIndex = 5;
             this.formButtonAddCubeworld.Text = "Cube World";
             this.formButtonAddCubeworld.UseVisualStyleBackColor = true;
+            this.formButtonAddCubeworld.Visible = false;
             // 
             // formButtonAddTerraria
             // 
             this.formButtonAddTerraria.Enabled = false;
             this.formButtonAddTerraria.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddTerraria.Location = new System.Drawing.Point(176, 40);
+            this.formButtonAddTerraria.Location = new System.Drawing.Point(224, 64);
             this.formButtonAddTerraria.Name = "formButtonAddTerraria";
             this.formButtonAddTerraria.Size = new System.Drawing.Size(64, 24);
             this.formButtonAddTerraria.TabIndex = 5;
             this.formButtonAddTerraria.Text = "Terraria";
             this.formButtonAddTerraria.UseVisualStyleBackColor = true;
+            this.formButtonAddTerraria.Visible = false;
             // 
             // formButtonAddStarbound
             // 
             this.formButtonAddStarbound.Enabled = false;
             this.formButtonAddStarbound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddStarbound.Location = new System.Drawing.Point(88, 40);
+            this.formButtonAddStarbound.Location = new System.Drawing.Point(240, 64);
             this.formButtonAddStarbound.Name = "formButtonAddStarbound";
             this.formButtonAddStarbound.Size = new System.Drawing.Size(80, 24);
             this.formButtonAddStarbound.TabIndex = 5;
             this.formButtonAddStarbound.Text = "Starbound";
             this.formButtonAddStarbound.UseVisualStyleBackColor = true;
+            this.formButtonAddStarbound.Visible = false;
             // 
             // atomAddGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(249, 106);
+            this.ClientSize = new System.Drawing.Size(249, 73);
             this.Controls.Add(this.formButtonCancel);
             this.Controls.Add(this.formButtonAddStarbound);
             this.Controls.Add(this.formButtonAddCubeworld);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 using System.Net;
 using System.Xml.Linq;
 
@@ -28,7 +29,7 @@ namespace AtomLauncher
             //{"time"                , new string[] { "2013-09-19T10:52:37-05:00" }},
             //{"releaseTime"         , new string[] { "2013-09-19T10:52:37-05:00" }},
             //{"Type"                , new string[] { "release" }},
-            //{"minecraftArguments"  , new string[] { "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets}" }},
+            //{"minecraftArguments"  , new string[] { "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token}" }},
             //{"mainClass"           , new string[] { "net.minecraft.client.main.Main" }},
             //{"libraries"           , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
             //{"natives"             , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
@@ -46,8 +47,10 @@ namespace AtomLauncher
         static bool mcAutoSelect = true;
         static bool mcUseNightly = false;
         static bool mcForce64Bit = false;
-        static string mcSessionID = "";
-        static string mcPropperUsername = "";
+        static string mcAccessToken = "";
+        static string mcClientToken = ""; //Currently Unused
+        static string mcUUID = "";
+        static string mcUsername = "";
         static string javaFile = @"javaw";
         static string buildArguments = "";
 
@@ -60,7 +63,7 @@ namespace AtomLauncher
         internal static string start(string username = "", string password = "", bool saveLogin = false, bool autoLogin = false)
         {
             string status = "Successful";
-            string gameLocation = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["location"][0];
+            string gameLocation = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["location"][0];
             int step = 0;
             while (step <= 8)
             {
@@ -68,9 +71,9 @@ namespace AtomLauncher
                 if (step == 0)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Versions...");
-                    if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["selectVer"][0].StartsWith("Latest: "))
+                    if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["selectVer"][0].StartsWith("Latest: "))
                     {
-                        status = getVersion(atomProgram.config["lastSelectedGame"]);
+                        status = getVersion(atomFileData.config["lastSelectedGame"]);
                     }
                     else
                     {
@@ -90,7 +93,7 @@ namespace AtomLauncher
                 else if (step == 3)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Saving Data...");
-                    status = setSaveData(username, password, mcPropperUsername, saveLogin, autoLogin);
+                    status = setSaveData(username, password, mcUsername, saveLogin, autoLogin);
                 }
                 else if (step == 4)
                 {
@@ -193,15 +196,15 @@ namespace AtomLauncher
             try
             {
                 if (atomLauncher.cancelPressed) { throw new System.Exception("Loading Settings"); }
-                mcLocation = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["location"][0];
-                mcSave = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["saveLoc"][0];
-                mcStartRam = "-Xms" + atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["startRam"][0] + "m ";
-                mcMaxRam = "-Xmx" + atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["maxRam"][0] + "m ";
-                mcDisplayCMD = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["displayCMD"][0]);
-                mcCPUPriority = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["CPUPriority"][0];
-                mcOnlineMode = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["onlineMode"][0]);
-                mcOfflineName = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["offlineName"][0];
-                mcSelectVer = atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["selectVer"][0];
+                mcLocation = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["location"][0];
+                mcSave = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["saveLoc"][0];
+                mcStartRam = "-Xms" + atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["startRam"][0] + "m ";
+                mcMaxRam = "-Xmx" + atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["maxRam"][0] + "m ";
+                mcDisplayCMD = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["displayCMD"][0]);
+                mcCPUPriority = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["CPUPriority"][0];
+                mcOnlineMode = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["onlineMode"][0]);
+                mcOfflineName = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["offlineName"][0];
+                mcSelectVer = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["selectVer"][0];
                 if (mcSelectVer.StartsWith("Latest: "))
                 {
                     if (mcSelectVer.EndsWith(" Recommended"))
@@ -213,9 +216,9 @@ namespace AtomLauncher
                         mcSelectVer = versionList["AL_LatestID"][1];
                     }
                 }
-                mcAutoSelect = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoSelect"][0]);
-                mcUseNightly = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["useNightly"][0]);
-                mcForce64Bit = Convert.ToBoolean(atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["force64Bit"][0]);
+                mcAutoSelect = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoSelect"][0]);
+                mcUseNightly = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["useNightly"][0]);
+                mcForce64Bit = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["force64Bit"][0]);
             }
             catch (Exception ex)
             {
@@ -237,51 +240,84 @@ namespace AtomLauncher
         /// <param name="username">Input username here. Example: "username"</param>
         /// <param name="password">Input password here. Example: "pass1234"</param>
         /// <returns>Status of exceptions or success</returns>
-        private static string setSession(string username = "", string password = "")
+        private static string setSession(string inputUsername = "", string inputPassword = "")
         {
             string status = "Successful";
-            string mcSessionData = "";
+            var responsePayload = "";
             try
             {
                 if (mcOnlineMode)
                 {
-                    using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
+                    WebRequest request = WebRequest.Create("https://authserver.mojang.com/authenticate");   //Start WebRequest
+                    request.Method = "POST";                                                                //Method type, POST
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(new                           //Object to Upload
                     {
-                        System.Collections.Specialized.NameValueCollection urlData = new System.Collections.Specialized.NameValueCollection();
-                        //client.Headers["Content-Type"] = "application/string";
-                        urlData.Add("user", username);
-                        urlData.Add("password", password);
-                        urlData.Add("version", "13");
-                        byte[] responsebytes = client.UploadValues("https://login.minecraft.net", "POST", urlData);
-                        mcSessionData = Encoding.UTF8.GetString(responsebytes);
+                        agent = new                 // optional /
+                        {                           //          /
+                            name = "Minecraft",     // -------- / So far this is the only encountered value
+                            version = 1             // -------- / This number might be increased by the vanilla client in the future
+                        },                          //          /
+                        username = inputUsername,   // Can be an email address or player name for unmigrated accounts
+                        password = inputPassword,
+                        //clientToken = "TOKEN"     // Client Identifier: optional
+                    });
+                    byte[] uploadBytes = Encoding.UTF8.GetBytes(json);                                      //Convert UploadObject to ByteArray
+                    request.ContentType = "application/json";                                               //Set Client Header ContentType to "application/json"
+                    request.ContentLength = uploadBytes.Length;                                             //Set Client Header ContentLength to size of upload
+                    using (Stream dataStream = request.GetRequestStream())                                  //Start/Close Upload
+                    {
+                        dataStream.Write(uploadBytes, 0, uploadBytes.Length);                               //Upload the ByteArray
                     }
-                    if (mcSessionData.Contains(":"))
+                    using (WebResponse response = request.GetResponse())                                    //Start/Close Download
                     {
-                        string[] sessionData = mcSessionData.Split(':');
-                        mcPropperUsername = sessionData[2];
-                        mcSessionID = sessionData[3];
+                        using (Stream dataStream = response.GetResponseStream())                            //Start/Close Download Content
+                        {                        
+                            using (StreamReader reader = new StreamReader(dataStream))                      //Start/Close Reading the Stream
+                            {
+                                responsePayload = reader.ReadToEnd();                                       //Save Downloaded Content
+                            }
+                        }
+                    }
+                    dynamic responseJson = JsonConvert.DeserializeObject(responsePayload);                  //Convert string to dynamic josn object
+                    if (responseJson.accessToken != null)                                                   //Detect if this is an error Payload
+                    {
+                        mcAccessToken = responseJson.accessToken;                                           //Assign Access Token
+                        mcClientToken = responseJson.clientToken;                                           //Assign Client Token
+                        if (responseJson.selectedProfile.id != null)                                        //Detect if this is an error Payload
+                        {
+                            mcUUID = responseJson.selectedProfile.id;                                       //Assign User ID
+                            mcUsername = responseJson.selectedProfile.name;                                 //Assign Selected Profile Name
+                        }
+                        else
+                        {
+                            status = "Error: WebPayLoad: Missing UUID and Username";
+                        }
+                    }
+                    else if (responseJson.errorMessage != null)
+                    {
+                        status = "Error: WebPayLoad: " + responseJson.errorMessage;
                     }
                     else
                     {
-                        if (mcSessionData == "Bad login")
-                        {
-                            mcSessionData = mcSessionData + ": Could be an Incorrect Username or Password.";
-                        }
-                        else if (mcSessionData == "Invalid salt version")
-                        {
-                            mcSessionData = mcSessionData + ": Username or Password has an invalid input.";
-                        }
-                        else if (mcSessionData == "")
-                        {
-                            mcSessionData = mcSessionData + ": ";
-                        }
-                        status = "Error: Web: " + mcSessionData;
+                        status = "Error: WebPayLoad: Had an error and the payload was empty.";
                     }
                 }
                 else
                 {
-                    mcPropperUsername = mcOfflineName;
+                    mcUsername = mcOfflineName;
                 }
+            }
+            catch (WebException ex)
+            {
+                using (Stream dataStream = ex.Response.GetResponseStream())                             //Start/Close Download Content
+                {
+                    using (StreamReader reader = new StreamReader(dataStream))                          //Start/Close Reading the Stream
+                    {
+                        responsePayload = reader.ReadToEnd();                                           //Save Downloaded Content
+                    }
+                }
+                dynamic responseJson = JsonConvert.DeserializeObject(responsePayload);                  //Convert string to dynamic josn object
+                status = "Web Ex: " + responseJson.errorMessage + " - " + ex.Message;                 //Set status to an Error Message.
             }
             catch (Exception ex)
             {
@@ -295,7 +331,7 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    status = "Error: Session ID Ex: " + ex.Message;
+                    status = "Error: Web: " + ex.Message;
                 }
             }
             return status;
@@ -320,52 +356,54 @@ namespace AtomLauncher
                     if (atomLauncher.cancelPressed) throw new System.Exception("Saving Launcher Data");
                     if (saveLogin)
                     {
-                        if (!atomLauncher.userData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                        if (!atomLauncher.userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                         {
-                            atomLauncher.userData.Add(atomProgram.config["lastSelectedGame"], new Dictionary<string, string[]>());
+                            atomLauncher.userData.Add(atomFileData.config["lastSelectedGame"], new Dictionary<string, string[]>());
                         }
-                        atomLauncher.userData[atomProgram.config["lastSelectedGame"]][username] = new string[]
+                        atomLauncher.userData[atomFileData.config["lastSelectedGame"]][username] = new string[]
                         {
                             propperUsername,
                             otherCipher.Encrypt(password, otherCipher.machineIDLookup()),
-                            mcSessionID,
-                            DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss")
+                            DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss"),
+                            mcAccessToken,
+                            mcClientToken,
+                            mcUUID
                         };
                         atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
                     }
                     else
                     {
-                        if (atomLauncher.userData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                        if (atomLauncher.userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                         {
-                            if (atomLauncher.userData[atomProgram.config["lastSelectedGame"]].ContainsKey(username))
+                            if (atomLauncher.userData[atomFileData.config["lastSelectedGame"]].ContainsKey(username))
                             {
-                                atomLauncher.userData[atomProgram.config["lastSelectedGame"]].Remove(username);
+                                atomLauncher.userData[atomFileData.config["lastSelectedGame"]].Remove(username);
                                 atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
                             }
                         }
                     }
                     if (autoLogin)
                     {
-                        if (!atomLauncher.gameData.ContainsKey(atomProgram.config["lastSelectedGame"]))
+                        if (!atomLauncher.gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                         {
-                            atomLauncher.gameData.Add(atomProgram.config["lastSelectedGame"], new Dictionary<string, string[]>());
+                            atomLauncher.gameData.Add(atomFileData.config["lastSelectedGame"], new Dictionary<string, string[]>());
                         }
-                        if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != username)
+                        if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != username)
                         {
-                            atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] = username;
+                            atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] = username;
                             atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
                         }
                     }
                     else
                     {
-                        if (atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
+                        if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
                         {
-                            atomLauncher.gameData[atomProgram.config["lastSelectedGame"]]["autoLoginUser"][0] = "";
+                            atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] = "";
                             atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
                         }
                     }
                 }
-                atomFileData.saveConfFile(atomFileData.configFile, atomProgram.config);
+                atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
             }
             catch (Exception ex)
             {
@@ -390,34 +428,34 @@ namespace AtomLauncher
         {
             string subString = "";
             string status = "Successful";
-                if (atomLauncher.cancelPressed) throw new System.Exception("Load Version Data");
-                string fileName = mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".json";
-                if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
+            if (atomLauncher.cancelPressed) throw new System.Exception("Load Version Data");
+            string fileName = mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".json";
+            if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
+            {
+                if (mcOnlineMode)
                 {
-                    if (mcOnlineMode)
+                    try
                     {
-                        try
-                        {
-                            atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Download/versions/" + mcSelectVer + "/" + mcSelectVer + ".json", fileName);
-                        }
-                        catch (Exception ex)
-                        {
-                            subString = ex.Message;
-                        }
+                        atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Download/versions/" + mcSelectVer + "/" + mcSelectVer + ".json", fileName);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        subString = "Offline Mode, File Missing. You need to login and download first, before offline mode can be used.";
+                        subString = ex.Message;
                     }
-                }
-                if (File.Exists(fileName))
-                {
-                    versionData = otherJsonNet.getVersionData(fileName, nightlyBuilds);
                 }
                 else
                 {
-                    status = subString + " / Version data file missing.";
+                    subString = "Offline Mode, File Missing. You need to login and download first, before offline mode can be used.";
                 }
+            }
+            if (File.Exists(fileName))
+            {
+                versionData = otherJsonNet.getVersionData(fileName, nightlyBuilds);
+            }
+            else
+            {
+                status = subString + " / Version data file missing.";
+            }
             try
             {
             }
@@ -593,10 +631,12 @@ namespace AtomLauncher
                 string mcJar = "\"" + mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".jar\"";
                 string mcClass = versionData["mainClass"][0];
                 string mcArgs = versionData["minecraftArguments"][0];
-                mcArgs = mcArgs.Replace("${auth_player_name}", mcPropperUsername);
+                mcArgs = mcArgs.Replace("${auth_player_name}", mcUsername);
                 if (mcOnlineMode)
                 {
-                    mcArgs = mcArgs.Replace("${auth_session}", mcSessionID);
+                    mcArgs = mcArgs.Replace("${auth_session}", "token:" + mcAccessToken + ":" + mcUUID);
+                    mcArgs = mcArgs.Replace("${auth_uuid}", mcUUID);
+                    mcArgs = mcArgs.Replace("${auth_access_token}", mcAccessToken);
                 }
                 else
                 {
@@ -633,6 +673,7 @@ namespace AtomLauncher
                 if (atomLauncher.cancelPressed) throw new System.Exception("Starting Game");
                 Process mcProc = new Process();
                 mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on my laptop. // Get more info on this and perhaps make it automatic and/or optional.
+                mcProc.StartInfo.WorkingDirectory = mcLocation;
                 mcProc.StartInfo.FileName = javaFile;
                 mcProc.StartInfo.Arguments = buildArguments;
                 mcProc.Start();

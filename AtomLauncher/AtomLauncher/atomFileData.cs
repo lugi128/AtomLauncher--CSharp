@@ -15,6 +15,7 @@ namespace AtomLauncher
         internal static string userDataFile = @".\ALUData";
         internal static string gameDataFile = @".\ALGData";
         internal static string configFile = @".\ALConfig.alcfg";
+        public static Dictionary<string, string> config;
 
         public static Dictionary<int, string[]> fileCheck(Dictionary<int, string[]> dict, string location)
         {
@@ -183,7 +184,7 @@ namespace AtomLauncher
             Dictionary<string, Dictionary<string, string[]>> loadedDict = new Dictionary<string, Dictionary<string, string[]>>();//{
             //    {
             //        "Minecraft", new Dictionary<string, string[]> { 
-            //            { "UserName", new string[] { "Propper Username", "Encrypted Password", "Last Session ID", "Last Session ID Date and Time" } }
+            //            { "UserName", new string[] { "Propper Username", "Encrypted Password", "Last Saved Date and Time", "Access Token", "Client Token", "Universally Unique Identifier"} }
             //        } 
             //    }
             //};
@@ -200,7 +201,7 @@ namespace AtomLauncher
         /// <param name="pathFile">The save location and file name.</param>
         /// <param name="data">The input dictonary</param>
         /// <param name="arrayThree">The Format of the dictonary to save. UserData is true. GameData is false</param>
-        internal static void saveDictonary(string pathFile, Dictionary<string, Dictionary<string, string[]>> inData, bool arrayFour = false)
+        internal static void saveDictonary(string pathFile, Dictionary<string, Dictionary<string, string[]>> inData, bool arraySix = false)
         {
             using (var file = File.Create(pathFile))
             using (var deflate = new DeflateStream(file, CompressionMode.Compress))
@@ -215,11 +216,13 @@ namespace AtomLauncher
                     {
                         writer.Write(subpair.Key);
                         writer.Write(subpair.Value[0]);
-                        if (arrayFour)
+                        if (arraySix)
                         {
                             writer.Write(subpair.Value[1]);
                             writer.Write(subpair.Value[2]);
                             writer.Write(subpair.Value[3]);
+                            writer.Write(subpair.Value[4]);
+                            writer.Write(subpair.Value[5]);
                         }
                     }
                 }
@@ -231,7 +234,7 @@ namespace AtomLauncher
         /// <param name="pathFile">The read location and file name.</param>
         /// <param name="arrayThree">The Format of the dictonary to read. UserData is true. GameData is false</param>
         /// <returns></returns>
-        internal static Dictionary<string, Dictionary<string, string[]>> loadDictonary(string pathFile, bool arrayFour = false)
+        internal static Dictionary<string, Dictionary<string, string[]>> loadDictonary(string pathFile, bool arraySix = false)
         {
             using (var file = File.OpenRead(pathFile))
             using (var deflate = new DeflateStream(file, CompressionMode.Decompress))
@@ -246,9 +249,9 @@ namespace AtomLauncher
                     int subCount = reader.ReadInt32();
                     while (subCount-- > 0)
                     {
-                        if (arrayFour) 
+                        if (arraySix) 
                         {
-                            subdata.Add(reader.ReadString(), new string[] { reader.ReadString(), reader.ReadString(), reader.ReadString(), reader.ReadString() });
+                            subdata.Add(reader.ReadString(), new string[] { reader.ReadString(), reader.ReadString(), reader.ReadString(), reader.ReadString(), reader.ReadString(), reader.ReadString() });
                         }
                         else 
                         { 
