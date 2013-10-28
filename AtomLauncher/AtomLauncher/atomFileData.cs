@@ -15,6 +15,7 @@ namespace AtomLauncher
         internal static string userDataFile = @".\ALUData";
         internal static string gameDataFile = @".\ALGData";
         internal static string configFile = @".\ALConfig.alcfg";
+        public static Dictionary<string, string> config;
 
         public static Dictionary<int, string[]> fileCheck(Dictionary<int, string[]> dict, string location)
         {

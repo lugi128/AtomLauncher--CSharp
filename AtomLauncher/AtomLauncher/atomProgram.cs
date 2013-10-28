@@ -13,7 +13,6 @@ namespace AtomLauncher
         public static bool debugApp = false; //Change this for testing purposes.
         public static string appDirectory = Assembly.GetExecutingAssembly().Location;
         public static bool is64Bit = Environment.Is64BitProcess;
-        public static Dictionary<string, string> config;
         [STAThread]
         static void Main(string[] args)
         {
