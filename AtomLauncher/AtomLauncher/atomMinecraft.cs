@@ -252,7 +252,7 @@ namespace AtomLauncher
                     request.Method = "POST";                                                                //Method type, POST
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(new                           //Object to Upload
                     {
-                        agent = new                 // optional /
+                        agent = new                 // optional /                                           //This seems to be required for minecraft despite them saying its optional.
                         {                           //          /
                             name = "Minecraft",     // -------- / So far this is the only encountered value
                             version = 1             // -------- / This number might be increased by the vanilla client in the future
@@ -307,17 +307,24 @@ namespace AtomLauncher
                     mcUsername = mcOfflineName;
                 }
             }
-            catch (WebException ex)
+            catch (WebException webEx)
             {
-                using (Stream dataStream = ex.Response.GetResponseStream())                             //Start/Close Download Content
+                try
                 {
-                    using (StreamReader reader = new StreamReader(dataStream))                          //Start/Close Reading the Stream
+                    using (Stream dataStream = webEx.Response.GetResponseStream())                             //Start/Close Download Content
                     {
-                        responsePayload = reader.ReadToEnd();                                           //Save Downloaded Content
+                        using (StreamReader reader = new StreamReader(dataStream))                          //Start/Close Reading the Stream
+                        {
+                            responsePayload = reader.ReadToEnd();                                           //Save Downloaded Content
+                        }
                     }
+                    dynamic responseJson = JsonConvert.DeserializeObject(responsePayload);                  //Convert string to dynamic josn object
+                    status = "Web Ex: " + responseJson.errorMessage + " - " + webEx.Message;  
                 }
-                dynamic responseJson = JsonConvert.DeserializeObject(responsePayload);                  //Convert string to dynamic josn object
-                status = "Web Ex: " + responseJson.errorMessage + " - " + ex.Message;                 //Set status to an Error Message.
+                catch
+                {
+                    status = "Web Ex: " + webEx.Message;  
+                }
             }
             catch (Exception ex)
             {
@@ -485,55 +492,100 @@ namespace AtomLauncher
                 if (atomLauncher.cancelPressed) throw new System.Exception("Checking Minecraft Files");
                 Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
                 int x = 0;
-                foreach (string entry in versionData["libraries"]) //maybe fix this to a proper for loop.
+                foreach (string entry in versionData["libraries"])
                 {
                     fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] }); x++;
                 }
-                string fileName = mcLocation + @"\versions\LatestVerList\Minecraft.Resources.xml";
+                string filename = mcLocation + @"\versions\LatestVerList\Minecraft.Resources";
+                string[] fileNames = { filename + ".0.xml" };
                 string subString = "";
-                if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
+                if ((DateTime.Now - File.GetLastWriteTime(fileNames[0])).TotalHours > 1)
                 {
+                    atomFileData.deleteLoop(mcLocation + @"\assets\sounds.json"); //In the future, possibly check ETAG instead with all the files.
                     try
                     {
-                        atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Resources", fileName);
+                        string pageMarker = "";
+                        int y = 0;
+                        while (true)
+                        {
+                            bool isTruncated = false;
+                            atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Resources" + pageMarker, fileNames[y]);
+                            XDocument doc = XDocument.Load(fileNames[y]);
+                            foreach (XElement el in doc.Root.Elements())
+                            {
+                                if (el.Name.LocalName == "IsTruncated")
+                                {
+                                    isTruncated = Convert.ToBoolean(el.Value);
+                                    break;
+                                }
+                            }
+                            if (isTruncated)
+                            {
+                                XElement el = doc.Root.Elements().Last();
+                                foreach (XElement element in el.Elements())
+                                {
+                                    if (element.Name.LocalName == "Key")
+                                    {
+                                        pageMarker = "?marker=" + element.Value;
+                                    }
+                                }
+                                y++;
+                                if (y > fileNames.Length - 1)
+                                {
+                                    Array.Resize(ref fileNames, fileNames.Length + 1);
+                                }
+                                fileNames[y] = filename + "." + y + ".xml";
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
                         subString = ex.Message;
                     }
                 }
-                if (File.Exists(fileName))
+                try
                 {
-                    try
+                    //foreach xml file
+                    foreach (string file in fileNames)
                     {
-                        XDocument doc = XDocument.Load(fileName);
-                        foreach (XElement el in doc.Root.Elements())
+                        if (File.Exists(file))
                         {
-                            foreach (XElement element in el.Elements())
+                            XDocument doc = XDocument.Load(file);
+                            foreach (XElement el in doc.Root.Elements())
                             {
-                                if (element.Name.LocalName == "Key")
+                                foreach (XElement element in el.Elements())
                                 {
-                                    if (!element.Value.EndsWith("/"))
+                                    if (element.Name.LocalName == "Key")
                                     {
-                                        fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Resources/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
+                                        if (!element.Value.EndsWith("/"))
+                                        {
+                                            fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Resources/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
+                                        }
                                     }
                                 }
                             }
                         }
-                        //BUG! Add sounds.json parsing to this. It contains more usefull files needed by minecraft.
-                    }
-                    catch
-                    {
-                        status = atomFileData.deleteLoop(fileName);
-                        if (status == "")
+                        else
                         {
-                            status = "Minecraft Resources Error: Please login again.";
+                            status = subString + " / Resource File Missing.";
+                            break;
                         }
                     }
                 }
-                else
+                catch
                 {
-                    status = subString + " / Resource File Missing.";
+                    foreach (string file in fileNames)
+                    {
+                        status = status + atomFileData.deleteLoop(file);
+                    }
+                    if (status == "")
+                    {
+                        status = "Minecraft Resources Error: Please login again.";
+                    }
                 }
                 if (status == "Successful")
                 {
@@ -604,7 +656,6 @@ namespace AtomLauncher
             string status = "Successful";
             try
             {
-                //"C:\Program Files\Java\jre7\bin\java.exe" -Xmx512M -Djava.library.path=C:\Users\Sheryl\AppData\Roaming\.minecraft\versions\1.6.4\1.6.4-test -cp C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\paulscode\codecjorbis\20101023\codecjorbis-20101023.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\paulscode\codecwav\20101023\codecwav-20101023.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\paulscode\libraryjavasound\20101123\libraryjavasound-20101123.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\paulscode\librarylwjglopenal\20100824\librarylwjglopenal-20100824.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\paulscode\soundsystem\20120107\soundsystem-20120107.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\argo\argo\2.25_fixed\argo-2.25_fixed.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\org\bouncycastle\bcprov-jdk15on\1.47\bcprov-jdk15on-1.47.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\google\guava\guava\14.0\guava-14.0.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\org\apache\commons\commons-lang3\3.1\commons-lang3-3.1.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\commons-io\commons-io\2.4\commons-io-2.4.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\net\java\jinput\jinput\2.0.5\jinput-2.0.5.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\net\java\jutils\jutils\1.0.0\jutils-1.0.0.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\com\google\code\gson\gson\2.2.2\gson-2.2.2.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\org\lwjgl\lwjgl\lwjgl\2.9.0\lwjgl-2.9.0.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\libraries\org\lwjgl\lwjgl\lwjgl_util\2.9.0\lwjgl_util-2.9.0.jar;C:\Users\Sheryl\AppData\Roaming\.minecraft\versions\1.6.4\1.6.4.jar net.minecraft.client.main.Main --username TrinaryAtom --session token:ec432334f6d84ec09974a8be3e704aa6:4ed3978b990a4666ae8ae157210ac54e --version 1.6.4 --gameDir C:\Users\Sheryl\AppData\Roaming\.minecraft --assetsDir C:\Users\Sheryl\AppData\Roaming\.minecraft\assets
                 if (atomLauncher.cancelPressed) throw new System.Exception("Setting up Command");
                 if (mcDisplayCMD)
                 {
@@ -640,7 +691,9 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    mcArgs = mcArgs.Replace("--session ${auth_session}", "");
+                    mcArgs = mcArgs.Replace("${auth_session}", "OFFLINE_MODE");
+                    mcArgs = mcArgs.Replace("${auth_uuid}", "OFFLINE_MODE");
+                    mcArgs = mcArgs.Replace("${auth_access_token}", "OFFLINE_MODE");
                 }
                 mcArgs = mcArgs.Replace("${version_name}", mcSelectVer);
                 mcArgs = mcArgs.Replace("${game_directory}", "\"" + mcSave + "\"");
@@ -672,7 +725,7 @@ namespace AtomLauncher
             {
                 if (atomLauncher.cancelPressed) throw new System.Exception("Starting Game");
                 Process mcProc = new Process();
-                mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on my laptop. // Get more info on this and perhaps make it automatic and/or optional.
+                mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on specific PCs. // Get more info on this and perhaps make it automatic and/or optional.
                 mcProc.StartInfo.WorkingDirectory = mcLocation;
                 mcProc.StartInfo.FileName = javaFile;
                 mcProc.StartInfo.Arguments = buildArguments;
