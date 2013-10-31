@@ -269,7 +269,7 @@ namespace AtomLauncher
             Thread delQuT = new Thread(() => deleteLoop(pathFILE, true));
             delQuT.Start();
         }
-        public static string deleteLoop(string pathFILE, bool runByThread = false)
+        public static string deleteLoop(string pathFILE, bool displayMessageBox = false)
         {
             string status = "";
             int x = 0;
@@ -290,7 +290,7 @@ namespace AtomLauncher
                     catch (Exception ex)
                     {
                         status = ex.Message;
-                        if (runByThread) MessageBox.Show(ex.Message);
+                        if (displayMessageBox) MessageBox.Show(ex.Message);
                     }
                     break;
                 }

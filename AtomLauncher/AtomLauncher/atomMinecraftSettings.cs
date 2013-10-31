@@ -355,11 +355,19 @@ namespace AtomLauncher
             {
                 formLabelStatus.Text = "Cannot use that 'Custom Game Name'";
             }
+            else if (atomLauncher.settingsGame != formTextGameName.Text && atomLauncher.gameData.ContainsKey(formTextGameName.Text))
+            {
+                formLabelStatus.Text = "That 'Custom Game Name' is already in use.";
+            }
             else
             {
                 if (atomLauncher.gameData.ContainsKey(atomLauncher.settingsGame))
                 {
                     atomLauncher.gameData[formTextGameName.Text] = atomLauncher.gameData[atomLauncher.settingsGame];
+                    if (atomLauncher.userData.ContainsKey(atomLauncher.settingsGame))
+                    {
+                        atomLauncher.userData[formTextGameName.Text] = atomLauncher.userData[atomLauncher.settingsGame];
+                    }
                 }
                 else
                 {
@@ -380,11 +388,13 @@ namespace AtomLauncher
                 atomLauncher.gameData[formTextGameName.Text]["autoSelect"] = new string[] { formCheckAutoJava.Checked.ToString() };
                 atomLauncher.gameData[formTextGameName.Text]["useNightly"] = new string[] { formCheckUseNightly.Checked.ToString() };
                 atomLauncher.gameData[formTextGameName.Text]["force64Bit"] = new string[] { formRadio64bitJava.Checked.ToString() };
-                atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
                 if (atomLauncher.settingsGame != formTextGameName.Text)
                 {
                     atomLauncher.gameData.Remove(atomLauncher.settingsGame);
+                    atomLauncher.userData.Remove(atomLauncher.settingsGame);
                 }
+                atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
+                atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
                 Thread close = new Thread(fadeOutClose);
                 close.IsBackground = true;
                 close.Start();

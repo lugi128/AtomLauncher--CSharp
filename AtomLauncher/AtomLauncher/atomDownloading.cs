@@ -24,14 +24,14 @@ namespace AtomLauncher
         static double bytesRecieved = 0;
         static string downloadingFile = "";
 
-        static public Dictionary<int, string[]> testDictionary = new Dictionary<int, string[]>{
-            {0, new string[] { "http://trinaryatom.com/_web_downloads/Test/test0.zip", @"Folder\test0.zip" }},
-            {1, new string[] { "http://trinaryatom.com/_web_downloads/Test/test1.zip", @"Folder\test1.zip" }},
-            {2, new string[] { "http://trinaryatom.com/_web_downloads/Test/test2.zip", @"Folder\test2.zip" }},
-            {3, new string[] { "http://trinaryatom.com/_web_downloads/Test/test3.zip", @"Folder\test3.zip" }},
-            {4, new string[] { "http://trinaryatom.com/_web_downloads/Test/test4.zip", @"Folder\test4.zip" }},
-            {5, new string[] { "http://trinaryatom.com/_web_downloads/Test/test5.zip", @"Folder\test5.zip" }}
-        };
+        //static public Dictionary<int, string[]> demoDownloadDictonary = new Dictionary<int, string[]>{
+        //    {0, new string[] { "http://www.atomicelectronics.net/Name/Test/test0.zip", @"Folder\test0.zip" }},
+        //    {1, new string[] { "http://www.atomicelectronics.net/Name/Test/test1.zip", @"Folder\test1.zip" }},
+        //    {2, new string[] { "http://www.atomicelectronics.net/Name/Test/test2.zip", @"Folder\test2.zip" }},
+        //    {3, new string[] { "http://www.atomicelectronics.net/Name/Test/test3.zip", @"Folder\test3.zip" }},
+        //    {4, new string[] { "http://www.atomicelectronics.net/Name/Test/test4.zip", @"Folder\test4.zip" }},
+        //    {5, new string[] { "http://www.atomicelectronics.net/Name/Test/test5.zip", @"Folder\test5.zip" }}
+        //};
 
         /// <summary>
         /// Input multiple file to download. Does not stop until error or completed.
@@ -55,6 +55,7 @@ namespace AtomLauncher
             foreach (KeyValuePair<int, string[]> entry in urlFilePath)
             {
                 if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Checking Remote Files");
+                atomLauncher.atomLaunch.formText("formLabelTotalMB", (Convert.ToInt32(entry.Key) + 1) + " / " + urlFilePath.Count());
                 int contentLength = 0;
                 atomLauncher.atomLaunch.formText("formLabelDLFile", (entry.Value[0]).TruncateDots(67));
                 try
@@ -230,7 +231,7 @@ namespace AtomLauncher
                         atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile.TruncateDots(67));
                         if (sw.Elapsed.TotalSeconds >= 5)
                         {
-                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", ((compileReceivedBytes - previousByteCount) / 1024 / 5).ToString("0.00") + " kB/s");
+                            atomLauncher.atomLaunch.formText("formLabelDLSpeed", ((compileReceivedBytes - previousByteCount) / 1024 / sw.Elapsed.TotalSeconds).ToString("0.00") + " kB/s");
                             sw.Restart();
                             previousByteCount = compileReceivedBytes;
                         }

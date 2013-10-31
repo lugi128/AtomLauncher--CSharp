@@ -37,14 +37,15 @@ namespace AtomLauncher
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-
-            MessageBox.Show("Copy this error and report it please.\n\nTo Copy Press [Ctrl] + [C].\n\n" + e.Exception.ToString(), "Unhandled Thread Exception");
+            System.IO.File.AppendAllText(@".\ALCrash.log", "[AtomLauncher][" + DateTime.Now.Date + "][" + DateTime.Now.TimeOfDay + "]: " + e.Exception.ToString() + Environment.NewLine);
+            MessageBox.Show("Error Saved to 'ALCrash.log'. Report this please.\n\nTo Copy Press [Ctrl] + [C].\n\n" + e.Exception.ToString(), "Unhandled Thread Exception");
             Environment.Exit(0);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("Copy this error and report it please.\n\nTo Copy Press [Ctrl] + [C].\n\n" + (e.ExceptionObject as Exception).ToString(), "Unhandled UI Exception");
+            System.IO.File.AppendAllText(@".\ALCrash.log", "[AtomLauncher][" + DateTime.Now.Date + "][" + DateTime.Now.TimeOfDay + "]: " + (e.ExceptionObject as Exception).ToString() + Environment.NewLine);
+            MessageBox.Show("Error Saved to 'ALCrash.log'. Report this please.\n\nTo Copy Press [Ctrl] + [C].\n\n" + (e.ExceptionObject as Exception).ToString(), "Unhandled UI Exception");
             Environment.Exit(0);
         }
     }

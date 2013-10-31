@@ -73,17 +73,8 @@ namespace AtomLauncher
 
         private void formPicture_Click(object sender, EventArgs e)
         {
-            formPanelRight_Click(sender, e);
             PictureBox pic = (PictureBox)sender;
-            atomFileData.config["lastSelectedGame"] = pic.Name.Replace("formPicture", "");
-            pic.BackColor = selectColor;
-            formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
-            setInputBoxes();
-        }
-
-        private void formPanelRight_Click(object sender, EventArgs e)
-        {
-            if (formLabelGameSelected.Enabled)
+            if (pic.BackColor == noColor)
             {
                 foreach (Control x in this.formPanelRight.Controls)
                 {
@@ -95,15 +86,9 @@ namespace AtomLauncher
                         }
                     }
                 }
-                atomFileData.config["lastSelectedGame"] = "";
-                if (gameData.Count < 1)
-                {
-                    formLabelGameSelected.Text = "No Games Added, Add one to launch.";
-                }
-                else
-                {
-                    formLabelGameSelected.Text = "Pick one to launch.";
-                }
+                atomFileData.config["lastSelectedGame"] = pic.Name.Replace("formPicture", "");
+                pic.BackColor = selectColor;
+                formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
                 setInputBoxes();
             }
         }
@@ -116,6 +101,16 @@ namespace AtomLauncher
             atomMinecraftSettings mcSet = new atomMinecraftSettings();
             mcSet.ShowDialog();
             setRightPanel();
+        }
+        private void atomButtonSettings_MouseLeave(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.BackgroundImage = global::AtomLauncher.Properties.Resources.setting;
+        }
+        private void atomButtonSettings_MouseEnter(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.BackgroundImage = global::AtomLauncher.Properties.Resources.settingopen;
         }
 
         private void atomButtonTrash_Click(object sender, EventArgs e)
@@ -130,17 +125,27 @@ namespace AtomLauncher
             userData.Remove(trashGame);
             atomFileData.saveDictonary(atomFileData.userDataFile, userData, true);
             atomFileData.saveDictonary(atomFileData.gameDataFile, gameData);
-            if (trashGame == atomFileData.config["lastSelectedGame"])
-            {
-                atomFileData.config["lastSelectedGame"] = "";
-                setInputBoxes();
-            }
             setRightPanel();
+            setInputBoxes();
+            atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
+        }
+        private void atomButtonTrash_MouseLeave(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.BackgroundImage = global::AtomLauncher.Properties.Resources.trash;
+        }
+        private void atomButtonTrash_MouseEnter(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            button.BackgroundImage = global::AtomLauncher.Properties.Resources.trashopen;
         }
 
         private void formComboUsername_SelectedIndexChanged(object sender, EventArgs e)
         {
-            formTextPass.Text = otherCipher.Decrypt(userData[atomFileData.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
+            if (userData[atomFileData.config["lastSelectedGame"]].ContainsKey(formComboUsername.Text))
+            {
+                formTextPass.Text = otherCipher.Decrypt(userData[atomFileData.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
+            }
         }
 
         private void formButtonAddGame_Click(object sender, EventArgs e)
@@ -176,7 +181,10 @@ namespace AtomLauncher
 
         private void formCheckSaveLogin_CheckedChanged(object sender, EventArgs e)
         {
-            formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
+            if (formCheckSaveLogin.Enabled)
+            {
+                formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
+            }
             if (formCheckSaveLogin.Checked)
             {
                 if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
@@ -373,25 +381,33 @@ namespace AtomLauncher
                 Thread versionF = new Thread(versionThread);
                 versionF.IsBackground = true;
                 versionF.Start();
+                this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); setInputBoxes(); }));
                 while (this.Opacity != 1)
                 {
                     Thread.Sleep(10);
                     this.Invoke(new MethodInvoker(delegate { this.Opacity += .04; }));
                 }
-                this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); }));
                 if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
                 {
                     if (gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
                     {
                         autoLogin();
                     }
+                    else
+                    {
+                        this.Invoke(new MethodInvoker(delegate
+                        {
+                            formSetControl(true, true);
+                        }));
+                    }
                 }
-                this.Invoke(new MethodInvoker(delegate
+                else
                 {
-                    formSetControl(true, true);
-                    setInputBoxes();
-                }));
-
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        formSetControl(true, true);
+                    }));
+                }
             }
         }
 
@@ -407,28 +423,13 @@ namespace AtomLauncher
 
         internal void setRightPanel()
         {
+            this.Invoke(new MethodInvoker(delegate { formPanelRight.Visible = false; }));
             this.Invoke(new MethodInvoker(delegate
             {
                 formPanelRight.Controls.Clear();
                 formPanelRight.Controls.Add(this.formButtonAddGame);
                 formPanelRight.Controls.Add(this.formButtonLauncherSettings);
                 formPanelRight.Controls.Add(this.formLabelGameSelected);
-                if (atomFileData.config["lastSelectedGame"] == "")
-                {
-                    if (gameData.Count < 1)
-                    {
-                        formLabelGameSelected.Text = "No Games Added, Add one to launch.";
-                    }
-                    else
-                    {
-                        formLabelGameSelected.Text = "Pick one to launch.";
-                    }
-                }
-                else
-                {
-                    formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
-                }
-                formPanelRight.VerticalScroll.Visible = false;
             }));
             int x = 0;
             foreach (KeyValuePair<string, Dictionary<string, string[]>> entry in gameData)
@@ -451,7 +452,8 @@ namespace AtomLauncher
 
                 Button setting = new Button();
                 setting.BackColor = System.Drawing.Color.White;
-                setting.FlatAppearance.BorderColor = System.Drawing.Color.White;
+                setting.FlatAppearance.BorderSize = 0;
+                setting.BackgroundImage = global::AtomLauncher.Properties.Resources.setting;
                 setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 setting.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 setting.ForeColor = System.Drawing.Color.Black;
@@ -461,16 +463,16 @@ namespace AtomLauncher
                 setting.Size = new System.Drawing.Size(24, 40);
                 setting.TabIndex = 8;
                 setting.TabStop = false;
-                setting.Text = "S";
                 setting.UseVisualStyleBackColor = false;
+                setting.MouseLeave += new System.EventHandler(this.atomButtonSettings_MouseLeave);
+                setting.MouseEnter += new System.EventHandler(this.atomButtonSettings_MouseEnter);
                 setting.Click += new System.EventHandler(this.atomButtonSettings_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(setting); }));
 
                 Button trash = new Button();
                 trash.BackColor = System.Drawing.Color.White;
-                trash.FlatAppearance.BorderColor = System.Drawing.Color.White;
-                trash.Click += new System.EventHandler(this.atomButtonTrash_Click);
-                trash.Text = "T";
+                trash.FlatAppearance.BorderSize = 0;
+                trash.BackgroundImage = global::AtomLauncher.Properties.Resources.trash;
                 trash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                 trash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 trash.ForeColor = System.Drawing.Color.Black;
@@ -481,9 +483,42 @@ namespace AtomLauncher
                 trash.TabIndex = 8;
                 trash.TabStop = false;
                 trash.UseVisualStyleBackColor = false;
+                trash.MouseLeave += new System.EventHandler(this.atomButtonTrash_MouseLeave);
+                trash.MouseEnter += new System.EventHandler(this.atomButtonTrash_MouseEnter);
+                trash.Click += new System.EventHandler(this.atomButtonTrash_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(trash); }));
                 x++;
             }
+            this.Invoke(new MethodInvoker(delegate
+            { 
+                if (gameData.Count < 1)
+                {
+                    formLabelGameSelected.Text = "No Games Added, Add one to launch.";
+                    atomFileData.config["lastSelectedGame"] = "";
+                }
+                else
+                {
+                    if (!gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+                    {
+                        foreach (Control c in this.formPanelRight.Controls)
+                        {
+                            if (c is PictureBox)
+                            {
+                                if (c.Name.StartsWith("formPicture"))
+                                {
+                                    atomFileData.config["lastSelectedGame"] = c.Name.Replace("formPicture", "");
+                                    break;
+                                }
+                            }
+                        }
+                        formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
+                    }
+                    else
+                    {
+                        formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
+                    }
+                }
+            }));
             foreach (Control c in this.formPanelRight.Controls)
             {
                 if (c is PictureBox)
@@ -495,6 +530,7 @@ namespace AtomLauncher
                     }
                 }
             }
+            this.Invoke(new MethodInvoker(delegate { formPanelRight.Visible = true; }));
         }
 
         private void autoLogin()
@@ -504,7 +540,7 @@ namespace AtomLauncher
             while (true)
             {
                 this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "Auto Login: " + timeSeconds; })); //Threading Friendly
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
                 if (atomLauncher.cancelPressed)
                 {
                     this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "Auto Login Canceled"; formSetControl(true, true); }));
@@ -524,40 +560,25 @@ namespace AtomLauncher
 
         private void setInputBoxes()
         {
-            if (atomFileData.config["lastSelectedGame"] == "")
+            formComboUsername.Items.Clear();
+            formComboUsername.Text = "";
+            formTextPass.Text = "";
+            formCheckSaveLogin.Checked = false;
+            int x = 0;
+            if (userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
             {
-                formComboUsername.Items.Clear();
-                formComboUsername.Text = "";
-                formTextPass.Text = "";
-                if (formComboUsername.Enabled)
+                foreach (KeyValuePair<string, string[]> dict in userData[atomFileData.config["lastSelectedGame"]])
                 {
-                    formComboUsername.Enabled = false;
-                    formTextPass.Enabled = false;
-                    formCheckSaveLogin.Enabled = false;
-                    formCheckSaveLogin.Checked = false;
-                }
-            }
-            else
-            {
-                if (!formComboUsername.Enabled)
-                {
-                    formComboUsername.Enabled = true;
-                    formTextPass.Enabled = true;
-                    formCheckSaveLogin.Enabled = true;
-                }
-                int x = 0;
-                if (userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
-                {
-                    foreach (KeyValuePair<string, string[]> dict in userData[atomFileData.config["lastSelectedGame"]])
+                    formComboUsername.Items.Add(dict.Key);
+                    if (x == 0)
                     {
-                        formComboUsername.Items.Add(dict.Key);
-                        formCheckSaveLogin.Checked = true;
-                        if (x == 0)
-                        {
-                            formComboUsername.Text = dict.Key;
-                        }
-                        x++;
+                        formComboUsername.Text = dict.Key;
                     }
+                    x++;
+                }
+                if (x > 0)
+                {
+                    formCheckSaveLogin.Checked = true;
                 }
             }
         }
@@ -639,6 +660,14 @@ namespace AtomLauncher
                 con.Enabled = userCanControl;
             }
             formCheckSaveLogin.Enabled = userCanControl;
+            if (formCheckSaveLogin.Checked)
+            {
+                formCheckAutoLogin.Enabled = userCanControl;
+            }
+            else
+            {
+                formCheckAutoLogin.Enabled = false;
+            }
             formButtonUpdate.Enabled = userCanControl;
             if (userCanControl)
             {

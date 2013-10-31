@@ -241,6 +241,7 @@
             // 
             this.formCheckAutoLogin.AutoSize = true;
             this.formCheckAutoLogin.BackColor = System.Drawing.Color.Transparent;
+            this.formCheckAutoLogin.Enabled = false;
             this.formCheckAutoLogin.ForeColor = System.Drawing.Color.White;
             this.formCheckAutoLogin.Location = new System.Drawing.Point(704, 16);
             this.formCheckAutoLogin.Name = "formCheckAutoLogin";
@@ -310,7 +311,6 @@
             this.formPanelRight.Name = "formPanelRight";
             this.formPanelRight.Size = new System.Drawing.Size(292, 484);
             this.formPanelRight.TabIndex = 14;
-            this.formPanelRight.Click += new System.EventHandler(this.formPanelRight_Click);
             // 
             // formLabelGameSelected
             // 
@@ -339,6 +339,7 @@
             this.formButtonLauncherSettings.TabStop = false;
             this.formButtonLauncherSettings.Text = "Launcher Settings";
             this.formButtonLauncherSettings.UseVisualStyleBackColor = false;
+            this.formButtonLauncherSettings.Visible = false;
             this.formButtonLauncherSettings.Click += new System.EventHandler(this.formButtonLauncherSettings_Click);
             // 
             // formButtonAddGame
