@@ -17,7 +17,7 @@ namespace AtomLauncher
     {
         // Commented Areas that start with //Dev// are under construction or future features.
 
-        public static string fileChangeVersion = "1.3.12.39"; // Last version of which the code for the saved data was changed.
+        public static string fileChangeVersion = "2.0.0.0"; // Last version of which the code for the saved data was changed.
         public static bool cancelPressed = false;
         public static Dictionary<string, Dictionary<string, string[]>> appData = new Dictionary<string, Dictionary<string, string[]>>();
         public static Dictionary<string, Dictionary<string, string[]>> userData = new Dictionary<string, Dictionary<string, string[]>>();
@@ -359,6 +359,7 @@ namespace AtomLauncher
                 atomFileData.config = atomFileData.loadConfFile(atomFileData.configFile);
                 if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], fileChangeVersion))
                 {
+                    //Dev// Fix Admin rights.
                     string status = atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"]);
                     status = status + atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"]);
                     status = status + atomFileData.deleteLoop(atomFileData.configFile);
