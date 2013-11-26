@@ -3,7 +3,8 @@ Atom Launcher
 An Open Source Game Launcher written in C#.
 The point to using this launcher is for extra configurations, features, and auto installing your own packs of files, also known as an "Atom Package".
 
-Compiled Launcher - Download Link (Not Ready)
+
+Compiled Launcher - [Download Link](http://www.atomicelectronics.net/?page=launcher.php)
 
 <strong>Features:</strong>
 - Before compiling this please follow the warning at the top of "StringCipher.cs".
