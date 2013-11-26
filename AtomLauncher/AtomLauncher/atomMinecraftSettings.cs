@@ -22,6 +22,9 @@ namespace AtomLauncher
         public atomMinecraftSettings()
         {
             InitializeComponent();
+            formTabs.Font = atomProgram.smallCustom;
+            formPanel.Font = atomProgram.smallCustom;
+            formLabelMinecraftSettingsTitle.Font = atomProgram.mediuCustom;
         }
 
         private Int32 returnTotalRam()
@@ -51,52 +54,121 @@ namespace AtomLauncher
 
         private void loadVer()
         {
-            fadeIn();
-            this.Invoke(new MethodInvoker(delegate { formButtonOK.Enabled = false; formButtonCancel.Enabled = false; formButtonClose.Enabled = false; formLabelVersionStatus.Text = "Version List Staus: Getting Version list... ... "; }));
-            string status = atomMinecraft.getVersion(atomLauncher.settingsGame);
+            string[] dirs = { "LatestVerList" };
+            if (Directory.Exists(formTextMinecraftLocation.Text + @"\versions"))
+            {
+                dirs = Directory.GetDirectories(formTextMinecraftLocation.Text + @"\versions");
+            }
+            string selectedVersion = "";
+            this.Invoke(new MethodInvoker(delegate 
+            {
+                selectedVersion = formComboVersionSelect.Text;
+                formButtonOK.Enabled = false;
+                formButtonCancel.Enabled = false;
+                formButtonClose.Enabled = false;
+                formLabelVersionStatus.Text = "Version List Staus: Getting Version list... ... ";
+                formComboVersionSelect.Items.Clear();
+                formComboVersionSelect.Items.Add("Latest: Recommended");
+                if (formCheckShowDev.Checked) formComboVersionSelect.Items.Add("Latest: Development"); 
+            }));
+            string status = atomMinecraft.getVersion(atomLauncher.settingsApp);
             if (status == "Successful")
             {
+                foreach (string d in dirs)
+                {
+                    if (!d.EndsWith("LatestVerList"))
+                    {
+                        if (!formComboVersionSelect.Items.Contains(Path.GetFileName(d)) && !atomMinecraft.versionList.ContainsKey(Path.GetFileName(d)))
+                        {
+                            this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(Path.GetFileName(d)); }));
+                        }
+                    }
+                }
                 foreach (KeyValuePair<string, string[]> entry in atomMinecraft.versionList)
                 {
                     if (entry.Key != "AL_LatestID")
                     {
-                        this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(entry.Key); }));
+                        if (!formComboVersionSelect.Items.Contains(entry.Key))
+                        {
+                            if (entry.Value[2] == "release")
+                            {
+                                this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(entry.Key); }));
+                            }
+                            else if (entry.Value[2] == "snapshot" && formCheckShowDev.Checked)
+                            {
+                                this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(entry.Key); }));
+                            }
+                            else if (entry.Value[2] == "old_beta" && formCheckShowBeta.Checked)
+                            {
+                                this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(entry.Key); }));
+                            }
+                            else if (entry.Value[2] == "old_alpha" && formCheckShowAlpha.Checked)
+                            {
+                                this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(entry.Key); }));
+                            }
+                        }
                     }
                 }
-                this.Invoke(new MethodInvoker(delegate { formLabelVersionStatus.Text = "Version List Staus: Loaded"; }));
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    formLabelVersionStatus.Text = "Version List Staus: Loaded";
+                    if (!formComboVersionSelect.Items.Contains(selectedVersion))
+                    {
+                        formComboVersionSelect.Items.Add(selectedVersion);
+                    }
+                    formComboVersionSelect.Text = selectedVersion;
+                }));
             }
             else
             {
+                foreach (string d in dirs)
+                {
+                    if (!d.EndsWith("LatestVerList"))
+                    {
+                        if (!formComboVersionSelect.Items.Contains(Path.GetFileName(d)))
+                        {
+                            this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(Path.GetFileName(d)); }));
+                        }
+                    }
+                }
                 this.Invoke(new MethodInvoker(delegate { formLabelVersionStatus.Text = "Version List Staus: " + status; }));
             }
+            atomLauncher.atomLaunch.formText("formLabelStatus", "");
+            atomLauncher.atomLaunch.formText("formLabelDLFile", "");
+            atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
+            atomLauncher.atomLaunch.formText("formLabelFileMB", "");
+            atomLauncher.atomLaunch.formText("formLabelTotalMB", "");
+            atomLauncher.atomLaunch.barValues(0, 0);
             this.Invoke(new MethodInvoker(delegate { formButtonOK.Enabled = true; formButtonCancel.Enabled = true; formButtonClose.Enabled = true; }));
         }
 
-        private void fillForm(Dictionary<string, Dictionary<string, string[]>> dict, string gameName)
+        private void fillForm(Dictionary<string, Dictionary<string, string[]>> dict, string appName)
         {
-            if (gameName == "AL_AddNewGame")
+            if (appName == "AL_AddNewApp")
             {
-                formTextGameName.Text = "";
+                formTextAppName.Text = "";
             }
             else
             {
-                formTextGameName.Text = gameName;
+                formTextAppName.Text = appName;
             }
-            if (!formComboVersionSelect.Items.Contains(dict[gameName]["selectVer"][0]))
+            if (!formComboVersionSelect.Items.Contains(dict[appName]["selectVer"][0]))
             {
-                formComboVersionSelect.Items.Add(dict[gameName]["selectVer"][0]);
+                formComboVersionSelect.Items.Add(dict[appName]["selectVer"][0]);
             }
-            formComboVersionSelect.Text = dict[gameName]["selectVer"][0];
-            formTextMinecraftLocation.Text = dict[gameName]["location"][0];
-            formTextSaveLocation.Text = dict[gameName]["saveLoc"][0];
-            formTextThumbnail.Text = dict[gameName]["thumbnailLoc"][0];
-            formComboCPUPriority.Text = dict[gameName]["CPUPriority"][0];
-            formCheckCMD.Checked = Convert.ToBoolean(dict[gameName]["displayCMD"][0]);
-            formCheckOnline.Checked = Convert.ToBoolean(dict[gameName]["onlineMode"][0]);
-            formCheckAutoJava.Checked = Convert.ToBoolean(dict[gameName]["autoSelect"][0]);
-            formCheckUseNightly.Checked = Convert.ToBoolean(dict[gameName]["useNightly"][0]);
-            formTextUsername.Text = dict[gameName]["offlineName"][0];
-            if (Convert.ToBoolean(dict[gameName]["force64Bit"][0]))
+            formComboVersionSelect.Text = dict[appName]["selectVer"][0];
+            formTextMinecraftLocation.Text = dict[appName]["location"][0];
+            formTextSaveLocation.Text = dict[appName]["saveLoc"][0];
+            formTextThumbnail.Text = dict[appName]["thumbnailLoc"][0];
+            formComboCPUPriority.Text = dict[appName]["CPUPriority"][0];
+            formCheckCMD.Checked = Convert.ToBoolean(dict[appName]["displayCMD"][0]);
+            formCheckOnline.Checked = Convert.ToBoolean(dict[appName]["onlineMode"][0]);
+            formCheckAutoJava.Checked = Convert.ToBoolean(dict[appName]["autoSelect"][0]);
+            formCheckShowDev.Checked = Convert.ToBoolean(dict[appName]["showDev"][0]);
+            formCheckShowBeta.Checked = Convert.ToBoolean(dict[appName]["showBeta"][0]);
+            formCheckShowAlpha.Checked = Convert.ToBoolean(dict[appName]["showAlpha"][0]);
+            formTextUsername.Text = dict[appName]["offlineName"][0];
+            if (Convert.ToBoolean(dict[appName]["force64Bit"][0]))
             {
                 formRadio64bitJava.Checked = true;
                 formRadio32bitJava.Checked = false;
@@ -136,8 +208,8 @@ namespace AtomLauncher
             {
                 formTextUsername.Enabled = false;
             }
-            formComboStartRam.Text = dict[gameName]["startRam"][0];
-            formComboMaxRam.Text = dict[gameName]["maxRam"][0];
+            formComboStartRam.Text = dict[appName]["startRam"][0];
+            formComboMaxRam.Text = dict[appName]["maxRam"][0];
         }
 
         private void resetRamCombo(string[] newArray)
@@ -170,23 +242,51 @@ namespace AtomLauncher
 
         private void fadeIn()
         {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                int x = atomLauncher.atomLaunch.Location.X + atomLauncher.atomLaunch.Width - this.Width - 8;
+                int y = atomLauncher.atomLaunch.Location.Y + 8;
+                if ((x + this.Width) > Screen.GetWorkingArea(this).Width)
+                {
+                    x = Screen.GetWorkingArea(this).Width - this.Width;
+                }
+                if ((y + this.Height) > Screen.GetWorkingArea(this).Height)
+                {
+                    y = Screen.GetWorkingArea(this).Height - this.Height;
+                }
+                if (x < 0)
+                {
+                    x = 0;
+                }
+                if (y < 0)
+                {
+                    y = 0;
+                }
+                Point tmpPoint = new Point(x, y);
+                this.Location = tmpPoint;
+            }));
             while (this.Opacity != 1)
             {
                 Thread.Sleep(10);
                 this.Invoke(new MethodInvoker(delegate { this.Opacity += .04; }));
             }
         }
+        private Object fadeLock = new Object();
         private void fadeOutClose()
         {
-            while (this.Opacity != 0)
+            if (Monitor.TryEnter(fadeLock)) //Lock to only one Thread at a time.
             {
-                Thread.Sleep(10);
-                this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                while (this.Opacity != 0)
+                {
+                    Thread.Sleep(10);
+                    this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                }
+                Monitor.Exit(fadeLock);
+                this.Invoke(new MethodInvoker(delegate { this.Close(); }));
             }
-            this.Invoke(new MethodInvoker(delegate { this.Close(); }));
         }
         
-        private void minecraftSettings_Load(object sender, EventArgs e)
+        private void atomMinecraftSettings_Load(object sender, EventArgs e)
         {
             ramAmmount = segmentRam();
             string mainDrive = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
@@ -224,23 +324,29 @@ namespace AtomLauncher
             {
                 if (typeStatus == "No32")
                 {
-                    formLabelStatus.Text = "WARNING!: No Java Detected. Running a 32bit Program.";
+                    formLabelStatus.Text = "WARNING!: No Java Detected. Running a 32bit Pr6aogram.";
                 }
                 else
                 {
                     formLabelStatus.Text = "Note: Running a 32bit Program.";
                 }
             }
-            if (atomLauncher.settingsGame == "AL_AddNewGame")
+            if (atomLauncher.settingsApp == "AL_AddNewApp")
             {
                 Dictionary<string, Dictionary<string, string[]>> tmpDict = new Dictionary<string, Dictionary<string, string[]>>();
-                tmpDict = atomFileData.getGameData(atomFileData.gameDataFile, atomLauncher.settingsGame, tmpDict, "Minecraft");
-                fillForm(tmpDict, atomLauncher.settingsGame);
+                tmpDict = atomFileData.getAppData(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], atomLauncher.settingsApp, tmpDict, "Minecraft");
+                fillForm(tmpDict, atomLauncher.settingsApp);
             }
             else
             {
-                fillForm(atomLauncher.gameData, atomLauncher.settingsGame);
+                fillForm(atomLauncher.appData, atomLauncher.settingsApp);
             }
+            formCheckShowDev.CheckedChanged += new EventHandler(formCheckShowVer_CheckedChanged);
+            formCheckShowBeta.CheckedChanged += new EventHandler(formCheckShowVer_CheckedChanged);
+            formCheckShowAlpha.CheckedChanged += new EventHandler(formCheckShowVer_CheckedChanged);
+            Thread fadeI = new Thread(fadeIn);
+            fadeI.IsBackground = true;
+            fadeI.Start();
             Thread webVer = new Thread(loadVer);
             webVer.IsBackground = true;
             webVer.Start();
@@ -321,21 +427,23 @@ namespace AtomLauncher
             formFolderDialog.SelectedPath = formTextMinecraftLocation.Text;
             formFolderDialog.ShowDialog();
             formTextMinecraftLocation.Text = formFolderDialog.SelectedPath;
+            formFolderDialog.Dispose();
         }
 
         private void formButtonSaveLocation_Click(object sender, EventArgs e)
         {
-            formFolderDialog.Description = "Select the folder to save game data in.";
+            formFolderDialog.Description = "Select the folder to save app data in.";
             formFolderDialog.SelectedPath = formTextMinecraftLocation.Text;
             formFolderDialog.ShowDialog();
             formTextSaveLocation.Text = formFolderDialog.SelectedPath;
+            formFolderDialog.Dispose();
         }
 
         private void formButtonDefaults_Click(object sender, EventArgs e)
         {
             Dictionary<string, Dictionary<string, string[]>> tmpDict = new Dictionary<string, Dictionary<string, string[]>>();
-            tmpDict = atomFileData.getGameData(atomFileData.gameDataFile, atomLauncher.settingsGame, tmpDict, "Minecraft");
-            fillForm(tmpDict, atomLauncher.settingsGame);
+            tmpDict = atomFileData.getAppData(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], atomLauncher.settingsApp, tmpDict, "Minecraft");
+            fillForm(tmpDict, atomLauncher.settingsApp);
         }
 
         private void formButtonCancel_Click(object sender, EventArgs e)
@@ -347,54 +455,56 @@ namespace AtomLauncher
 
         private void formButtonOK_Click(object sender, EventArgs e)
         {
-            if (formTextGameName.Text == "")
+            if (formTextAppName.Text == "")
             {
-                formLabelStatus.Text = "Please set the 'Custom Game Name'";
+                formLabelStatus.Text = "Please set the 'Custom App Name'";
             }
-            else if (formTextGameName.Text == "AL_AddNewGame")
+            else if (formTextAppName.Text == "AL_AddNewApp")
             {
-                formLabelStatus.Text = "Cannot use that 'Custom Game Name'";
+                formLabelStatus.Text = "Cannot use that 'Custom App Name'";
             }
-            else if (atomLauncher.settingsGame != formTextGameName.Text && atomLauncher.gameData.ContainsKey(formTextGameName.Text))
+            else if (atomLauncher.settingsApp != formTextAppName.Text && atomLauncher.appData.ContainsKey(formTextAppName.Text))
             {
-                formLabelStatus.Text = "That 'Custom Game Name' is already in use.";
+                formLabelStatus.Text = "That 'Custom App Name' is already in use.";
             }
             else
             {
-                if (atomLauncher.gameData.ContainsKey(atomLauncher.settingsGame))
+                if (atomLauncher.appData.ContainsKey(atomLauncher.settingsApp))
                 {
-                    atomLauncher.gameData[formTextGameName.Text] = atomLauncher.gameData[atomLauncher.settingsGame];
-                    if (atomLauncher.userData.ContainsKey(atomLauncher.settingsGame))
+                    atomLauncher.appData[formTextAppName.Text] = atomLauncher.appData[atomLauncher.settingsApp];
+                    if (atomLauncher.userData.ContainsKey(atomLauncher.settingsApp))
                     {
-                        atomLauncher.userData[formTextGameName.Text] = atomLauncher.userData[atomLauncher.settingsGame];
+                        atomLauncher.userData[formTextAppName.Text] = atomLauncher.userData[atomLauncher.settingsApp];
                     }
                 }
                 else
                 {
-                    atomLauncher.gameData.Add(formTextGameName.Text, new Dictionary<string, string[]>());
-                    atomLauncher.gameData = atomFileData.getGameData(atomFileData.gameDataFile, formTextGameName.Text, atomLauncher.gameData, "Minecraft");
+                    atomLauncher.appData.Add(formTextAppName.Text, new Dictionary<string, string[]>());
+                    atomLauncher.appData = atomFileData.getAppData(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], formTextAppName.Text, atomLauncher.appData, "Minecraft");
                 }
-                atomLauncher.gameData[formTextGameName.Text]["gameType"] = new string[] { "Minecraft" };
-                atomLauncher.gameData[formTextGameName.Text]["location"] = new string[] { formTextMinecraftLocation.Text };
-                atomLauncher.gameData[formTextGameName.Text]["saveLoc"] = new string[] { formTextSaveLocation.Text };
-                atomLauncher.gameData[formTextGameName.Text]["thumbnailLoc"] = new string[] { formTextThumbnail.Text };
-                atomLauncher.gameData[formTextGameName.Text]["startRam"] = new string[] { formComboStartRam.Text };
-                atomLauncher.gameData[formTextGameName.Text]["maxRam"] = new string[] { formComboMaxRam.Text };
-                atomLauncher.gameData[formTextGameName.Text]["displayCMD"] = new string[] { formCheckCMD.Checked.ToString() };
-                atomLauncher.gameData[formTextGameName.Text]["CPUPriority"] = new string[] { formComboCPUPriority.Text };
-                atomLauncher.gameData[formTextGameName.Text]["onlineMode"] = new string[] { formCheckOnline.Checked.ToString() };
-                atomLauncher.gameData[formTextGameName.Text]["offlineName"] = new string[] { formTextUsername.Text };
-                atomLauncher.gameData[formTextGameName.Text]["selectVer"] = new string[] { formComboVersionSelect.Text };
-                atomLauncher.gameData[formTextGameName.Text]["autoSelect"] = new string[] { formCheckAutoJava.Checked.ToString() };
-                atomLauncher.gameData[formTextGameName.Text]["useNightly"] = new string[] { formCheckUseNightly.Checked.ToString() };
-                atomLauncher.gameData[formTextGameName.Text]["force64Bit"] = new string[] { formRadio64bitJava.Checked.ToString() };
-                if (atomLauncher.settingsGame != formTextGameName.Text)
+                atomLauncher.appData[formTextAppName.Text]["appType"] = new string[] { "Minecraft" };
+                atomLauncher.appData[formTextAppName.Text]["location"] = new string[] { formTextMinecraftLocation.Text };
+                atomLauncher.appData[formTextAppName.Text]["saveLoc"] = new string[] { formTextSaveLocation.Text };
+                atomLauncher.appData[formTextAppName.Text]["thumbnailLoc"] = new string[] { formTextThumbnail.Text };
+                atomLauncher.appData[formTextAppName.Text]["startRam"] = new string[] { formComboStartRam.Text };
+                atomLauncher.appData[formTextAppName.Text]["maxRam"] = new string[] { formComboMaxRam.Text };
+                atomLauncher.appData[formTextAppName.Text]["displayCMD"] = new string[] { formCheckCMD.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["CPUPriority"] = new string[] { formComboCPUPriority.Text };
+                atomLauncher.appData[formTextAppName.Text]["onlineMode"] = new string[] { formCheckOnline.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["offlineName"] = new string[] { formTextUsername.Text };
+                atomLauncher.appData[formTextAppName.Text]["selectVer"] = new string[] { formComboVersionSelect.Text };
+                atomLauncher.appData[formTextAppName.Text]["autoSelect"] = new string[] { formCheckAutoJava.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["showDev"] = new string[] { formCheckShowDev.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["showBeta"] = new string[] { formCheckShowBeta.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["showAlpha"] = new string[] { formCheckShowAlpha.Checked.ToString() };
+                atomLauncher.appData[formTextAppName.Text]["force64Bit"] = new string[] { formRadio64bitJava.Checked.ToString() };
+                if (atomLauncher.settingsApp != formTextAppName.Text)
                 {
-                    atomLauncher.gameData.Remove(atomLauncher.settingsGame);
-                    atomLauncher.userData.Remove(atomLauncher.settingsGame);
+                    atomLauncher.appData.Remove(atomLauncher.settingsApp);
+                    atomLauncher.userData.Remove(atomLauncher.settingsApp);
                 }
-                atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
-                atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
+                atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], atomLauncher.appData);
+                atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], atomLauncher.userData, true);
                 Thread close = new Thread(fadeOutClose);
                 close.IsBackground = true;
                 close.Start();
@@ -419,36 +529,17 @@ namespace AtomLauncher
             formFileDialog.Filter = "Preferred Images|*.png|Other Images|*.bmp,*.gif,*.jpeg,*.tif,*.tiff";
             formFileDialog.InitialDirectory = formTextMinecraftLocation.Text;
             formFileDialog.ShowDialog();
-            formFileDialog.Title = "Select Game Thumbnail";
+            formFileDialog.Title = "Select App Thumbnail";
             if (formFileDialog.FileName != "")
             {
                 formTextThumbnail.Text = formFileDialog.FileName;
             }
+            formFileDialog.Dispose();
         }
 
         private void formButtonThumbnailClear_Click(object sender, EventArgs e)
         {
             formTextThumbnail.Text = "";
-        }
-
-        private void formCheckUseNightly_CheckedChanged(object sender, EventArgs e)
-        {
-            string gameName = atomLauncher.settingsGame;
-            if (atomLauncher.settingsGame == "AL_AddNewGame")
-            {
-                gameName = "Minecraft";
-            }
-            if (!Convert.ToBoolean(atomLauncher.gameData[gameName]["useNightly"][0]))
-            {
-                if (formCheckUseNightly.Checked)
-                {
-                    DialogResult dialogResult = MessageBox.Show("Are you sure? They can provide bug fixes, but, at the same time could introduce more bugs.", "Are you sure?", MessageBoxButtons.YesNo);
-                    if (dialogResult == DialogResult.No)
-                    {
-                        formCheckUseNightly.Checked = false;
-                    }
-                }
-            }
         }
 
         private void formButtonDeleteAll_Click(object sender, EventArgs e)
@@ -458,7 +549,7 @@ namespace AtomLauncher
             DirectoryInfo[] Directories = d.GetDirectories();
             foreach (FileInfo file in Files)
             {
-                File.Delete(file.FullName);
+                atomFileData.deleteLoop(file.FullName, true);
             }
             foreach (DirectoryInfo directory in Directories)
             {
@@ -475,7 +566,7 @@ namespace AtomLauncher
             {
                 if (!file.FullName.Contains("saves"))
                 {
-                    File.Delete(file.FullName);
+                    atomFileData.deleteLoop(file.FullName, true);
                 }
             }
             foreach (DirectoryInfo direct in Directories)
@@ -506,7 +597,7 @@ namespace AtomLauncher
 
         private void formButtonDeleteVerList_Click(object sender, EventArgs e)
         {
-            File.Delete(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json");
+            atomFileData.deleteLoop(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json", true);
         }
 
         private void formButtonDeleteLibraries_Click(object sender, EventArgs e)
@@ -548,6 +639,13 @@ namespace AtomLauncher
             {
                 File.Delete(file.FullName);
             }
+        }
+
+        private void formCheckShowVer_CheckedChanged(object sender, EventArgs e)
+        {
+            Thread webVer = new Thread(loadVer);
+            webVer.IsBackground = true;
+            webVer.Start();
         }
     }
 }

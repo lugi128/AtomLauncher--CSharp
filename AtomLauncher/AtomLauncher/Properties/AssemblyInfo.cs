@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("AtomLauncher")]
-[assembly: AssemblyDescription("A Mult-Program Launcher. Go to http://www.atomicelectronics.net for more.")]
+[assembly: AssemblyDescription("A Mult-Program Launcher. Go to http://www.atomicelectronics.net for more information. \n\n This")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Atomic Electronics")]
 [assembly: AssemblyProduct("Atom Launcher")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright ©  2013 TrinaryAtom http://www.atomicelectronics.net")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

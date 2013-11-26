@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Net;
 using System.Xml.Linq;
@@ -21,19 +22,21 @@ namespace AtomLauncher
             //{"1.6.4",       new string[] { "time", "releaseTime", "Type" }}
         };
 
-        Dictionary<string, string[]> dict = new Dictionary<string, string[]>{
-            };
         internal static Dictionary<string, string[]> versionData = new Dictionary<string, string[]>
         {
             //{"id"                  , new string[] { "1.6.4" }},
             //{"time"                , new string[] { "2013-09-19T10:52:37-05:00" }},
             //{"releaseTime"         , new string[] { "2013-09-19T10:52:37-05:00" }},
             //{"Type"                , new string[] { "release" }},
-            //{"minecraftArguments"  , new string[] { "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token}" }},
+            //{"minecraftArguments"  , new string[] { "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --appDir ${app_directory} --assetsDir ${app_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token}" }},
             //{"mainClass"           , new string[] { "net.minecraft.client.main.Main" }},
             //{"libraries"           , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
+            //{"urlLibraries"        , new string[] { "MODWEBSITE" "" "etc" }}, //for Mods the declare there own downloads.
             //{"natives"             , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
         };
+
+        internal static Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
+        internal static Dictionary<int, string[]> modInput = new Dictionary<int, string[]>();
         
         static string mcLocation = "";
         static string mcSave = "";
@@ -45,10 +48,9 @@ namespace AtomLauncher
         static string mcOfflineName = "";
         static string mcSelectVer = "";
         static bool mcAutoSelect = true;
-        static bool mcUseNightly = false;
         static bool mcForce64Bit = false;
         static string mcAccessToken = "";
-        static string mcClientToken = ""; //Currently Unused
+        static string mcClientToken = ""; //Dev//Currently Unused
         static string mcUUID = "";
         static string mcUsername = "";
         static string javaFile = @"javaw";
@@ -60,20 +62,19 @@ namespace AtomLauncher
         /// <param name="username">Input a username here. Example: "username"</param>
         /// <param name="password">Input a password here. Example: "pass1234"</param>
         /// <returns></returns>
-        internal static string start(string username = "", string password = "", bool saveLogin = false, bool autoLogin = false)
+        internal static string start(string username = "", string password = "")
         {
             string status = "Successful";
-            string gameLocation = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["location"][0];
             int step = 0;
-            while (step <= 8)
+            while (step <= 9)
             {
                 if (status != "Successful") { return status; }
                 if (step == 0)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Versions...");
-                    if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["selectVer"][0].StartsWith("Latest: "))
+                    if (atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["selectVer"][0].StartsWith("Latest: "))
                     {
-                        status = getVersion(atomFileData.config["lastSelectedGame"]);
+                        status = getVersion(atomFileData.config["lastSelectedApp"]);
                     }
                     else
                     {
@@ -93,31 +94,36 @@ namespace AtomLauncher
                 else if (step == 3)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Saving Data...");
-                    status = setSaveData(username, password, mcUsername, saveLogin, autoLogin);
+                    status = setSaveData(username, password, mcUsername);
                 }
                 else if (step == 4)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Loading Version Data...");
-                    status = getVersionParam(mcUseNightly);
+                    status = getVersionParam();
                 }
                 else if (step == 5)
+                {
+                    atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Additional Files...");
+                    status = checkAdditionalFiles();
+                }
+                else if (step == 6)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Downloading Files...");
                     status = getFiles();
                 }
-                else if (step == 6)
+                else if (step == 7)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Extracting Natives...");
                     status = getNatives();
                 }
-                else if (step == 7)
+                else if (step == 8)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Setting up Command...");
                     status = compileCommand();
                 }
-                else if (step == 8)
+                else if (step == 9)
                 {
-                    atomLauncher.atomLaunch.formText("formLabelStatus", "Starting Game...");
+                    atomLauncher.atomLaunch.formText("formLabelStatus", "Starting App...");
                     status = runCommand();
                 }
                 step++;
@@ -134,9 +140,9 @@ namespace AtomLauncher
         /// When file is present get full list of versions.
         /// Get latest versions on the list.
         /// </summary>
-        /// <param name="selectedGame">Input the selected game to download/check for.</param>
+        /// <param name="selectedApp">Input the selected app to download/check for.</param>
         /// <returns>Status of exceptions or success</returns>
-        internal static string getVersion(string selectedGame)
+        internal static string getVersion(string selectedApp)
         {
             string subString = "";
             string status = "Successful";
@@ -144,13 +150,13 @@ namespace AtomLauncher
             {
                 if (atomLauncher.cancelPressed) throw new System.Exception("Load Version List");
                 string fileName = "";
-                if (selectedGame == "AL_AddNewGame")
+                if (selectedApp == "AL_AddNewApp")
                 {
                     fileName = atomProgram.appData + @"\.minecraft\versions\LatestVerList\versions.json";
                 }
                 else
                 {
-                    fileName = atomLauncher.gameData[selectedGame]["location"][0] + @"\versions\LatestVerList\versions.json";
+                    fileName = atomLauncher.appData[selectedApp]["location"][0] + @"\versions\LatestVerList\versions.json";
                 }
                 if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
                 {
@@ -169,7 +175,14 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    status = subString + " / Version list file missing.";
+                    if (atomLauncher.cancelPressed)
+                    {
+                        status = "Canceled: " + subString + " / Version list file missing.";
+                    }
+                    else
+                    {
+                        status = "Error: " + subString + " / Version list file missing.";
+                    }
                 }
             }
             catch (Exception ex)
@@ -196,15 +209,15 @@ namespace AtomLauncher
             try
             {
                 if (atomLauncher.cancelPressed) { throw new System.Exception("Loading Settings"); }
-                mcLocation = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["location"][0];
-                mcSave = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["saveLoc"][0];
-                mcStartRam = "-Xms" + atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["startRam"][0] + "m ";
-                mcMaxRam = "-Xmx" + atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["maxRam"][0] + "m ";
-                mcDisplayCMD = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["displayCMD"][0]);
-                mcCPUPriority = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["CPUPriority"][0];
-                mcOnlineMode = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["onlineMode"][0]);
-                mcOfflineName = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["offlineName"][0];
-                mcSelectVer = atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["selectVer"][0];
+                mcLocation = atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["location"][0];
+                mcSave = atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["saveLoc"][0];
+                mcStartRam = "-Xms" + atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["startRam"][0] + "m ";
+                mcMaxRam = "-Xmx" + atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["maxRam"][0] + "m ";
+                mcDisplayCMD = Convert.ToBoolean(atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["displayCMD"][0]);
+                mcCPUPriority = atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["CPUPriority"][0];
+                mcOnlineMode = Convert.ToBoolean(atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["onlineMode"][0]);
+                mcOfflineName = atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["offlineName"][0];
+                mcSelectVer = atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["selectVer"][0];
                 if (mcSelectVer.StartsWith("Latest: "))
                 {
                     if (mcSelectVer.EndsWith(" Recommended"))
@@ -216,9 +229,8 @@ namespace AtomLauncher
                         mcSelectVer = versionList["AL_LatestID"][1];
                     }
                 }
-                mcAutoSelect = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoSelect"][0]);
-                mcUseNightly = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["useNightly"][0]);
-                mcForce64Bit = Convert.ToBoolean(atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["force64Bit"][0]);
+                mcAutoSelect = Convert.ToBoolean(atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["autoSelect"][0]);
+                mcForce64Bit = Convert.ToBoolean(atomLauncher.appData[atomFileData.config["lastSelectedApp"]]["force64Bit"][0]);
             }
             catch (Exception ex)
             {
@@ -248,6 +260,11 @@ namespace AtomLauncher
             {
                 if (mcOnlineMode)
                 {
+                    string placedPassword = "";
+                    if (inputPassword != "")
+                    {
+                        placedPassword = otherCipher.Decrypt(inputPassword, otherCipher.machineIDLookup());
+                    }
                     WebRequest request = WebRequest.Create("https://authserver.mojang.com/authenticate");   //Start WebRequest
                     request.Method = "POST";                                                                //Method type, POST
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(new                           //Object to Upload
@@ -258,7 +275,7 @@ namespace AtomLauncher
                             version = 1             // -------- / This number might be increased by the vanilla client in the future
                         },                          //          /
                         username = inputUsername,   // Can be an email address or player name for unmigrated accounts
-                        password = inputPassword,
+                        password = placedPassword
                         //clientToken = "TOKEN"     // Client Identifier: optional
                     });
                     byte[] uploadBytes = Encoding.UTF8.GetBytes(json);                                      //Convert UploadObject to ByteArray
@@ -353,60 +370,28 @@ namespace AtomLauncher
         /// <param name="saveLogin">Input if the user prompted to save Login.</param>
         /// <param name="autoLogin">Input if the user prompted to have this user automatically Login.</param>
         /// <returns>Status of exceptions or success</returns>
-        private static string setSaveData(string username, string password, string propperUsername, bool saveLogin = false, bool autoLogin = false)
+        private static string setSaveData(string username, string password, string propperUsername)
         {
             string status = "Successful";
             try
             {
-                if (mcOnlineMode) // Possibly add a way to auto login an offline user.
+                if (atomLauncher.cancelPressed) throw new System.Exception("Saving Launcher Data");
+                if (mcOnlineMode)
                 {
-                    if (atomLauncher.cancelPressed) throw new System.Exception("Saving Launcher Data");
-                    if (saveLogin)
+                    if (atomLauncher.userData.ContainsKey(atomFileData.config["lastSelectedApp"]))
                     {
-                        if (!atomLauncher.userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+                        if (atomLauncher.userData[atomFileData.config["lastSelectedApp"]].ContainsKey(username))
                         {
-                            atomLauncher.userData.Add(atomFileData.config["lastSelectedGame"], new Dictionary<string, string[]>());
-                        }
-                        atomLauncher.userData[atomFileData.config["lastSelectedGame"]][username] = new string[]
-                        {
-                            propperUsername,
-                            otherCipher.Encrypt(password, otherCipher.machineIDLookup()),
-                            DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss"),
-                            mcAccessToken,
-                            mcClientToken,
-                            mcUUID
-                        };
-                        atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
-                    }
-                    else
-                    {
-                        if (atomLauncher.userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
-                        {
-                            if (atomLauncher.userData[atomFileData.config["lastSelectedGame"]].ContainsKey(username))
+                            atomLauncher.userData[atomFileData.config["lastSelectedApp"]][username] = new string[]
                             {
-                                atomLauncher.userData[atomFileData.config["lastSelectedGame"]].Remove(username);
-                                atomFileData.saveDictonary(atomFileData.userDataFile, atomLauncher.userData, true);
-                            }
-                        }
-                    }
-                    if (autoLogin)
-                    {
-                        if (!atomLauncher.gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
-                        {
-                            atomLauncher.gameData.Add(atomFileData.config["lastSelectedGame"], new Dictionary<string, string[]>());
-                        }
-                        if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != username)
-                        {
-                            atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] = username;
-                            atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
-                        }
-                    }
-                    else
-                    {
-                        if (atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
-                        {
-                            atomLauncher.gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] = "";
-                            atomFileData.saveDictonary(atomFileData.gameDataFile, atomLauncher.gameData);
+                                password,
+                                propperUsername,
+                                DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss"),
+                                mcAccessToken,
+                                mcClientToken,
+                                mcUUID
+                            };
+                            atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], atomLauncher.userData, true);
                         }
                     }
                 }
@@ -431,40 +416,40 @@ namespace AtomLauncher
         /// </summary>
         /// <param name="nightlyBuilds">Whether or not to use the latest builds for the libraries.</param>
         /// <returns>Status of exceptions or success</returns>
-        private static string getVersionParam(bool nightlyBuilds = false)
+        private static string getVersionParam()
         {
             string subString = "";
             string status = "Successful";
-            if (atomLauncher.cancelPressed) throw new System.Exception("Load Version Data");
-            string fileName = mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".json";
-            if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
+            try
             {
-                if (mcOnlineMode)
+                if (atomLauncher.cancelPressed) throw new System.Exception("Load Version Data");
+                string fileName = mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + ".json";
+                if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
                 {
-                    try
+                    if (mcOnlineMode)
                     {
-                        atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Download/versions/" + mcSelectVer + "/" + mcSelectVer + ".json", fileName);
+                        try
+                        {
+                            atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Download/versions/" + mcSelectVer + "/" + mcSelectVer + ".json", fileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            subString = ex.Message;
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        subString = ex.Message;
+                        subString = "Offline Mode, File Missing. You need to login and download first, before offline mode can be used.";
                     }
+                }
+                if (File.Exists(fileName))
+                {
+                    versionData = otherJsonNet.getVersionData(fileName);
                 }
                 else
                 {
-                    subString = "Offline Mode, File Missing. You need to login and download first, before offline mode can be used.";
+                    status = subString + " / Version data file missing.";
                 }
-            }
-            if (File.Exists(fileName))
-            {
-                versionData = otherJsonNet.getVersionData(fileName, nightlyBuilds);
-            }
-            else
-            {
-                status = subString + " / Version data file missing.";
-            }
-            try
-            {
             }
             catch (Exception ex)
             {
@@ -481,6 +466,32 @@ namespace AtomLauncher
         }
 
         /// <summary>
+        /// Look for & Download optional or additional Files
+        /// </summary>
+        /// <returns>Status of exceptions or success</returns>
+        private static string checkAdditionalFiles()
+        {
+            string status = "Successful";
+            try
+            {
+                if (atomLauncher.cancelPressed) throw new System.Exception("Checking Additional Files");
+                fileInput = new Dictionary<int, string[]>();
+            }
+            catch (Exception ex)
+            {
+                if (atomLauncher.cancelPressed)
+                {
+                    status = "Canceled: " + ex.Message;
+                }
+                else
+                {
+                    status = "Error: Checking Additional Files: " + ex.Message;
+                }
+            }
+            return status;
+        }
+
+        /// <summary>
         /// Look for & Download required Files
         /// </summary>
         /// <returns>Status of exceptions or success</returns>
@@ -490,18 +501,32 @@ namespace AtomLauncher
             try
             {
                 if (atomLauncher.cancelPressed) throw new System.Exception("Checking Minecraft Files");
-                Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
                 int x = 0;
+                int i = 0;//Dev// Need to rewrite this to properly use the foreach loop.
                 foreach (string entry in versionData["libraries"])
                 {
-                    fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] }); x++;
+                    if (versionData["urlLibraries"][x] == "")
+                    {
+                        fileInput.Add(x - i, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] });
+                    }
+                    else
+                    {
+                        modInput.Add(i, new string[] { "URL" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] });
+                        i++;
+                        //Dev// rewrite bad, Possible idea, check to see if download is possbile, if not error out.
+                    }
+                    x++;
                 }
+                x = x - i;
+                //Dev//
+                // Create a method to check for multiple xml files.
                 string filename = mcLocation + @"\versions\LatestVerList\Minecraft.Resources";
                 string[] fileNames = { filename + ".0.xml" };
                 string subString = "";
                 if ((DateTime.Now - File.GetLastWriteTime(fileNames[0])).TotalHours > 1)
                 {
-                    atomFileData.deleteLoop(mcLocation + @"\assets\sounds.json"); //In the future, possibly check ETAG instead with all the files.
+                    //Dev//
+                    //In the future, possibly check ETAG instead with all the files.
                     try
                     {
                         string pageMarker = "";
@@ -509,7 +534,7 @@ namespace AtomLauncher
                         while (true)
                         {
                             bool isTruncated = false;
-                            atomDownloading.Single("http://s3.amazonaws.com/Minecraft.Resources" + pageMarker, fileNames[y]);
+                            atomDownloading.Single("http://resources.download.minecraft.net/" + pageMarker, fileNames[y]);
                             XDocument doc = XDocument.Load(fileNames[y]);
                             foreach (XElement el in doc.Root.Elements())
                             {
@@ -521,20 +546,21 @@ namespace AtomLauncher
                             }
                             if (isTruncated)
                             {
-                                XElement el = doc.Root.Elements().Last();
-                                foreach (XElement element in el.Elements())
-                                {
-                                    if (element.Name.LocalName == "Key")
-                                    {
-                                        pageMarker = "?marker=" + element.Value;
-                                    }
-                                }
-                                y++;
-                                if (y > fileNames.Length - 1)
-                                {
-                                    Array.Resize(ref fileNames, fileNames.Length + 1);
-                                }
-                                fileNames[y] = filename + "." + y + ".xml";
+                                throw new System.Exception("Unimplimented Resources. PLEASE REPORT THIS.");
+                                //XElement el = doc.Root.Elements().Last();
+                                //foreach (XElement element in el.Elements())
+                                //{
+                                //    if (element.Name.LocalName == "Key")
+                                //    {
+                                //        pageMarker = "?marker=" + element.Value;
+                                //    }
+                                //}
+                                //y++;
+                                //if (y > fileNames.Length - 1)
+                                //{
+                                //    Array.Resize(ref fileNames, fileNames.Length + 1);
+                                //}
+                                //fileNames[y] = filename + "." + y + ".xml";
                             }
                             else
                             {
@@ -549,7 +575,6 @@ namespace AtomLauncher
                 }
                 try
                 {
-                    //foreach xml file
                     foreach (string file in fileNames)
                     {
                         if (File.Exists(file))
@@ -563,7 +588,7 @@ namespace AtomLauncher
                                     {
                                         if (!element.Value.EndsWith("/"))
                                         {
-                                            fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Resources/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
+                                            fileInput.Add(x, new string[] { "http://resources.download.minecraft.net/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
                                         }
                                     }
                                 }
@@ -591,15 +616,23 @@ namespace AtomLauncher
                 {
                     fileInput.Add(x, new string[] { "http://s3.amazonaws.com/Minecraft.Download/versions/" + versionData["id"][0] + "/" + versionData["id"][0] + ".jar", @"versions\" + versionData["id"][0] + @"\" + versionData["id"][0] + ".jar" }); x++;
                     Dictionary<int, string[]> downloadInput = atomFileData.fileCheck(fileInput, mcLocation);
-                    if (mcOnlineMode)
+                    Dictionary<int, string[]> modCheckInput = atomFileData.fileCheck(modInput, mcLocation);
+                    if (modCheckInput.Count > 0)
                     {
-                        atomDownloading.Multi(downloadInput, mcLocation);
+                        status = "Error: Modifcation Files Missing, Please reinstall mod files.";
                     }
                     else
                     {
-                        if (downloadInput.Count > 0)
+                        if (mcOnlineMode)
                         {
-                            status = "Offline Mode, Files Missing. You need to login and download first, before offline mode can be used.";
+                            atomDownloading.Multi(downloadInput, mcLocation);
+                        }
+                        else
+                        {
+                            if (downloadInput.Count > 0)
+                            {
+                                status = "Offline Mode, Files Missing. You need to login and download first, before offline mode can be used.";
+                            }
                         }
                     }
                 }
@@ -673,6 +706,7 @@ namespace AtomLauncher
                         javaFile = mainDrive + @"Windows\System32\" + javaFile + ".exe";
                     }
                 }
+                string mojangIntelTrick = "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump";
                 string mcNatives = "-Djava.library.path=\"" + mcLocation + @"\versions\" + mcSelectVer + @"\" + mcSelectVer + "-natives-AL74\"";
                 string mcLibraries = "-cp ";
                 foreach (string entry in versionData["libraries"])
@@ -696,9 +730,10 @@ namespace AtomLauncher
                     mcArgs = mcArgs.Replace("${auth_access_token}", "OFFLINE_MODE");
                 }
                 mcArgs = mcArgs.Replace("${version_name}", mcSelectVer);
+                mcArgs = mcArgs.Replace("${user_properties}", "{}");
                 mcArgs = mcArgs.Replace("${game_directory}", "\"" + mcSave + "\"");
                 mcArgs = mcArgs.Replace("${game_assets}", "\"" + mcLocation + "\\assets\"");
-                buildArguments = mcStartRam + " " + mcMaxRam + " " + mcNatives + " " + mcLibraries + mcJar + " " + mcClass + " " + mcArgs;
+                buildArguments = mojangIntelTrick + " " + mcStartRam + " " + mcMaxRam + " " + mcNatives + " " + mcLibraries + mcJar + " " + mcClass + " " + mcArgs;
             }
             catch (Exception ex)
             {
@@ -723,10 +758,12 @@ namespace AtomLauncher
             string status = "Successful";
             try
             {
-                if (atomLauncher.cancelPressed) throw new System.Exception("Starting Game");
+                if (atomLauncher.cancelPressed) throw new System.Exception("Starting App");
                 Process mcProc = new Process();
                 mcProc.StartInfo.UseShellExecute = false; // Apperently fixes a problem on specific PCs. // Get more info on this and perhaps make it automatic and/or optional.
                 mcProc.StartInfo.WorkingDirectory = mcLocation;
+                //Dev//
+                //To Read Java Errors//mcProc.StartInfo.RedirectStandardError = true;
                 mcProc.StartInfo.FileName = javaFile;
                 mcProc.StartInfo.Arguments = buildArguments;
                 mcProc.Start();
@@ -746,6 +783,11 @@ namespace AtomLauncher
                 {
                     mcProc.PriorityClass = ProcessPriorityClass.BelowNormal;
                 }
+                //Dev//
+                //To Read Java Errors
+                //mcProc.WaitForExit();
+                //string teststring = mcProc.StandardError.ReadToEnd();
+                //MessageBox.Show(teststring, "Java Error");
             }
             catch (Exception ex)
             {
@@ -755,7 +797,7 @@ namespace AtomLauncher
                 }
                 else
                 {
-                    status = "Error: Starting Game: " + ex.Message;
+                    status = "Error: Starting App: " + ex.Message;
                 }
             }
             return status;

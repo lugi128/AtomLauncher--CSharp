@@ -55,9 +55,10 @@ namespace AtomLauncher
             foreach (KeyValuePair<int, string[]> entry in urlFilePath)
             {
                 if (atomLauncher.cancelPressed || cancelDownload) throw new System.Exception("Checking Remote Files");
-                atomLauncher.atomLaunch.formText("formLabelTotalMB", (Convert.ToInt32(entry.Key) + 1) + " / " + urlFilePath.Count());
+                atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToInt32(entry.Key) + 1) + " / " + urlFilePath.Count());
+                atomLauncher.atomLaunch.barValues((Convert.ToInt32(entry.Key) + 1) * 100 / urlFilePath.Count(), 0);
                 int contentLength = 0;
-                atomLauncher.atomLaunch.formText("formLabelDLFile", (entry.Value[0]).TruncateDots(67));
+                atomLauncher.atomLaunch.formText("formLabelDLFile", entry.Value[0]);
                 try
                 {
                     System.Net.WebRequest req = System.Net.HttpWebRequest.Create(entry.Value[0]);
@@ -120,7 +121,7 @@ namespace AtomLauncher
             bytesRecieved = 0;
             downloadingFile = "";
             atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Remote File");
-            atomLauncher.atomLaunch.formText("formLabelDLFile", urlFilePATH.TruncateDots(67));
+            atomLauncher.atomLaunch.formText("formLabelDLFile", urlFilePATH);
             atomLauncher.atomLaunch.formText("formLabelDLSpeed", "");
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
             atomLauncher.atomLaunch.formText("formLabelTotalMB", "");
@@ -228,7 +229,7 @@ namespace AtomLauncher
                     double compileReceivedBytes = bytesRecievedTotal + bytesRecieved;
                     if (e.ProgressPercentage != 100)
                     {
-                        atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile.TruncateDots(67));
+                        atomLauncher.atomLaunch.formText("formLabelDLFile", downloadingFile);
                         if (sw.Elapsed.TotalSeconds >= 5)
                         {
                             atomLauncher.atomLaunch.formText("formLabelDLSpeed", ((compileReceivedBytes - previousByteCount) / 1024 / sw.Elapsed.TotalSeconds).ToString("0.00") + " kB/s");
@@ -239,7 +240,7 @@ namespace AtomLauncher
                         {
                             atomLauncher.atomLaunch.formText("formLabelDLSpeed", (compileReceivedBytes / 1024 / sw.Elapsed.TotalSeconds).ToString("0.00") + " kB/s");
                         }
-                        if (atomLauncher.atomLaunch.formBarTop.Value != e.ProgressPercentage)
+                        if ((566 * atomLauncher.atomLaunch.formBarTop.Width) / 100 != e.ProgressPercentage)
                         {
                             atomLauncher.atomLaunch.barValues(e.ProgressPercentage, Convert.ToInt32(compileReceivedBytes * 100 / totalBytes));
                             atomLauncher.atomLaunch.formText("formLabelFileMB", (Convert.ToDouble(bytesRecieved) / 1024 / 1024).ToString("0.00") + " MB " + "/ " + (Convert.ToDouble(e.TotalBytesToReceive) / 1024 / 1024).ToString("0.00") + " MB");

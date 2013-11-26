@@ -119,6 +119,10 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ALIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ionic.Zip">
@@ -152,6 +156,7 @@
     <Compile Include="atomAddGame.Designer.cs">
       <DependentUpon>atomAddGame.cs</DependentUpon>
     </Compile>
+    <Compile Include="atomCustomFont.cs" />
     <Compile Include="atomDownloading.cs" />
     <Compile Include="atomFileData.cs" />
     <Compile Include="atomLauncher.cs">
@@ -169,6 +174,25 @@
     </Compile>
     <Compile Include="atomProgram.cs" />
     <Compile Include="atomUtility.cs" />
+    <Compile Include="atomGeneralSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="atomGeneralSettings.Designer.cs">
+      <DependentUpon>atomGeneralSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="atomGeneral.cs" />
+    <Compile Include="atomUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="atomUserForm.Designer.cs">
+      <DependentUpon>atomUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="atomLauncherSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="atomLauncherSettings.Designer.cs">
+      <DependentUpon>atomLauncherSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="otherCipher.cs" />
     <Compile Include="otherDotNetZip.cs" />
     <Compile Include="otherJsonNet.cs" />
@@ -189,16 +213,23 @@
       <DependentUpon>atomMinecraftSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="atomGeneralSettings.resx">
+      <DependentUpon>atomGeneralSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <EmbeddedResource Include="atomUserForm.resx">
+      <DependentUpon>atomUserForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="atomLauncherSettings.resx">
+      <DependentUpon>atomLauncherSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -206,6 +237,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -257,6 +293,40 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\trashopen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\abouticon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\visitor2.ttf" />
+    <None Include="Resources\xicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\update.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\canceling.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\progressbot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\progresstop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ALIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
