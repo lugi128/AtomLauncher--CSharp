@@ -15,29 +15,19 @@ namespace AtomLauncher
 {
     public partial class atomLauncher : Form
     {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Change this to suite your needs.
-        // Change it to "" for it to ignore updateing.
-        // Or, in the config file change the version to some high number, like 999.0.0.0
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        string launcherUpdateURL = "http://launcher.atomicelectronics.net";
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // This launcher is looking for a version number and a download url from the launcherUpdateURL
-        // Version:::URL
-        // 0.0.0.0:::http://www.url.com
-        // MajorChange.StandardAdd.MinorAdd.BugFix
-        // The version number is controlled by the properties window. (The config file, if present, overwrites it).
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Commented Areas that start with //Dev// are under construction or future features.
+
         public static string fileChangeVersion = "1.3.12.39"; // Last version of which the code for the saved data was changed.
         public static bool cancelPressed = false;
-        public static Dictionary<string, Dictionary<string, string[]>> gameData = new Dictionary<string, Dictionary<string, string[]>>();
+        public static Dictionary<string, Dictionary<string, string[]>> appData = new Dictionary<string, Dictionary<string, string[]>>();
         public static Dictionary<string, Dictionary<string, string[]>> userData = new Dictionary<string, Dictionary<string, string[]>>();
         public static atomLauncher atomLaunch;
-        Color selectColor = Color.FromArgb(255, 255, 255);
-        Color noColor = Color.FromArgb(100, 0, 0, 0);
+        public static Color selectColor = Color.FromArgb(255, 255, 255);
+        public static Color noColor = Color.FromArgb(100, 0, 0, 0);
         public static string downloadVersion = "";
+        public static string versionChangeLog = "";
         public static string launcherDownload = "";
-        public static string settingsGame = "";
+        public static string settingsApp = "";
         public static string updateStatus = "Starting Update...";
 
         public atomLauncher()
@@ -55,17 +45,18 @@ namespace AtomLauncher
 
         private void formButtonLogin_Click(object sender, EventArgs e)
         {
-            if (formButtonLogin.Text == "Cancel")
+            if (formButtonLogin.Tag.ToString() == "Cancel")
             {
                 cancelPressed = true;
-                formButtonLogin.Text = "Canceling ...";
                 formButtonLogin.Enabled = false;
+                formButtonLogin.BackgroundImage = global::AtomLauncher.Properties.Resources.canceling;
+                formButtonLogin.Tag = "Canceling";
             }
             else
             {
                 cancelPressed = false;
                 formSetControl(false, true);
-                Thread webt = new Thread(launchGame);
+                Thread webt = new Thread(launchApp);
                 webt.IsBackground = true;
                 webt.Start();
             }
@@ -76,30 +67,60 @@ namespace AtomLauncher
             PictureBox pic = (PictureBox)sender;
             if (pic.BackColor == noColor)
             {
+                atomFileData.config["lastSelectedApp"] = pic.Name.Replace("formPicture", "");
                 foreach (Control x in this.formPanelRight.Controls)
                 {
-                    if (x is PictureBox)
+                    if (x.Name.EndsWith(atomFileData.config["lastSelectedApp"]))
                     {
-                        if (!x.Name.StartsWith("formPictureLine"))
-                        {
-                            x.BackColor = noColor;
-                        }
+                        x.BackColor = selectColor;
+                    }
+                    else
+                    {
+                        x.BackColor = noColor;
                     }
                 }
-                atomFileData.config["lastSelectedGame"] = pic.Name.Replace("formPicture", "");
-                pic.BackColor = selectColor;
-                formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
-                setInputBoxes();
+                formLabelAppSelected.Text = atomFileData.config["lastSelectedApp"];
+                setInputBox();
             }
+        }
+
+        private void formButtonEditUser_Click(object sender, EventArgs e)
+        {
+            cancelPressed = false;
+            atomUserForm editU = new atomUserForm();
+            editU.editUser = true;
+            editU.ShowDialog();
+            setInputBox();
+        }
+
+        private void formButtonAddUser_Click(object sender, EventArgs e)
+        {
+            cancelPressed = false;
+            atomUserForm addU = new atomUserForm();
+            addU.ShowDialog();
+            setInputBox();
         }
 
         private void atomButtonSettings_Click(object sender, EventArgs e)
         {
             cancelPressed = false;
             Button button = (Button)sender;
-            settingsGame = button.Name.Replace("atomButtonSettings", "");
-            atomMinecraftSettings mcSet = new atomMinecraftSettings();
-            mcSet.ShowDialog();
+            settingsApp = button.Name.Replace("atomButtonSettings", "");
+            string selectedType = appData[settingsApp]["appType"][0];
+            if (selectedType == "Minecraft")
+            {
+                atomMinecraftSettings mcSet = new atomMinecraftSettings();
+                mcSet.ShowDialog();
+            }
+            else if (selectedType == "General")
+            {
+                atomGeneralSettings genSet = new atomGeneralSettings();
+                genSet.ShowDialog();
+            }
+            else
+            {
+                formLabelStatus.Text = "Error: App Type Missing.";
+            }
             setRightPanel();
         }
         private void atomButtonSettings_MouseLeave(object sender, EventArgs e)
@@ -115,18 +136,20 @@ namespace AtomLauncher
 
         private void atomButtonTrash_Click(object sender, EventArgs e)
         {
+            //Dev//
             //
             // Do you want to delete related files? If so Which ones?
-            //
+            // Or, popup saying "Are you sure? This wont delete the files"
+            // 
             cancelPressed = false;
             Button button = (Button)sender;
-            string trashGame = button.Name.Replace("atomButtonTrash", "");
-            gameData.Remove(trashGame);
-            userData.Remove(trashGame);
-            atomFileData.saveDictonary(atomFileData.userDataFile, userData, true);
-            atomFileData.saveDictonary(atomFileData.gameDataFile, gameData);
+            string trashApp = button.Name.Replace("atomButtonTrash", "");
+            appData.Remove(trashApp);
+            userData.Remove(trashApp);
+            atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], userData, true);
+            atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], appData);
             setRightPanel();
-            setInputBoxes();
+            setInputBox();
             atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
         }
         private void atomButtonTrash_MouseLeave(object sender, EventArgs e)
@@ -140,24 +163,18 @@ namespace AtomLauncher
             button.BackgroundImage = global::AtomLauncher.Properties.Resources.trashopen;
         }
 
-        private void formComboUsername_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (userData[atomFileData.config["lastSelectedGame"]].ContainsKey(formComboUsername.Text))
-            {
-                formTextPass.Text = otherCipher.Decrypt(userData[atomFileData.config["lastSelectedGame"]][formComboUsername.Text][1], otherCipher.machineIDLookup());
-            }
-        }
-
-        private void formButtonAddGame_Click(object sender, EventArgs e)
+        private void formButtonAddApp_Click(object sender, EventArgs e)
         {
             cancelPressed = false;
-            atomAddGame addP = new atomAddGame();
-            addP.ShowDialog();
+            atomAddApp addA = new atomAddApp();
+            addA.ShowDialog();
             setRightPanel();
+            setInputBox();
         }
 
         private void formButtonUpdate_Click(object sender, EventArgs e)
         {
+            //Dev//
             // Should Create a form for this. For better control.
             DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
             if (updateDialog == DialogResult.Yes)
@@ -165,7 +182,7 @@ namespace AtomLauncher
                 DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
                 if (changelog == DialogResult.Yes)
                 {
-                    Process.Start("http://launcher.atomicelectronics.net/?page=changelog.php"); // possibly store change log on string downloads
+                    Process.Start(versionChangeLog);
                 }
                 cancelPressed = false;
                 Thread updateF = new Thread(updateThread);
@@ -179,29 +196,6 @@ namespace AtomLauncher
             MessageBox.Show("Status: " + updateStatus + "\n" + "Current Version: " + atomFileData.config["launcherVersion"] + "\n" + "Latest Version: " + downloadVersion, "Update Status");
         }
 
-        private void formCheckSaveLogin_CheckedChanged(object sender, EventArgs e)
-        {
-            if (formCheckSaveLogin.Enabled)
-            {
-                formCheckAutoLogin.Enabled = formCheckSaveLogin.Checked;
-            }
-            if (formCheckSaveLogin.Checked)
-            {
-                if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
-                {
-                    if (gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
-                    {
-                        formComboUsername.Text = gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0];
-                        formCheckAutoLogin.Checked = true;
-                    }
-                }
-            }
-            else
-            {
-                formCheckAutoLogin.Checked = false;
-            }
-        }
-
         private void formButtonAbout_Click(object sender, EventArgs e)
         {
             atomAboutBox box = new atomAboutBox();
@@ -210,22 +204,15 @@ namespace AtomLauncher
 
         private void formButtonLauncherSettings_Click(object sender, EventArgs e)
         {
-            // Create Settings for Launcher here.
-            //    Settings List.
-            //    Change idle background image.
-            //    Update Url Change.
-            //    Debug on/off.
-            //    Version Number Change.
-            //    Manual Select Game.
-            //    Delete User Data.
-            //    Delete Game Data.
-            //    Set all to Defaults.
+            cancelPressed = false;
+            atomLauncherSettings addLS = new atomLauncherSettings();
+            addLS.ShowDialog();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////
-        //
-        // Methods used by above
-        //
+        // 
+        // Methods used by above 
+        // 
 
         private void updateThread()
         {
@@ -233,7 +220,7 @@ namespace AtomLauncher
             this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); }));
             try
             {
-                atomDownloading.Single(launcherDownload, Path.GetDirectoryName(atomProgram.appDirectory) + @"\Update" + Path.GetFileName(atomProgram.appDirectory));
+                atomDownloading.Single(launcherDownload, Path.GetDirectoryName(atomProgram.appDirectoryFile) + @"\Update" + Path.GetFileName(atomProgram.appDirectoryFile));
             }
             catch (Exception ex)
             {
@@ -248,7 +235,7 @@ namespace AtomLauncher
             }
             if (status == "")
             {
-                Process.Start(Path.GetDirectoryName(atomProgram.appDirectory) + @"\Update" + Path.GetFileName(atomProgram.appDirectory));
+                Process.Start(Path.GetDirectoryName(atomProgram.appDirectoryFile) + @"\Update" + Path.GetFileName(atomProgram.appDirectoryFile));
                 fadeOutClose();
             }
             else
@@ -260,72 +247,61 @@ namespace AtomLauncher
 
         private void versionThread()
         {
-            if (File.Exists("Update" + Path.GetFileName(atomProgram.appDirectory)))
+            if (File.Exists("Update" + Path.GetFileName(atomProgram.appDirectoryFile)))
             {
                 Dictionary<string, string> dict = atomFileData.loadConfDefaults();
                 atomFileData.config["launcherVersion"] = dict["launcherVersion"];
                 atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
-                string status = atomFileData.deleteLoop("Update" + Path.GetFileName(atomProgram.appDirectory));
+                string status = atomFileData.deleteLoop("Update" + Path.GetFileName(atomProgram.appDirectoryFile));
                 if (status != "")
                 {
                     MessageBox.Show("Update Error: Deleting Update File: " + status, "Update File");
                 }
             }
-            if (!atomProgram.debugApp)
+            if (atomFileData.config["updateURL"] != "")
             {
-                if (launcherUpdateURL != "")
+                this.Invoke(new MethodInvoker(delegate
                 {
-                    this.Invoke(new MethodInvoker(delegate
+                    updateStatus = "Checking version...";
+                    formButtonUpdate.BackColor = Color.FromArgb(255, 255, 0);
+                }));
+                string status = "";
+                try
+                {
+                    string ALUpdateData = "";
+                    using (WebClient client = new WebClient())
                     {
-                        updateStatus = "Checking version...";
-                        formButtonUpdate.BackColor = Color.FromArgb(255, 255, 0);
-                    }));
-                    string status = "";
-                    try
-                    {
-                        string ALUpdateData = "";
-                        using (WebClient client = new WebClient()) // Get Data from Minecraft with username and password
-                        {
-                            ALUpdateData = client.DownloadString(launcherUpdateURL);
-                        }
-                        string[] splitCharacter = { ":::" };
-                        string[] ALUpdateStrings = ALUpdateData.Split(splitCharacter, StringSplitOptions.None);
-                        downloadVersion = ALUpdateStrings[0];
-                        launcherDownload = ALUpdateStrings[1];
+                        ALUpdateData = client.DownloadString(atomFileData.config["updateURL"]);
                     }
-                    catch (Exception ex)
+                    string[] ALUpdateStrings = ALUpdateData.Split(new string[] { ":::" }, StringSplitOptions.None);
+                    downloadVersion = ALUpdateStrings[0];
+                    launcherDownload = ALUpdateStrings[1];
+                    versionChangeLog = ALUpdateStrings[2];
+                }
+                catch (Exception ex)
+                {
+                    status = "Error: " + ex.Message;
+                }
+                if (status == "")
+                {
+                    if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], downloadVersion))
                     {
-                        status = "Error: " + ex.Message;
-                    }
-                    if (status == "")
-                    {
-                        if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], downloadVersion))
+                        this.Invoke(new MethodInvoker(delegate
                         {
-                            this.Invoke(new MethodInvoker(delegate
-                            {
-                                formButtonUpdate.BackColor = System.Drawing.Color.White;
-                                formButtonUpdate.Location = new System.Drawing.Point(828, 4);
-                                formButtonUpdate.Size = new System.Drawing.Size(116, 20);
-                                formButtonUpdate.Text = "Update Available";
-                                formButtonUpdate.Click -= new System.EventHandler(this.formButtonUpdateStatus_Click);
-                                formButtonUpdate.Click += new System.EventHandler(this.formButtonUpdate_Click);
-                            }));
-                        }
-                        else
-                        {
-                            this.Invoke(new MethodInvoker(delegate
-                            {
-                                formButtonUpdate.BackColor = Color.FromArgb(0, 255, 0);
-                                updateStatus = "Up to date.";
-                            }));
-                        }
+                            formButtonUpdate.BackColor = System.Drawing.Color.White;
+                            formButtonUpdate.Location = new System.Drawing.Point(880, 8);
+                            formButtonUpdate.Size = new System.Drawing.Size(74, 14);
+                            formButtonUpdate.BackgroundImage = global::AtomLauncher.Properties.Resources.update;
+                            formButtonUpdate.Click -= new System.EventHandler(this.formButtonUpdateStatus_Click);
+                            formButtonUpdate.Click += new System.EventHandler(this.formButtonUpdate_Click);
+                        }));
                     }
                     else
                     {
                         this.Invoke(new MethodInvoker(delegate
                         {
-                            formButtonUpdate.BackColor = Color.FromArgb(255, 0, 0);
-                            updateStatus = status;
+                            formButtonUpdate.BackColor = Color.FromArgb(0, 255, 0);
+                            updateStatus = "Up to date.";
                         }));
                     }
                 }
@@ -333,23 +309,30 @@ namespace AtomLauncher
                 {
                     this.Invoke(new MethodInvoker(delegate
                     {
-                        formButtonUpdate.Enabled = false;
-                        formButtonUpdate.Visible = false;
+                        formButtonUpdate.BackColor = Color.FromArgb(255, 0, 0);
+                        updateStatus = status;
                     }));
                 }
+            }
+            else
+            {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    formButtonUpdate.Enabled = false;
+                    formButtonUpdate.Visible = false;
+                }));
             }
         }
 
         private void loadingThread()
         {
-            this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); }));
-            if (Path.GetFileName(atomProgram.appDirectory).StartsWith("Update"))
+            if (Path.GetFileName(atomProgram.appDirectoryFile).StartsWith("Update"))
             {
-                string status = atomFileData.deleteLoop(Path.GetFileName(atomProgram.appDirectory).Replace("Update", ""));
+                string status = atomFileData.deleteLoop(Path.GetFileName(atomProgram.appDirectoryFile).Replace("Update", ""));
                 if (status == "")
                 {
-                    File.Copy(Path.GetFileName(atomProgram.appDirectory), Path.GetFileName(atomProgram.appDirectory).Replace("Update", ""));
-                    Process.Start(Path.GetFileName(atomProgram.appDirectory).Replace("Update", ""));
+                    File.Copy(Path.GetFileName(atomProgram.appDirectoryFile), Path.GetFileName(atomProgram.appDirectoryFile).Replace("Update", ""));
+                    Process.Start(Path.GetFileName(atomProgram.appDirectoryFile).Replace("Update", ""));
                 }
                 else
                 {
@@ -362,11 +345,22 @@ namespace AtomLauncher
             }
             else
             {
+                this.Invoke(new MethodInvoker(delegate
+                {
+                    formSetControl(false, true);
+                    formBarTop.Width = 0;
+                    formBarBottom.Width = 0;
+                    formLabelTotalMB.Text = "";
+                    formLabelDLFile.Text = "";
+                    formLabelDLSpeed.Text = "";
+                    formLabelFileMB.Text = "";
+                    formLabelStatus.Text = "";
+                }));
                 atomFileData.config = atomFileData.loadConfFile(atomFileData.configFile);
                 if (atomUtility.compareVersions(atomFileData.config["launcherVersion"], fileChangeVersion))
                 {
-                    string status = atomFileData.deleteLoop(atomFileData.gameDataFile);
-                    status = status + atomFileData.deleteLoop(atomFileData.userDataFile);
+                    string status = atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"]);
+                    status = status + atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"]);
                     status = status + atomFileData.deleteLoop(atomFileData.configFile);
                     if (status != "")
                     {
@@ -374,22 +368,60 @@ namespace AtomLauncher
                     }
                     MessageBox.Show("Update Notification: Updates to the opening and saveing of files have changed. The files saved to the computer have been deleted. Sorry for the inconvience.", "Update Notification");
                 }
-                gameData = atomFileData.getGameData(atomFileData.gameDataFile);
-                userData = atomFileData.getUserData(atomFileData.userDataFile);
-                atomProgram.debugApp = Convert.ToBoolean(atomFileData.config["debug"]);
+                if (!Convert.ToBoolean(atomFileData.config["changeFont"]))
+                {
+                    atomProgram.customFontFamily = atomCustomFont.loadFont();
+                    atomProgram.smallCustom = new System.Drawing.Font(atomProgram.customFontFamily, 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    atomProgram.mediuCustom = new System.Drawing.Font(atomProgram.customFontFamily, 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+                    this.Invoke(new MethodInvoker(delegate
+                    {
+                        formPanelBottom.Font = atomProgram.smallCustom;
+                        formPanelInputs.Font = atomProgram.mediuCustom;
+                        formPanelTop.Font = atomProgram.mediuCustom;
+                        formLabelAppSelected.Font = atomProgram.mediuCustom;
+                    }));
+                }
+                appData = atomFileData.getAppData(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"]);
+                userData = atomFileData.getUserData(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"]);
+                foreach (KeyValuePair<string, Dictionary<string, string[]>> entry in userData)
+                {
+                    bool toBreak = false;
+                    foreach (KeyValuePair<string, string[]> subEntry in entry.Value)
+                    {
+                        otherCipher.Decrypt(subEntry.Value[0], otherCipher.machineIDLookup()); //Test Decryption for errors.
+                        toBreak = true;
+                        break;
+                    }
+                    if (toBreak)
+                    {
+                        break;
+                    }
+                }
+                if (atomFileData.config["launcherBackground"] != "")
+                {
+                    if (File.Exists(atomFileData.config["launcherBackground"]))
+                    {
+                        BackgroundImage = Image.FromFile(atomFileData.config["launcherBackground"]);
+                    }
+                    else
+                    {
+                        atomFileData.config["launcherBackground"] = "";
+                    }
+                }
                 setRightPanel();
                 Thread versionF = new Thread(versionThread);
                 versionF.IsBackground = true;
                 versionF.Start();
-                this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); setInputBoxes(); }));
+                this.Invoke(new MethodInvoker(delegate { formSetControl(false, true); setInputBox(); this.Opacity += .01; }));
+                Thread.Sleep(1000);
                 while (this.Opacity != 1)
                 {
                     Thread.Sleep(10);
                     this.Invoke(new MethodInvoker(delegate { this.Opacity += .04; }));
                 }
-                if (gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+                if (appData.ContainsKey(atomFileData.config["lastSelectedApp"]))
                 {
-                    if (gameData[atomFileData.config["lastSelectedGame"]]["autoLoginUser"][0] != "")
+                    if (appData[atomFileData.config["lastSelectedApp"]]["autoLoginUser"][0] != "" && userData.ContainsKey(atomFileData.config["lastSelectedApp"]) && userData[atomFileData.config["lastSelectedApp"]].ContainsKey(appData[atomFileData.config["lastSelectedApp"]]["autoLoginUser"][0]))
                     {
                         autoLogin();
                     }
@@ -411,94 +443,102 @@ namespace AtomLauncher
             }
         }
 
+        private Object fadeLock = new Object();
         private void fadeOutClose()
         {
-            while (this.Opacity != 0)
+            if (Monitor.TryEnter(fadeLock)) //Lock to only one Thread at a time.
             {
-                Thread.Sleep(10);
-                this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                while (this.Opacity != 0)
+                {
+                    Thread.Sleep(10);
+                    this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                }
+                Monitor.Exit(fadeLock);
+                this.Invoke(new MethodInvoker(delegate { this.Close(); }));
             }
-            this.Invoke(new MethodInvoker(delegate { this.Close(); }));
         }
 
         internal void setRightPanel()
         {
-            this.Invoke(new MethodInvoker(delegate { formPanelRight.Visible = false; }));
             this.Invoke(new MethodInvoker(delegate
             {
+                formPanelRight.Visible = false;
                 formPanelRight.Controls.Clear();
-                formPanelRight.Controls.Add(this.formButtonAddGame);
-                formPanelRight.Controls.Add(this.formButtonLauncherSettings);
-                formPanelRight.Controls.Add(this.formLabelGameSelected);
             }));
             int x = 0;
-            foreach (KeyValuePair<string, Dictionary<string, string[]>> entry in gameData)
+            foreach (KeyValuePair<string, Dictionary<string, string[]>> entry in appData)
             {
                 PictureBox picture = new PictureBox();
                 picture.BackColor = noColor;
-                picture.Image = global::AtomLauncher.Properties.Resources.mc;
-                if (gameData[entry.Key]["thumbnailLoc"][0] != "")
+                if (appData[entry.Key]["appType"][0] == "Minecraft")
                 {
-                    picture.ImageLocation = gameData[entry.Key]["thumbnailLoc"][0];
+                    picture.BackgroundImage = global::AtomLauncher.Properties.Resources.mc;
                 }
-                picture.Location = new System.Drawing.Point(4, 52 + (84 * x));
+                else
+                {
+                    picture.BackgroundImage = global::AtomLauncher.Properties.Resources.gen;
+                }
+                if (appData[entry.Key]["thumbnailLoc"][0] != "")
+                {
+                    picture.BackgroundImage = Image.FromFile(appData[entry.Key]["thumbnailLoc"][0]);
+                }
+                picture.Location = new Point(4, 4 + (84 * x));
                 picture.Name = "formPicture" + entry.Key;
-                picture.Size = new System.Drawing.Size(260, 80);
-                picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                picture.Size = new Size(260, 80);
+                picture.SizeMode = PictureBoxSizeMode.Zoom;
+                picture.BackgroundImageLayout = ImageLayout.Zoom;
                 picture.TabIndex = 0;
                 picture.TabStop = false;
-                picture.Click += new System.EventHandler(this.formPicture_Click);
+                picture.Click += new EventHandler(this.formPicture_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(picture); }));
 
                 Button setting = new Button();
-                setting.BackColor = System.Drawing.Color.White;
+                setting.BackColor = noColor;
                 setting.FlatAppearance.BorderSize = 0;
                 setting.BackgroundImage = global::AtomLauncher.Properties.Resources.setting;
-                setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                setting.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                setting.ForeColor = System.Drawing.Color.Black;
-                setting.Location = new System.Drawing.Point(264, 52 + (84 * x));
-                setting.Margin = new System.Windows.Forms.Padding(0);
+                setting.FlatStyle = FlatStyle.Flat;
+                setting.ForeColor = Color.Black;
+                setting.Location = new Point(264, 4 + (84 * x));
+                setting.Margin = new Padding(0);
                 setting.Name = "atomButtonSettings" + entry.Key;
-                setting.Size = new System.Drawing.Size(24, 40);
+                setting.Size = new Size(26, 40);
                 setting.TabIndex = 8;
                 setting.TabStop = false;
                 setting.UseVisualStyleBackColor = false;
-                setting.MouseLeave += new System.EventHandler(this.atomButtonSettings_MouseLeave);
-                setting.MouseEnter += new System.EventHandler(this.atomButtonSettings_MouseEnter);
-                setting.Click += new System.EventHandler(this.atomButtonSettings_Click);
+                setting.MouseLeave += new EventHandler(this.atomButtonSettings_MouseLeave);
+                setting.MouseEnter += new EventHandler(this.atomButtonSettings_MouseEnter);
+                setting.Click += new EventHandler(this.atomButtonSettings_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(setting); }));
 
                 Button trash = new Button();
-                trash.BackColor = System.Drawing.Color.White;
+                trash.BackColor = noColor;
                 trash.FlatAppearance.BorderSize = 0;
                 trash.BackgroundImage = global::AtomLauncher.Properties.Resources.trash;
-                trash.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-                trash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                trash.ForeColor = System.Drawing.Color.Black;
-                trash.Location = new System.Drawing.Point(264, 92 + (84 * x));
-                trash.Margin = new System.Windows.Forms.Padding(0);
+                trash.FlatStyle = FlatStyle.Flat;
+                trash.ForeColor = Color.Black;
+                trash.Location = new Point(264, 44 + (84 * x));
+                trash.Margin = new Padding(0);
                 trash.Name = "atomButtonTrash" + entry.Key;
-                trash.Size = new System.Drawing.Size(24, 40);
+                trash.Size = new Size(26, 40);
                 trash.TabIndex = 8;
                 trash.TabStop = false;
                 trash.UseVisualStyleBackColor = false;
-                trash.MouseLeave += new System.EventHandler(this.atomButtonTrash_MouseLeave);
-                trash.MouseEnter += new System.EventHandler(this.atomButtonTrash_MouseEnter);
-                trash.Click += new System.EventHandler(this.atomButtonTrash_Click);
+                trash.MouseLeave += new EventHandler(this.atomButtonTrash_MouseLeave);
+                trash.MouseEnter += new EventHandler(this.atomButtonTrash_MouseEnter);
+                trash.Click += new EventHandler(this.atomButtonTrash_Click);
                 this.Invoke(new MethodInvoker(delegate { formPanelRight.Controls.Add(trash); }));
                 x++;
             }
             this.Invoke(new MethodInvoker(delegate
             { 
-                if (gameData.Count < 1)
+                if (appData.Count < 1)
                 {
-                    formLabelGameSelected.Text = "No Games Added, Add one to launch.";
-                    atomFileData.config["lastSelectedGame"] = "";
+                    formLabelAppSelected.Text = "No App, Add to launch.";
+                    atomFileData.config["lastSelectedApp"] = "";
                 }
                 else
                 {
-                    if (!gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+                    if (!appData.ContainsKey(atomFileData.config["lastSelectedApp"]))
                     {
                         foreach (Control c in this.formPanelRight.Controls)
                         {
@@ -506,28 +546,26 @@ namespace AtomLauncher
                             {
                                 if (c.Name.StartsWith("formPicture"))
                                 {
-                                    atomFileData.config["lastSelectedGame"] = c.Name.Replace("formPicture", "");
+                                    atomFileData.config["lastSelectedApp"] = c.Name.Replace("formPicture", "");
                                     break;
                                 }
                             }
                         }
-                        formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
                     }
-                    else
-                    {
-                        formLabelGameSelected.Text = atomFileData.config["lastSelectedGame"];
-                    }
+                    formLabelAppSelected.Text = atomFileData.config["lastSelectedApp"];
                 }
             }));
+            int y = 0;
             foreach (Control c in this.formPanelRight.Controls)
             {
-                if (c is PictureBox)
+                if (c.Name.EndsWith(atomFileData.config["lastSelectedApp"]))
                 {
-                    if (c.Name == "formPicture" + atomFileData.config["lastSelectedGame"])
-                    {
-                        c.BackColor = selectColor;
-                        break;
-                    }
+                    c.BackColor = selectColor;
+                    y++;
+                }
+                if (y > 2)
+                {
+                    break;
                 }
             }
             this.Invoke(new MethodInvoker(delegate { formPanelRight.Visible = true; }));
@@ -535,11 +573,11 @@ namespace AtomLauncher
 
         private void autoLogin()
         {
-            int timeSeconds = 5;
+            int timeSeconds = Convert.ToInt32(atomFileData.config["autoLoginTime"]);
             int c = 0;
             while (true)
             {
-                this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "Auto Login: " + timeSeconds; })); //Threading Friendly
+                this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = formComboUsername.Text + " - Auto Login: " + timeSeconds; })); //Threading Friendly
                 Thread.Sleep(1000);
                 if (atomLauncher.cancelPressed)
                 {
@@ -548,7 +586,7 @@ namespace AtomLauncher
                 }
                 if (c >= timeSeconds)
                 {
-                    launchGame();
+                    launchApp();
                     break;
                 }
                 else
@@ -558,93 +596,107 @@ namespace AtomLauncher
             }
         }
 
-        private void setInputBoxes()
+        private void setInputBox()
         {
             formComboUsername.Items.Clear();
             formComboUsername.Text = "";
-            formTextPass.Text = "";
-            formCheckSaveLogin.Checked = false;
             int x = 0;
-            if (userData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+            if (userData.ContainsKey(atomFileData.config["lastSelectedApp"]))
             {
-                foreach (KeyValuePair<string, string[]> dict in userData[atomFileData.config["lastSelectedGame"]])
+                foreach (KeyValuePair<string, string[]> dict in userData[atomFileData.config["lastSelectedApp"]])
                 {
                     formComboUsername.Items.Add(dict.Key);
                     if (x == 0)
                     {
                         formComboUsername.Text = dict.Key;
+                        x++;
                     }
-                    x++;
                 }
                 if (x > 0)
                 {
-                    formCheckSaveLogin.Checked = true;
+                    formButtonEditUser.Visible = true;
                 }
+                else
+                {
+                    formButtonEditUser.Visible = false;
+                }
+            }
+            else
+            {
+                formButtonEditUser.Visible = false;
+            }
+            if (appData.Count > 0)
+            {
+                formPanelInputs.Visible = true;
+            }
+            else
+            {
+                formPanelInputs.Visible = false;
             }
         }
 
         private Object threadLock = new Object();
-        private void launchGame()
+        private void launchApp()
         {
-            if (!Monitor.TryEnter(threadLock)) //Lock to only one Thread at a time.
+            if (Monitor.TryEnter(threadLock)) //Lock to only one Thread at a time.
             {
-                this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "Code still working"; }));
-                this.Invoke(new MethodInvoker(delegate { formSetControl(true, true); }));
-                return;
-            }
-            try
-            {
-                string status = "Failed: Game Code Error.";
-                
-                    if (atomFileData.config["lastSelectedGame"] == "")
+                try
+                {
+                    string status = "Failed: App Code Error.";
+                    this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "Working..."; }));
+                    if (atomFileData.config["lastSelectedApp"] == "")
                     {
-                        status = "Failed: No Game Selected.";
+                        status = "Failed: No App Selected.";
                     }
-                    else if (!gameData.ContainsKey(atomFileData.config["lastSelectedGame"]))
+                    else if (!appData.ContainsKey(atomFileData.config["lastSelectedApp"]))
                     {
-                        status = "Failed: Game " + atomFileData.config["lastSelectedGame"] + " does not Exist in Database";
+                        status = "Failed: App " + atomFileData.config["lastSelectedApp"] + " does not Exist in Database";
                     }
-                    else if (gameData[atomFileData.config["lastSelectedGame"]]["gameType"][0] == "Minecraft")
+                    else if (appData[atomFileData.config["lastSelectedApp"]]["appType"][0] == "Minecraft")
                     {
                         string username = "";
                         this.Invoke(new MethodInvoker(delegate { username = formComboUsername.Text; }));
-                        status = atomMinecraft.start(username, formTextPass.Text, formCheckSaveLogin.Checked, formCheckAutoLogin.Checked);
-                    }
-                int x = 10;
-                if (status == "Successful")
-                {
-                    if (atomProgram.debugApp)
-                    {
-                        this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "(" + x + ") " + status; formSetControl(true, false); }));
-                        while (x-- >= 0)
+                        string password = "";
+                        if (username != "")
                         {
-                            Thread.Sleep(1000);
-                            this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "(" + x + ") " + status; }));
+                            this.Invoke(new MethodInvoker(delegate { password = userData[atomFileData.config["lastSelectedApp"]][formComboUsername.Text][0]; }));
                         }
-                        this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = status; formSetControl(true, true); }));
+                        status = atomMinecraft.start(username, password);
+                    }
+                    else if (appData[atomFileData.config["lastSelectedApp"]]["appType"][0] == "General")
+                    {
+                        string username = "";
+                        this.Invoke(new MethodInvoker(delegate { username = formComboUsername.Text; }));
+                        string password = "";
+                        if (username != "")
+                        {
+                            this.Invoke(new MethodInvoker(delegate { password = userData[atomFileData.config["lastSelectedApp"]][formComboUsername.Text][0]; }));
+                        }
+                        status = atomGeneral.start(username, password);
+                    }
+                    int x = 10;
+                    if (status == "Successful")
+                    {
+                            fadeOutClose();
                     }
                     else
                     {
-                        fadeOutClose();
+                        this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = status; formLabelLoginCount.Text = x.ToString(); formSetControl(true, false); }));
+                        while (x-- > 0)
+                        {
+                            Thread.Sleep(1000);
+                            this.Invoke(new MethodInvoker(delegate { formLabelLoginCount.Text = x.ToString(); }));
+                        }
+                        this.Invoke(new MethodInvoker(delegate { formSetControl(true, true); }));
                     }
                 }
-                else
+                finally
                 {
-                    this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "(" + x + ") " + status; formSetControl(true, false); }));
-                    while (x-- > 0)
-                    {
-                        Thread.Sleep(1000);
-                        this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = "(" + x + ") " + status; }));
-                    }
-                    this.Invoke(new MethodInvoker(delegate { formLabelStatus.Text = status; formSetControl(true, true); }));
+                    Monitor.Exit(threadLock); //Unlock for use of other threads.
                 }
-            }
-            finally
-            {
-                Monitor.Exit(threadLock); //Unlock for use of other threads.
             }
         }
-        
+
         /// <summary>
         /// Controls the form to be disabled or enabled. Also changes the main button text.
         /// </summary>
@@ -653,29 +705,23 @@ namespace AtomLauncher
         private void formSetControl(bool userCanControl, bool loginButtonControl)
         {
             formButtonLogin.Enabled = loginButtonControl;
-            formComboUsername.Enabled = userCanControl;
-            formTextPass.Enabled = userCanControl;
+            formButtonLogin.Visible = loginButtonControl;
+            formLabelLoginCount.Visible = !loginButtonControl;
+            formPanelUser.Visible = userCanControl;
             foreach (Control con in formPanelRight.Controls)
             {
                 con.Enabled = userCanControl;
             }
-            formCheckSaveLogin.Enabled = userCanControl;
-            if (formCheckSaveLogin.Checked)
-            {
-                formCheckAutoLogin.Enabled = userCanControl;
-            }
-            else
-            {
-                formCheckAutoLogin.Enabled = false;
-            }
             formButtonUpdate.Enabled = userCanControl;
             if (userCanControl)
             {
-                formButtonLogin.Text = "Login";
+                formButtonLogin.BackgroundImage = global::AtomLauncher.Properties.Resources.login;
+                formButtonLogin.Tag = "Login";
             }
             else
             {
-                formButtonLogin.Text = "Cancel";
+                formButtonLogin.BackgroundImage = global::AtomLauncher.Properties.Resources.cancel;
+                formButtonLogin.Tag = "Cancel";
             }
         }
 
@@ -694,7 +740,15 @@ namespace AtomLauncher
                 this.Invoke(new UpdateControlTextCallback(formText), name, text);
                 return;
             }
-            this.Controls.Find(name, true)[0].Text = text;
+            if (name == "formLabelDLFile")
+            {
+                this.formLabelDLFile.Text = atomUtility.Compact(text, this.formLabelDLFile);
+            }
+            else
+            {
+                this.Controls.Find(name, true)[0].Text = text;
+            }
+                
         }
         public void barValues(int valuet, int valueb) //Sets the values from other classes and threads.
         {
@@ -705,8 +759,8 @@ namespace AtomLauncher
                 this.Invoke(new UpdateControlIntCallback(barValues), valuet, valueb);
                 return;
             }
-            this.formBarTop.Value = valuet;
-            this.formBarBottom.Value = valueb;
+            this.formBarTop.Width = (566 * valuet) / 100;
+            this.formBarBottom.Width = (566 * valueb) / 100;
         }
 
         private void atomButtonClose_Click(object sender, EventArgs e)
@@ -743,6 +797,32 @@ namespace AtomLauncher
                     return;
             }
             base.WndProc(ref m);
+        }
+
+        private void atomLauncher_ResizeEnd(object sender, EventArgs e)
+        {
+            int x = this.Location.X;
+            int y = this.Location.Y;
+            bool change = false;
+            if (x < (0 - (this.Width / 3) * 2))
+            {
+                x = (0 - (this.Width / 3) * 2);
+                change = true;
+            }
+            if (x > Screen.PrimaryScreen.Bounds.Right - (this.Width / 3))
+            {
+                x = Screen.PrimaryScreen.Bounds.Right - (this.Width / 3);
+                change = true;
+            }
+            if (y > Screen.PrimaryScreen.Bounds.Bottom - (this.Height / 3))
+            {
+                y = Screen.PrimaryScreen.Bounds.Bottom - (this.Height / 3);
+                change = true;
+            }
+            if (change)
+            {
+                this.Location = new Point(x, y);
+            }
         }
     }
 }

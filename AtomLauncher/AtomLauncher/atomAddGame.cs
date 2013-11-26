@@ -10,11 +10,13 @@ using System.Threading;
 
 namespace AtomLauncher
 {
-    public partial class atomAddGame : Form
+    public partial class atomAddApp : Form
     {
-        public atomAddGame()
+        public atomAddApp()
         {
             InitializeComponent();
+            formLabelTitle.Font = atomProgram.mediuCustom;
+            formButtonCancel.Font = atomProgram.mediuCustom;
         }
 
         private void formButtonCancel_Click(object sender, EventArgs e)
@@ -24,18 +26,31 @@ namespace AtomLauncher
             close.Start();
         }
 
-        private void formButtonAddMinecraft_Click(object sender, EventArgs e)
+        private void formPictureMinecraft_Click(object sender, EventArgs e)
         {
-            atomLauncher.settingsGame = "AL_AddNewGame";
-            atomMinecraftSettings mcSet = new atomMinecraftSettings();
-            mcSet.ShowDialog();
-            mcSet.Dispose();
             Thread close = new Thread(fadeOutClose);
             close.IsBackground = true;
             close.Start();
+            atomLauncher.settingsApp = "AL_AddNewApp";
+            atomMinecraftSettings mcSet = new atomMinecraftSettings();
+            mcSet.ShowDialog();
+            mcSet.Dispose();
+            this.Close();
         }
 
-        private void atomAddGame_Load(object sender, EventArgs e)
+        private void formPictureGeneral_Click(object sender, EventArgs e)
+        {
+            Thread close = new Thread(fadeOutClose);
+            close.IsBackground = true;
+            close.Start();
+            atomLauncher.settingsApp = "AL_AddNewApp";
+            atomGeneralSettings genSet = new atomGeneralSettings();
+            genSet.ShowDialog();
+            genSet.Dispose();
+            this.Close();
+        }
+
+        private void atomAddApp_Load(object sender, EventArgs e)
         {
             Thread open = new Thread(fadeIn);
             open.IsBackground = true;
@@ -44,20 +59,60 @@ namespace AtomLauncher
 
         private void fadeIn()
         {
+            this.Invoke(new MethodInvoker(delegate
+            {
+                int x = atomLauncher.atomLaunch.Location.X + atomLauncher.atomLaunch.Width - this.Width - 8;
+                int y = atomLauncher.atomLaunch.Location.Y + 8;
+                if ((x + this.Width) > Screen.GetWorkingArea(this).Width)
+                {
+                    x = Screen.GetWorkingArea(this).Width - this.Width;
+                }
+                if ((y + this.Height) > Screen.GetWorkingArea(this).Height)
+                {
+                    y = Screen.GetWorkingArea(this).Height - this.Height;
+                }
+                if (x < 0)
+                {
+                    x = 0;
+                }
+                if (y < 0)
+                {
+                    y = 0;
+                }
+                Point tmpPoint = new Point(x, y);
+                this.Location = tmpPoint;
+            }));
             while (this.Opacity != 1)
             {
                 Thread.Sleep(10);
                 this.Invoke(new MethodInvoker(delegate { this.Opacity += .04; }));
             }
         }
+        private Object fadeLock = new Object();
         private void fadeOutClose()
         {
-            while (this.Opacity != 0)
+            if (Monitor.TryEnter(fadeLock)) //Lock to only one Thread at a time.
             {
-                Thread.Sleep(10);
-                this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                while (this.Opacity != 0)
+                {
+                    Thread.Sleep(10);
+                    this.Invoke(new MethodInvoker(delegate { this.Opacity -= .04; }));
+                }
+                Monitor.Exit(fadeLock);
+                this.Invoke(new MethodInvoker(delegate { this.Close(); }));
             }
-            this.Invoke(new MethodInvoker(delegate { this.Close(); }));
+        }
+
+        private void formPicture_MouseEnter(object sender, EventArgs e)
+        {
+            PictureBox picBox = (PictureBox)sender;
+            picBox.BackColor = atomLauncher.selectColor;
+        }
+
+        private void formPicture_MouseLeave(object sender, EventArgs e)
+        {
+            PictureBox picBox = (PictureBox)sender;
+            picBox.BackColor = atomLauncher.noColor;
         }
     }
 }

@@ -4,20 +4,22 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Threading;
+using System.Drawing;
 
 namespace AtomLauncher
 {
     static class atomProgram
     {
         public static string appData = Environment.GetEnvironmentVariable("APPDATA");
-        public static bool debugApp = false; //Change this for testing purposes.
-        public static string appDirectory = Assembly.GetExecutingAssembly().Location;
+        public static string appDirectoryFile = Assembly.GetExecutingAssembly().Location;
         public static bool is64Bit = Environment.Is64BitProcess;
+        internal static FontFamily customFontFamily;
+        internal static Font smallCustom = new Font("Lucida Console", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+        internal static Font mediuCustom = new Font("Lucida Console", 13.5F, System.Drawing.FontStyle.Bold);
+        //internal static Font LargeCustom;
         [STAThread]
         static void Main(string[] args)
         {
-            //Disabled for custom styleing.
-            //Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);

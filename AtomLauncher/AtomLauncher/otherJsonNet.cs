@@ -14,11 +14,17 @@ namespace AtomLauncher
         /// <param name="jsonFile">The json file for a sepcific version. Example: "C:\LOCATION\1.6.2.json"</param>
         /// <param name="useNightly">Whether to use the nightly builds or not. Could be unstable.</param>
         /// <returns>Returns a dictonary with all of the elements.</returns>
-        internal static Dictionary<string, string[]> getVersionData(string jsonFile, bool useNightly = false)
+        internal static Dictionary<string, string[]> getVersionData(string jsonFile)
         {
+            string archType = "32";
+            if (atomProgram.is64Bit)
+            {
+                archType = "64";
+            }
             var json = System.IO.File.ReadAllText(jsonFile);
             dynamic version = JsonConvert.DeserializeObject(json);
             string[] libraries = { "" };
+            string[] urlLibraries = { "" };
             int l = 0;
             string[] natives = { "" };
             int n = 0;
@@ -26,25 +32,40 @@ namespace AtomLauncher
             {
                 bool isNative = false;
                 bool addFile = true;
+                bool modFile = false;
                 if (param.rules != null)
                 {
-                    if (param.rules[0].action == "allow")
+                    foreach (var entry in param.rules)
                     {
-                        if (useNightly)
+                        if (entry.action == "allow")
                         {
-                            if (param.rules[0].os == null)
+                            if (entry.os != null)
                             {
-                                addFile = false;
+                                if (entry.os.name != "windows")
+                                {
+                                    addFile = false;
+                                }
                             }
                         }
                         else
                         {
-                            if (param.rules[0].os != null)
+                            if (entry.os != null)
+                            {
+                                if (entry.os.name == "windows")
+                                {
+                                    addFile = false;
+                                }
+                            }
+                            else
                             {
                                 addFile = false;
                             }
                         }
                     }
+                }
+                if (param.url != null)
+                {
+                    modFile = true;
                 }
 
                 if (addFile)
@@ -73,11 +94,22 @@ namespace AtomLauncher
                     {
                         compileFolder = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + ".jar";
                     }
+                    compileFolder = compileFolder.Replace("${arch}", archType);
                     if (l > libraries.Length - 1)
                     {
                         Array.Resize(ref libraries, libraries.Length + 1);
+                        Array.Resize(ref urlLibraries, libraries.Length + 1);
                     }
                     libraries[l] = compileFolder;
+                    if (modFile)
+                    {
+                        urlLibraries[l] = param.url;
+                    }
+                    else
+                    {
+                        urlLibraries[l] = "";
+                    }
+
                     l++;
                     if (isNative)
                     {
@@ -99,6 +131,7 @@ namespace AtomLauncher
                 {"mainClass"           , new string[] { version.mainClass }},
               //{"libraries"           , new string[] { "net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar" "etc" "etc" }},
                 {"libraries"           , libraries },
+                {"urlLibraries"        , urlLibraries },
               //{"natives"             , new string[] { "net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar" "etc" "etc" }},
                 {"natives"             , natives   }
             };

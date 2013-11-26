@@ -1,6 +1,6 @@
 ﻿namespace AtomLauncher
 {
-    partial class atomAddGame
+    partial class atomAddApp
     {
         /// <summary>
         /// Required designer variable.
@@ -28,62 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.formButtonAddMinecraft = new System.Windows.Forms.Button();
-            this.formButtonAddGeneral = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(atomAddApp));
+            this.formLabelTitle = new System.Windows.Forms.Label();
             this.formButtonCancel = new System.Windows.Forms.Button();
             this.formButtonAddCubeworld = new System.Windows.Forms.Button();
             this.formButtonAddTerraria = new System.Windows.Forms.Button();
             this.formButtonAddStarbound = new System.Windows.Forms.Button();
+            this.formPictureGeneral = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.formButtonClose = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.formPictureGeneral)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // formLabelTitle
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(0, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(248, 24);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "What type of custom launcher?";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // formButtonAddMinecraft
-            // 
-            this.formButtonAddMinecraft.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddMinecraft.Location = new System.Drawing.Point(8, 40);
-            this.formButtonAddMinecraft.Name = "formButtonAddMinecraft";
-            this.formButtonAddMinecraft.Size = new System.Drawing.Size(72, 24);
-            this.formButtonAddMinecraft.TabIndex = 4;
-            this.formButtonAddMinecraft.Text = "Minecraft";
-            this.formButtonAddMinecraft.UseVisualStyleBackColor = true;
-            this.formButtonAddMinecraft.Click += new System.EventHandler(this.formButtonAddMinecraft_Click);
-            // 
-            // formButtonAddGeneral
-            // 
-            this.formButtonAddGeneral.Enabled = false;
-            this.formButtonAddGeneral.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddGeneral.Location = new System.Drawing.Point(88, 40);
-            this.formButtonAddGeneral.Name = "formButtonAddGeneral";
-            this.formButtonAddGeneral.Size = new System.Drawing.Size(72, 24);
-            this.formButtonAddGeneral.TabIndex = 5;
-            this.formButtonAddGeneral.Text = "General";
-            this.formButtonAddGeneral.UseVisualStyleBackColor = true;
+            this.formLabelTitle.Font = new System.Drawing.Font("Lucida Console", 12F, System.Drawing.FontStyle.Bold);
+            this.formLabelTitle.ForeColor = System.Drawing.Color.White;
+            this.formLabelTitle.Location = new System.Drawing.Point(4, 24);
+            this.formLabelTitle.Name = "formLabelTitle";
+            this.formLabelTitle.Size = new System.Drawing.Size(286, 24);
+            this.formLabelTitle.TabIndex = 3;
+            this.formLabelTitle.Text = "What type of App?";
+            this.formLabelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // formButtonCancel
             // 
-            this.formButtonCancel.Location = new System.Drawing.Point(168, 40);
+            this.formButtonCancel.BackColor = System.Drawing.Color.White;
+            this.formButtonCancel.FlatAppearance.BorderSize = 0;
+            this.formButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonCancel.Font = new System.Drawing.Font("Lucida Console", 12F, System.Drawing.FontStyle.Bold);
+            this.formButtonCancel.Location = new System.Drawing.Point(188, 228);
             this.formButtonCancel.Name = "formButtonCancel";
-            this.formButtonCancel.Size = new System.Drawing.Size(72, 24);
+            this.formButtonCancel.Size = new System.Drawing.Size(90, 24);
             this.formButtonCancel.TabIndex = 6;
             this.formButtonCancel.Text = "Cancel";
-            this.formButtonCancel.UseVisualStyleBackColor = true;
+            this.formButtonCancel.UseVisualStyleBackColor = false;
             this.formButtonCancel.Click += new System.EventHandler(this.formButtonCancel_Click);
             // 
             // formButtonAddCubeworld
             // 
             this.formButtonAddCubeworld.Enabled = false;
             this.formButtonAddCubeworld.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddCubeworld.Location = new System.Drawing.Point(232, 64);
+            this.formButtonAddCubeworld.Location = new System.Drawing.Point(200, 444);
             this.formButtonAddCubeworld.Name = "formButtonAddCubeworld";
             this.formButtonAddCubeworld.Size = new System.Drawing.Size(88, 24);
             this.formButtonAddCubeworld.TabIndex = 5;
@@ -95,9 +82,9 @@
             // 
             this.formButtonAddTerraria.Enabled = false;
             this.formButtonAddTerraria.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddTerraria.Location = new System.Drawing.Point(224, 64);
+            this.formButtonAddTerraria.Location = new System.Drawing.Point(200, 420);
             this.formButtonAddTerraria.Name = "formButtonAddTerraria";
-            this.formButtonAddTerraria.Size = new System.Drawing.Size(64, 24);
+            this.formButtonAddTerraria.Size = new System.Drawing.Size(88, 24);
             this.formButtonAddTerraria.TabIndex = 5;
             this.formButtonAddTerraria.Text = "Terraria";
             this.formButtonAddTerraria.UseVisualStyleBackColor = true;
@@ -107,45 +94,92 @@
             // 
             this.formButtonAddStarbound.Enabled = false;
             this.formButtonAddStarbound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.formButtonAddStarbound.Location = new System.Drawing.Point(240, 64);
+            this.formButtonAddStarbound.Location = new System.Drawing.Point(200, 468);
             this.formButtonAddStarbound.Name = "formButtonAddStarbound";
-            this.formButtonAddStarbound.Size = new System.Drawing.Size(80, 24);
+            this.formButtonAddStarbound.Size = new System.Drawing.Size(88, 24);
             this.formButtonAddStarbound.TabIndex = 5;
             this.formButtonAddStarbound.Text = "Starbound";
             this.formButtonAddStarbound.UseVisualStyleBackColor = true;
             this.formButtonAddStarbound.Visible = false;
             // 
-            // atomAddGame
+            // formPictureGeneral
+            // 
+            this.formPictureGeneral.BackColor = System.Drawing.Color.Black;
+            this.formPictureGeneral.Image = global::AtomLauncher.Properties.Resources.gen;
+            this.formPictureGeneral.Location = new System.Drawing.Point(16, 52);
+            this.formPictureGeneral.Name = "formPictureGeneral";
+            this.formPictureGeneral.Size = new System.Drawing.Size(262, 80);
+            this.formPictureGeneral.TabIndex = 7;
+            this.formPictureGeneral.TabStop = false;
+            this.formPictureGeneral.Click += new System.EventHandler(this.formPictureGeneral_Click);
+            this.formPictureGeneral.MouseEnter += new System.EventHandler(this.formPicture_MouseEnter);
+            this.formPictureGeneral.MouseLeave += new System.EventHandler(this.formPicture_MouseLeave);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.Color.Black;
+            this.pictureBox2.Image = global::AtomLauncher.Properties.Resources.mc;
+            this.pictureBox2.Location = new System.Drawing.Point(16, 140);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(262, 80);
+            this.pictureBox2.TabIndex = 7;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.formPictureMinecraft_Click);
+            this.pictureBox2.MouseEnter += new System.EventHandler(this.formPicture_MouseEnter);
+            this.pictureBox2.MouseLeave += new System.EventHandler(this.formPicture_MouseLeave);
+            // 
+            // formButtonClose
+            // 
+            this.formButtonClose.BackColor = System.Drawing.Color.White;
+            this.formButtonClose.BackgroundImage = global::AtomLauncher.Properties.Resources.xicon;
+            this.formButtonClose.FlatAppearance.BorderSize = 0;
+            this.formButtonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.formButtonClose.Location = new System.Drawing.Point(280, 0);
+            this.formButtonClose.Margin = new System.Windows.Forms.Padding(0);
+            this.formButtonClose.Name = "formButtonClose";
+            this.formButtonClose.Size = new System.Drawing.Size(14, 14);
+            this.formButtonClose.TabIndex = 9;
+            this.formButtonClose.TabStop = false;
+            this.formButtonClose.UseVisualStyleBackColor = false;
+            this.formButtonClose.Click += new System.EventHandler(this.formButtonCancel_Click);
+            // 
+            // atomAddApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(249, 73);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(294, 498);
+            this.Controls.Add(this.formButtonClose);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.formPictureGeneral);
             this.Controls.Add(this.formButtonCancel);
             this.Controls.Add(this.formButtonAddStarbound);
             this.Controls.Add(this.formButtonAddCubeworld);
             this.Controls.Add(this.formButtonAddTerraria);
-            this.Controls.Add(this.formButtonAddGeneral);
-            this.Controls.Add(this.formButtonAddMinecraft);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.formLabelTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "atomAddGame";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "atomAddApp";
             this.Opacity = 0D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "atomAddGame";
-            this.Load += new System.EventHandler(this.atomAddGame_Load);
+            this.Text = "Add App";
+            this.Load += new System.EventHandler(this.atomAddApp_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.formPictureGeneral)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button formButtonAddMinecraft;
-        private System.Windows.Forms.Button formButtonAddGeneral;
+        private System.Windows.Forms.Label formLabelTitle;
         private System.Windows.Forms.Button formButtonCancel;
         private System.Windows.Forms.Button formButtonAddCubeworld;
         private System.Windows.Forms.Button formButtonAddTerraria;
         private System.Windows.Forms.Button formButtonAddStarbound;
+        private System.Windows.Forms.PictureBox formPictureGeneral;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button formButtonClose;
 
     }
 }
