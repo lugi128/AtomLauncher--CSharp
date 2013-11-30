@@ -13,7 +13,45 @@ namespace AtomLauncher
     class atomFileData
     {
         internal static string configFile = @"ALConfig.alcfg";
+        internal static string addServLoc = @"AdditionalApps";
         public static Dictionary<string, string> config;
+        public static Dictionary<string, Dictionary<string, string[]>> defaultDict = new Dictionary<string, Dictionary<string, string[]>>{
+                {
+                    "Minecraft", new Dictionary<string, string[]> { 
+                        { "appType",        new string[] { "Minecraft" } }, //Used to Reference Defaults
+                        { "servApp",        new string[] { "False" } },
+                        { "location",       new string[] { atomProgram.appData + @"\.minecraft" } },
+                        { "workingDirect",  new string[] { "" } },
+                        { "CPUPriority",    new string[] { "Normal" } },
+                        { "thumbnailLoc",   new string[] { "" } },
+                        { "saveLoc",        new string[] { atomProgram.appData + @"\.minecraft" } },
+                        { "startRam",       new string[] { "512" } },
+                        { "maxRam",         new string[] { "1024" } },
+                        { "displayCMD",     new string[] { "False" } },
+                        { "autoLoginUser",  new string[] { "" } },
+                        { "onlineMode",     new string[] { "True" } },
+                        { "offlineName",    new string[] { "Player" } },
+                        { "selectVer",      new string[] { "Latest: Recommended" } },
+                        { "autoSelect",     new string[] { "True" } },
+                        { "showDev",        new string[] { "False" } },
+                        { "showBeta",       new string[] { "False" } },
+                        { "showAlpha",      new string[] { "False" } },
+                        { "force64Bit",     new string[] { "False" } }
+                    } 
+                },
+                {
+                    "General", new Dictionary<string, string[]> { 
+                        { "appType",        new string[] { "General" } },
+                        { "servApp",        new string[] { "False" } },
+                        { "location",       new string[] { "" } },
+                        { "workingDirect",  new string[] { "" } },
+                        { "arguments",      new string[] { "" } },
+                        { "autoLoginUser",  new string[] { "" } },
+                        { "CPUPriority",    new string[] { "Normal" } },
+                        { "thumbnailLoc",   new string[] { "" } }
+                    } 
+                }
+            };
 
         /// <summary>
         /// Return defaults for the config file or Dictonary config.
@@ -35,8 +73,9 @@ namespace AtomLauncher
                     {"updateURL", @""},
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     // This launcher is looking for a version number and a download url from the launcherUpdateURL
-                    // Version:::URL:::ChangeLog
-                    // 0.0.0.0:::http://www.url.com:::http://www.url.com/changelog
+                    // If there is a URL present it will only require the version number. Feel free to add the rest, in order, at your leasure.
+                    // Version:::ChangeLog:::DownloadURL
+                    // 0.0.0.0:::http://www.downloadurl.com:::http://www.siteurl.com/download
                     // MajorChange.StandardAdd.MinorAdd.BugFix
                     // The version number is controlled by the properties window. (The config file, if present, overwrites it).
                     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,41 +181,6 @@ namespace AtomLauncher
         /// <returns></returns>
         internal static Dictionary<string, Dictionary<string, string[]>> getAppData(string pathFile, string defaultApp = "", Dictionary<string, Dictionary<string, string[]>> returnDict = null, string appType = "")
         {
-            Dictionary<string, Dictionary<string, string[]>> defaultDict = new Dictionary<string, Dictionary<string, string[]>>{
-                {
-                    "Minecraft", new Dictionary<string, string[]> { 
-                        { "appType",        new string[] { "Minecraft" } }, //Used to Reference Defaults
-                        { "location",       new string[] { atomProgram.appData + @"\.minecraft" } },
-                        { "workingDirect",  new string[] { "" } },
-                        { "CPUPriority",    new string[] { "Normal" } },
-                        { "thumbnailLoc",   new string[] { "" } },
-                        { "saveLoc",        new string[] { atomProgram.appData + @"\.minecraft" } },
-                        { "startRam",       new string[] { "512" } },
-                        { "maxRam",         new string[] { "1024" } },
-                        { "displayCMD",     new string[] { "False" } },
-                        { "autoLoginUser",  new string[] { "" } },
-                        { "onlineMode",     new string[] { "True" } },
-                        { "offlineName",    new string[] { "Player" } },
-                        { "selectVer",      new string[] { "Latest: Recommended" } },
-                        { "autoSelect",     new string[] { "True" } },
-                        { "showDev",        new string[] { "False" } },
-                        { "showBeta",       new string[] { "False" } },
-                        { "showAlpha",      new string[] { "False" } },
-                        { "force64Bit",     new string[] { "False" } }
-                    } 
-                },
-                {
-                    "General", new Dictionary<string, string[]> { 
-                        { "appType",       new string[] { "General" } },
-                        { "location",      new string[] { "" } },
-                        { "workingDirect", new string[] { "" } },
-                        { "arguments",     new string[] { "" } },
-                        { "autoLoginUser", new string[] { "" } },
-                        { "CPUPriority",   new string[] { "Normal" } },
-                        { "thumbnailLoc",  new string[] { "" } }
-                    } 
-                }
-            };
             if (defaultApp != "")
             {
                 if (returnDict == null)
@@ -210,6 +214,32 @@ namespace AtomLauncher
                 }
                 return loadedDict;
             }
+        }
+        internal static Dictionary<string, Dictionary<string, string[]>> getSerApps(string pathFolder, Dictionary<string, Dictionary<string, string[]>> returnDict)
+        {
+            if (File.Exists(pathFolder))
+            {
+                Dictionary<string, Dictionary<string, string[]>> loadedDict = loadDictonary(pathFolder);
+                foreach (KeyValuePair<string, Dictionary<string, string[]>> app in loadedDict)
+                {
+                    if (!returnDict.ContainsKey(app.Key))
+                    {
+                        returnDict.Add(app.Key, app.Value);
+                    }
+                    else
+                    {
+                        returnDict[app.Key] = app.Value;
+                    }
+                    foreach (KeyValuePair<string, string[]> item in defaultDict[app.Value["appType"][0]])
+                    {
+                        if (!returnDict[app.Key].ContainsKey(item.Key))
+                        {
+                            returnDict[app.Key][item.Key] = item.Value;
+                        }
+                    }
+                }
+            }
+            return returnDict;
         }
         internal static Dictionary<string, Dictionary<string, string[]>> getUserData(string pathFile)
         {
@@ -309,7 +339,7 @@ namespace AtomLauncher
             Thread delQuT = new Thread(() => deleteLoop(pathFILE, true));
             delQuT.Start();
         }
-        public static string deleteLoop(string pathFILE, bool displayMessageBox = false)
+        public static string deleteLoop(string pathFILE, bool displayMessageBox = false, int attemtps = 10)
         {
             string status = "";
             int x = 0;
@@ -320,8 +350,8 @@ namespace AtomLauncher
                 {
                     break;
                 }
-                Thread.Sleep(1000);
-                if (x > 10)
+                Thread.Sleep(500);
+                if (x > attemtps)
                 {
                     try
                     {
@@ -345,6 +375,54 @@ namespace AtomLauncher
                 try
                 {
                     File.Delete(pathFILE);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public static string deleteFolLoop(string pathFOLDER, bool recursive = true, bool displayMessageBox = false, int attemtps = 10)
+        {
+            string status = "";
+            int x = 0;
+            while (true)
+            {
+                bool tempBool = tryToDeleteFol(pathFOLDER, recursive);
+                if (tempBool)
+                {
+                    break;
+                }
+                Thread.Sleep(500);
+                if (x > attemtps)
+                {
+                    try
+                    {
+                        Directory.Delete(pathFOLDER, recursive);
+                    }
+                    catch (Exception ex)
+                    {
+                        status = ex.Message;
+                        if (displayMessageBox) MessageBox.Show(ex.Message);
+                    }
+                    break;
+                }
+                x++;
+            }
+            return status;
+        }
+        public static bool tryToDeleteFol(string pathFOLDER, bool recursive)
+        {
+            if (Directory.Exists(pathFOLDER))
+            {
+                try
+                {
+                    Directory.Delete(pathFOLDER, recursive);
                     return true;
                 }
                 catch

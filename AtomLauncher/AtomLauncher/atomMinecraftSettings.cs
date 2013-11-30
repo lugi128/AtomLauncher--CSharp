@@ -66,6 +66,10 @@ namespace AtomLauncher
                 formButtonOK.Enabled = false;
                 formButtonCancel.Enabled = false;
                 formButtonClose.Enabled = false;
+                formComboVersionSelect.Enabled = false;
+                formCheckShowDev.Enabled = false;
+                formCheckShowBeta.Enabled = false;
+                formCheckShowAlpha.Enabled = false;
                 formLabelVersionStatus.Text = "Version List Staus: Getting Version list... ... ";
                 formComboVersionSelect.Items.Clear();
                 formComboVersionSelect.Items.Add("Latest: Recommended");
@@ -139,7 +143,16 @@ namespace AtomLauncher
             atomLauncher.atomLaunch.formText("formLabelFileMB", "");
             atomLauncher.atomLaunch.formText("formLabelTotalMB", "");
             atomLauncher.atomLaunch.barValues(0, 0);
-            this.Invoke(new MethodInvoker(delegate { formButtonOK.Enabled = true; formButtonCancel.Enabled = true; formButtonClose.Enabled = true; }));
+            this.Invoke(new MethodInvoker(delegate
+            {
+                formButtonOK.Enabled = true;
+                formButtonCancel.Enabled = true;
+                formButtonClose.Enabled = true;
+                formComboVersionSelect.Enabled = true;
+                formCheckShowDev.Enabled = true;
+                formCheckShowBeta.Enabled = true;
+                formCheckShowAlpha.Enabled = true;
+            }));
         }
 
         private void fillForm(Dictionary<string, Dictionary<string, string[]>> dict, string appName)
@@ -381,6 +394,13 @@ namespace AtomLauncher
                 }
             }
         }
+        
+        private void formCheckShowVer_CheckedChanged(object sender, EventArgs e)
+        {
+            Thread webVer = new Thread(loadVer);
+            webVer.IsBackground = true;
+            webVer.Start();
+        }
 
         private void formComboStartRam_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -547,67 +567,37 @@ namespace AtomLauncher
             DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
             FileInfo[] Files = d.GetFiles();
             DirectoryInfo[] Directories = d.GetDirectories();
-            foreach (FileInfo file in Files)
-            {
-                atomFileData.deleteLoop(file.FullName, true);
-            }
-            foreach (DirectoryInfo directory in Directories)
-            {
-                Directory.Delete(directory.FullName, true);
-            }
+            Thread deleteItems = new Thread(() => deleteAllMethod(Files, Directories));
+            deleteItems.Start();
         }
 
         private void formButtonDeleteAllButSaves_Click(object sender, EventArgs e)
         {
             DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
-            DirectoryInfo[] Directories = d.GetDirectories("*", SearchOption.AllDirectories);
-            FileInfo[] Files = d.GetFiles("*",SearchOption.AllDirectories);
-            foreach (FileInfo file in Files)
-            {
-                if (!file.FullName.Contains("saves"))
-                {
-                    atomFileData.deleteLoop(file.FullName, true);
-                }
-            }
-            foreach (DirectoryInfo direct in Directories)
-            {
-                if (!direct.FullName.Contains("saves"))
-                {
-                    if (Directory.Exists(direct.FullName))
-                    {
-                        bool safeToDelete = true;
-                        DirectoryInfo subD = new DirectoryInfo(direct.FullName);
-                        DirectoryInfo[] subDirectories = subD.GetDirectories("*", SearchOption.AllDirectories);
-                        foreach (DirectoryInfo subDirectory in subDirectories)
-                        {
-                            if (subDirectory.FullName.Contains("saves"))
-                            {
-                                safeToDelete = false;
-                                break;
-                            }
-                        }
-                        if (safeToDelete)
-                        {
-                            Directory.Delete(direct.FullName, true);
-                        }
-                    }
-                }
-            }
+            Thread deleteExItems = new Thread(() => deleteAllExMethod(d, "saves"));
+            deleteExItems.Start();
         }
 
         private void formButtonDeleteVerList_Click(object sender, EventArgs e)
         {
-            atomFileData.deleteLoop(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json", true);
+            FileInfo[] Files = { new FileInfo(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json") };
+            Thread deleteFItems = new Thread(() => deleteFilesMethod(Files));
+            deleteFItems.Start();
         }
 
         private void formButtonDeleteLibraries_Click(object sender, EventArgs e)
         {
-            Directory.Delete(formTextMinecraftLocation.Text + @"\libraries", true);
+            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\libraries");
+            FileInfo[] Files = d.GetFiles();
+            DirectoryInfo[] Directories = d.GetDirectories();
+            Thread deleteLibItems = new Thread(() => deleteAllMethod(Files, Directories));
+            deleteLibItems.Start();
         }
 
         private void formButtonDeleteNatives_Click(object sender, EventArgs e)
         {
             DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\versions");
+            FileInfo[] Files = d.GetFiles("*-natives-AL74*", SearchOption.AllDirectories);
             DirectoryInfo[] Directories = d.GetDirectories("*-natives-AL74", SearchOption.AllDirectories);
             foreach (DirectoryInfo directory in Directories)
             {
@@ -617,35 +607,101 @@ namespace AtomLauncher
 
         private void formButtonDeleteAssets_Click(object sender, EventArgs e)
         {
-            File.Delete(formTextMinecraftLocation.Text + @"\versions\LatestVerList\Minecraft.Resources.xml");
-            Directory.Delete(formTextMinecraftLocation.Text + @"\assets", true);
+            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\assets");
+            DirectoryInfo[] Directories = d.GetDirectories();
+            Thread deleteAsItems = new Thread(() => deleteDirecMethod(Directories));
+            deleteAsItems.Start();
         }
 
         private void formButtonDeleteSaves_Click(object sender, EventArgs e)
         {
             DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
             DirectoryInfo[] Directories = d.GetDirectories("saves", SearchOption.AllDirectories);
-            foreach (DirectoryInfo directory in Directories)
-            {
-                Directory.Delete(directory.FullName, true);
-            }
+            Thread deleteSavItems = new Thread(() => deleteDirecMethod(Directories));
+            deleteSavItems.Start();
         }
 
         private void formButtonDeleteVerFiles_Click(object sender, EventArgs e)
         {
             DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
             FileInfo[] Files = d.GetFiles("*.json", SearchOption.AllDirectories);
-            foreach (FileInfo file in Files)
-            {
-                File.Delete(file.FullName);
-            }
+            Thread deleteVerItems = new Thread(() => deleteFilesMethod(Files));
+            deleteVerItems.Start();
         }
 
-        private void formCheckShowVer_CheckedChanged(object sender, EventArgs e)
+        private void deleteFilesMethod(FileInfo[] Files)
         {
-            Thread webVer = new Thread(loadVer);
-            webVer.IsBackground = true;
-            webVer.Start();
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            int x = Files.Count();
+            int y = x;
+            foreach (FileInfo file in Files)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteLoop(file.FullName, true);
+                x--;
+            }
+            if (y == 0) y = 1;
+            this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = true; }));
+        }
+        private void deleteDirecMethod(DirectoryInfo[] Directories)
+        {
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            int x = Directories.Count();
+            int y = x;
+            foreach (DirectoryInfo directory in Directories)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteFolLoop(directory.FullName, true, true);
+                x--;
+            }
+            if (y == 0) y = 1;
+            this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = true; }));
+        }
+        private void deleteAllMethod(FileInfo[] Files, DirectoryInfo[] Directories)
+        {
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            int x = Files.Count() + Directories.Count();
+            int y = x;
+            foreach (FileInfo file in Files)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteLoop(file.FullName, true);
+                x--;
+            }
+            foreach (DirectoryInfo directory in Directories)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteFolLoop(directory.FullName, true, true);
+                x--;
+            }
+            if (y == 0) y = 1;
+            this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = true; }));
+        }
+        private void deleteAllExMethod(DirectoryInfo Directory, string excludeString)
+        {
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            var Directories = Directory.GetDirectories("*", SearchOption.AllDirectories).Where(file => !file.FullName.Contains(excludeString));
+            var Files = Directory.GetFiles("*", SearchOption.AllDirectories).Where(file => !file.FullName.Contains(excludeString));
+            int x = Files.Count() + Directories.Count();
+            int y = x;
+            foreach (FileInfo file in Files)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteLoop(file.FullName, true);
+                x--;
+            }
+            foreach (DirectoryInfo directory in Directories)
+            {
+                this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+                atomFileData.deleteFolLoop(directory.FullName, true, true);
+                x--;
+            }
+            if (y == 0) y = 1;
+            this.Invoke(new MethodInvoker(delegate { formBarDelete.Value = (y - x) * 100 / y; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = true; }));
         }
     }
 }
