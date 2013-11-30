@@ -176,18 +176,28 @@ namespace AtomLauncher
         {
             //Dev//
             // Should Create a form for this. For better control.
-            DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
-            if (updateDialog == DialogResult.Yes)
+            if (launcherDownload != "")
             {
-                DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
-                if (changelog == DialogResult.Yes)
+                DialogResult updateDialog = MessageBox.Show("Do you wish to update from " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Update?", MessageBoxButtons.YesNo);
+                if (updateDialog == DialogResult.Yes)
                 {
-                    Process.Start(versionChangeLog);
+                    if (versionChangeLog != "")
+                    {
+                        DialogResult changelog = MessageBox.Show("Do you want to read the change log for " + atomFileData.config["launcherVersion"] + " to " + downloadVersion + "?", "Changelog?", MessageBoxButtons.YesNo);
+                        if (changelog == DialogResult.Yes)
+                        {
+                            Process.Start(versionChangeLog);
+                        }
+                    }
+                    cancelPressed = false;
+                    Thread updateF = new Thread(updateThread);
+                    updateF.IsBackground = true;
+                    updateF.Start();
                 }
-                cancelPressed = false;
-                Thread updateF = new Thread(updateThread);
-                updateF.IsBackground = true;
-                updateF.Start();
+            }
+            else
+            {
+                MessageBox.Show("Update Ready, Please go and download the new version.", "Update Available");
             }
         }
 
@@ -275,8 +285,14 @@ namespace AtomLauncher
                     }
                     string[] ALUpdateStrings = ALUpdateData.Split(new string[] { ":::" }, StringSplitOptions.None);
                     downloadVersion = ALUpdateStrings[0];
-                    launcherDownload = ALUpdateStrings[1];
-                    versionChangeLog = ALUpdateStrings[2];
+                    if (ALUpdateStrings.Length > 1)
+                    {
+                        versionChangeLog = ALUpdateStrings[1];
+                    }
+                    if (ALUpdateStrings.Length > 2)
+                    {
+                        launcherDownload = ALUpdateStrings[2];
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -383,6 +399,7 @@ namespace AtomLauncher
                     }));
                 }
                 appData = atomFileData.getAppData(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"]);
+                //appData = atomFileData.getSerApps(atomFileData.config["dataLocation"] + atomFileData.addSerFile, appData);
                 userData = atomFileData.getUserData(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"]);
                 foreach (KeyValuePair<string, Dictionary<string, string[]>> entry in userData)
                 {

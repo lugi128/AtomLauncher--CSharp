@@ -520,7 +520,7 @@ namespace AtomLauncher
                 x = x - i;
                 //Dev//
                 // Create a method to check for multiple xml files.
-                string filename = mcLocation + @"\versions\LatestVerList\Minecraft.Resources";
+                string filename = mcLocation + @"\assets\Minecraft.Resources";
                 string[] fileNames = { filename + ".0.xml" };
                 string subString = "";
                 if ((DateTime.Now - File.GetLastWriteTime(fileNames[0])).TotalHours > 1)

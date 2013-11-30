@@ -75,7 +75,7 @@
             // 
             this.formButtonOK.BackColor = System.Drawing.Color.White;
             this.formButtonOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.formButtonOK.Location = new System.Drawing.Point(204, 8);
+            this.formButtonOK.Location = new System.Drawing.Point(204, 36);
             this.formButtonOK.Name = "formButtonOK";
             this.formButtonOK.Size = new System.Drawing.Size(72, 24);
             this.formButtonOK.TabIndex = 11;
@@ -88,7 +88,7 @@
             this.formButtonCancel.BackColor = System.Drawing.Color.White;
             this.formButtonCancel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
             this.formButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.formButtonCancel.Location = new System.Drawing.Point(140, 8);
+            this.formButtonCancel.Location = new System.Drawing.Point(140, 36);
             this.formButtonCancel.Name = "formButtonCancel";
             this.formButtonCancel.Size = new System.Drawing.Size(56, 24);
             this.formButtonCancel.TabIndex = 12;
@@ -102,7 +102,7 @@
             this.formButtonDefaults.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.formButtonDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonDefaults.ForeColor = System.Drawing.Color.Black;
-            this.formButtonDefaults.Location = new System.Drawing.Point(8, 8);
+            this.formButtonDefaults.Location = new System.Drawing.Point(8, 36);
             this.formButtonDefaults.Name = "formButtonDefaults";
             this.formButtonDefaults.Size = new System.Drawing.Size(64, 24);
             this.formButtonDefaults.TabIndex = 13;
@@ -136,13 +136,12 @@
             // 
             // formLabelStatus
             // 
-            this.formLabelStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.formLabelStatus.Location = new System.Drawing.Point(8, 40);
+            this.formLabelStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
+            this.formLabelStatus.Location = new System.Drawing.Point(8, 8);
             this.formLabelStatus.Name = "formLabelStatus";
             this.formLabelStatus.Size = new System.Drawing.Size(268, 24);
             this.formLabelStatus.TabIndex = 16;
-            this.formLabelStatus.Text = "System OK.";
-            this.formLabelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formLabelStatus.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // formTextAppName
             // 
@@ -389,6 +388,7 @@
             // 
             // formPanel
             // 
+            this.formPanel.BackColor = System.Drawing.Color.Black;
             this.formPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.formPanel.Controls.Add(this.formButtonDefaults);
             this.formPanel.Controls.Add(this.formButtonOK);

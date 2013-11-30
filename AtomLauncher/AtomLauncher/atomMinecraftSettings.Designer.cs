@@ -88,6 +88,7 @@
             this.formLabelMinecraftSettingsTitle = new System.Windows.Forms.Label();
             this.formFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.formButtonClose = new System.Windows.Forms.Button();
+            this.formBarDelete = new System.Windows.Forms.ProgressBar();
             this.formTabs.SuspendLayout();
             this.General.SuspendLayout();
             this.Files.SuspendLayout();
@@ -244,8 +245,9 @@
             // formButtonOK
             // 
             this.formButtonOK.BackColor = System.Drawing.Color.White;
+            this.formButtonOK.FlatAppearance.BorderSize = 0;
             this.formButtonOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.formButtonOK.Location = new System.Drawing.Point(204, 8);
+            this.formButtonOK.Location = new System.Drawing.Point(204, 36);
             this.formButtonOK.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonOK.Name = "formButtonOK";
             this.formButtonOK.Size = new System.Drawing.Size(72, 24);
@@ -258,8 +260,9 @@
             // 
             this.formButtonCancel.BackColor = System.Drawing.Color.White;
             this.formButtonCancel.FlatAppearance.BorderColor = System.Drawing.Color.LightGray;
+            this.formButtonCancel.FlatAppearance.BorderSize = 0;
             this.formButtonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.formButtonCancel.Location = new System.Drawing.Point(144, 8);
+            this.formButtonCancel.Location = new System.Drawing.Point(140, 36);
             this.formButtonCancel.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonCancel.Name = "formButtonCancel";
             this.formButtonCancel.Size = new System.Drawing.Size(56, 24);
@@ -272,9 +275,10 @@
             // 
             this.formButtonDefaults.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             this.formButtonDefaults.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.formButtonDefaults.FlatAppearance.BorderSize = 0;
             this.formButtonDefaults.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.formButtonDefaults.ForeColor = System.Drawing.Color.Black;
-            this.formButtonDefaults.Location = new System.Drawing.Point(8, 8);
+            this.formButtonDefaults.Location = new System.Drawing.Point(8, 36);
             this.formButtonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDefaults.Name = "formButtonDefaults";
             this.formButtonDefaults.Size = new System.Drawing.Size(64, 24);
@@ -311,14 +315,13 @@
             // 
             // formLabelStatus
             // 
-            this.formLabelStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.formLabelStatus.Location = new System.Drawing.Point(8, 40);
+            this.formLabelStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
+            this.formLabelStatus.Location = new System.Drawing.Point(8, 8);
             this.formLabelStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.formLabelStatus.Name = "formLabelStatus";
             this.formLabelStatus.Size = new System.Drawing.Size(268, 24);
             this.formLabelStatus.TabIndex = 16;
-            this.formLabelStatus.Text = "System OK.";
-            this.formLabelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.formLabelStatus.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // formTextUsername
             // 
@@ -406,7 +409,7 @@
             this.formComboVersionSelect.Items.AddRange(new object[] {
             "Latest: Recommended",
             "Latest: Development"});
-            this.formComboVersionSelect.Location = new System.Drawing.Point(8, 52);
+            this.formComboVersionSelect.Location = new System.Drawing.Point(8, 48);
             this.formComboVersionSelect.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formComboVersionSelect.MaxDropDownItems = 16;
             this.formComboVersionSelect.Name = "formComboVersionSelect";
@@ -415,7 +418,7 @@
             // 
             // formLabelVersionSelect
             // 
-            this.formLabelVersionSelect.Location = new System.Drawing.Point(8, 44);
+            this.formLabelVersionSelect.Location = new System.Drawing.Point(8, 40);
             this.formLabelVersionSelect.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.formLabelVersionSelect.Name = "formLabelVersionSelect";
             this.formLabelVersionSelect.Size = new System.Drawing.Size(144, 9);
@@ -440,6 +443,8 @@
             // 
             // General
             // 
+            this.General.Controls.Add(this.formComboVersionSelect);
+            this.General.Controls.Add(this.formLabelVersionSelect);
             this.General.Controls.Add(this.formTextUsername);
             this.General.Controls.Add(this.formCheckOnline);
             this.General.Controls.Add(this.formCheckShowAlpha);
@@ -448,8 +453,6 @@
             this.General.Controls.Add(this.formLabelVersionStatus);
             this.General.Controls.Add(this.formLabelAppName);
             this.General.Controls.Add(this.formTextAppName);
-            this.General.Controls.Add(this.formComboVersionSelect);
-            this.General.Controls.Add(this.formLabelVersionSelect);
             this.General.Location = new System.Drawing.Point(4, 19);
             this.General.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.General.Name = "General";
@@ -462,7 +465,7 @@
             // formCheckShowAlpha
             // 
             this.formCheckShowAlpha.AutoSize = true;
-            this.formCheckShowAlpha.Location = new System.Drawing.Point(8, 96);
+            this.formCheckShowAlpha.Location = new System.Drawing.Point(8, 92);
             this.formCheckShowAlpha.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formCheckShowAlpha.Name = "formCheckShowAlpha";
             this.formCheckShowAlpha.Size = new System.Drawing.Size(119, 14);
@@ -474,7 +477,7 @@
             // formCheckShowBeta
             // 
             this.formCheckShowBeta.AutoSize = true;
-            this.formCheckShowBeta.Location = new System.Drawing.Point(8, 84);
+            this.formCheckShowBeta.Location = new System.Drawing.Point(8, 80);
             this.formCheckShowBeta.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formCheckShowBeta.Name = "formCheckShowBeta";
             this.formCheckShowBeta.Size = new System.Drawing.Size(114, 14);
@@ -486,7 +489,7 @@
             // formCheckShowDev
             // 
             this.formCheckShowDev.AutoSize = true;
-            this.formCheckShowDev.Location = new System.Drawing.Point(8, 72);
+            this.formCheckShowDev.Location = new System.Drawing.Point(8, 68);
             this.formCheckShowDev.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formCheckShowDev.Name = "formCheckShowDev";
             this.formCheckShowDev.Size = new System.Drawing.Size(139, 14);
@@ -497,14 +500,13 @@
             // 
             // formLabelVersionStatus
             // 
-            this.formLabelVersionStatus.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.formLabelVersionStatus.Location = new System.Drawing.Point(8, 296);
+            this.formLabelVersionStatus.ForeColor = System.Drawing.Color.Blue;
+            this.formLabelVersionStatus.Location = new System.Drawing.Point(8, 108);
             this.formLabelVersionStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.formLabelVersionStatus.Name = "formLabelVersionStatus";
-            this.formLabelVersionStatus.Size = new System.Drawing.Size(260, 40);
+            this.formLabelVersionStatus.Size = new System.Drawing.Size(264, 40);
             this.formLabelVersionStatus.TabIndex = 18;
             this.formLabelVersionStatus.Text = "Version List Status:";
-            this.formLabelVersionStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Files
             // 
@@ -636,6 +638,7 @@
             // 
             // Delete
             // 
+            this.Delete.Controls.Add(this.formBarDelete);
             this.Delete.Controls.Add(this.formButtonDeleteAll);
             this.Delete.Controls.Add(this.formButtonDeleteVerList);
             this.Delete.Controls.Add(this.formButtonDeleteVerFiles);
@@ -707,7 +710,7 @@
             this.label2.Size = new System.Drawing.Size(256, 216);
             this.label2.TabIndex = 15;
             this.label2.Text = "Use Caution, Still under construction. May error if somthing is wrong with the fi" +
-    "les.";
+                "les.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // formButtonDeleteSaves
@@ -756,6 +759,7 @@
             // 
             // formPanel
             // 
+            this.formPanel.BackColor = System.Drawing.Color.Black;
             this.formPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.formPanel.Controls.Add(this.formButtonDefaults);
             this.formPanel.Controls.Add(this.formButtonOK);
@@ -793,6 +797,13 @@
             this.formButtonClose.TabStop = false;
             this.formButtonClose.UseVisualStyleBackColor = false;
             this.formButtonClose.Click += new System.EventHandler(this.formButtonCancel_Click);
+            // 
+            // formBarDelete
+            // 
+            this.formBarDelete.Location = new System.Drawing.Point(12, 340);
+            this.formBarDelete.Name = "formBarDelete";
+            this.formBarDelete.Size = new System.Drawing.Size(256, 12);
+            this.formBarDelete.TabIndex = 16;
             // 
             // atomMinecraftSettings
             // 
@@ -888,6 +899,7 @@
         private System.Windows.Forms.CheckBox formCheckShowDev;
         private System.Windows.Forms.CheckBox formCheckShowAlpha;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ProgressBar formBarDelete;
 
     }
 }

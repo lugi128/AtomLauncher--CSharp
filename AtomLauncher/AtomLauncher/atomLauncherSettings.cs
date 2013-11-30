@@ -113,7 +113,7 @@ namespace AtomLauncher
             {
                 formLabelError.Text = "Version Number cannot be blank.";
             }
-            else if (!(Uri.TryCreate(formTextUpdateURL.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
+            else if (formTextUpdateURL.Text != "" && !(Uri.TryCreate(formTextUpdateURL.Text, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
             {
                 formLabelError.Text = "The Update URL is set to an incorrect format. You must declare Http:// or Https://";
             }
