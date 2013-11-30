@@ -23,12 +23,6 @@ ___
 
 ![alt tag](https://github.com/TrinaryAtom/AtomLauncher--Minecraft--/blob/Release/AtomLauncher/AtomLauncher/Resources/launcherpic.png?raw=true)
 
-=====
-To Do List
-
-- [ ] Customize the background image. Use your own.
-- [ ] Build the Atom Packager.
-
 -----------------
 -----------------
 Minecraft
