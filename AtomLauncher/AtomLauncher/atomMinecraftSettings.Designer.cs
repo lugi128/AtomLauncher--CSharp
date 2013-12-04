@@ -60,6 +60,10 @@
             this.formLabelVersionSelect = new System.Windows.Forms.Label();
             this.formTabs = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
+            this.formButtonMinecraftOpenFolder = new System.Windows.Forms.Button();
+            this.formButtonResourcePacks = new System.Windows.Forms.Button();
+            this.formButtonLogs = new System.Windows.Forms.Button();
+            this.formButtonScreenshots = new System.Windows.Forms.Button();
             this.formCheckShowAlpha = new System.Windows.Forms.CheckBox();
             this.formCheckShowBeta = new System.Windows.Forms.CheckBox();
             this.formCheckShowDev = new System.Windows.Forms.CheckBox();
@@ -75,11 +79,11 @@
             this.Java = new System.Windows.Forms.TabPage();
             this.Program = new System.Windows.Forms.TabPage();
             this.Delete = new System.Windows.Forms.TabPage();
+            this.formBarDelete = new System.Windows.Forms.ProgressBar();
             this.formButtonDeleteAll = new System.Windows.Forms.Button();
             this.formButtonDeleteVerList = new System.Windows.Forms.Button();
             this.formButtonDeleteVerFiles = new System.Windows.Forms.Button();
             this.formButtonDeleteNatives = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.formButtonDeleteSaves = new System.Windows.Forms.Button();
             this.formButtonDeleteAssets = new System.Windows.Forms.Button();
             this.formButtonDeleteAllButSaves = new System.Windows.Forms.Button();
@@ -88,7 +92,9 @@
             this.formLabelMinecraftSettingsTitle = new System.Windows.Forms.Label();
             this.formFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.formButtonClose = new System.Windows.Forms.Button();
-            this.formBarDelete = new System.Windows.Forms.ProgressBar();
+            this.formButtonDeleteResourcePacks = new System.Windows.Forms.Button();
+            this.formButtonDeleteLogs = new System.Windows.Forms.Button();
+            this.formButtonDeleteScreenshots = new System.Windows.Forms.Button();
             this.formTabs.SuspendLayout();
             this.General.SuspendLayout();
             this.Files.SuspendLayout();
@@ -443,6 +449,10 @@
             // 
             // General
             // 
+            this.General.Controls.Add(this.formButtonMinecraftOpenFolder);
+            this.General.Controls.Add(this.formButtonResourcePacks);
+            this.General.Controls.Add(this.formButtonLogs);
+            this.General.Controls.Add(this.formButtonScreenshots);
             this.General.Controls.Add(this.formComboVersionSelect);
             this.General.Controls.Add(this.formLabelVersionSelect);
             this.General.Controls.Add(this.formTextUsername);
@@ -461,6 +471,50 @@
             this.General.TabIndex = 0;
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
+            // 
+            // formButtonMinecraftOpenFolder
+            // 
+            this.formButtonMinecraftOpenFolder.Location = new System.Drawing.Point(8, 136);
+            this.formButtonMinecraftOpenFolder.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonMinecraftOpenFolder.Name = "formButtonMinecraftOpenFolder";
+            this.formButtonMinecraftOpenFolder.Size = new System.Drawing.Size(136, 20);
+            this.formButtonMinecraftOpenFolder.TabIndex = 19;
+            this.formButtonMinecraftOpenFolder.Text = "Goto Minecraft Folder";
+            this.formButtonMinecraftOpenFolder.UseVisualStyleBackColor = false;
+            this.formButtonMinecraftOpenFolder.Click += new System.EventHandler(this.formButtonMinecraftOpenFolder_Click);
+            // 
+            // formButtonResourcePacks
+            // 
+            this.formButtonResourcePacks.Location = new System.Drawing.Point(8, 164);
+            this.formButtonResourcePacks.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonResourcePacks.Name = "formButtonResourcePacks";
+            this.formButtonResourcePacks.Size = new System.Drawing.Size(128, 20);
+            this.formButtonResourcePacks.TabIndex = 19;
+            this.formButtonResourcePacks.Text = "Goto Resource Packs";
+            this.formButtonResourcePacks.UseVisualStyleBackColor = false;
+            this.formButtonResourcePacks.Click += new System.EventHandler(this.formButtonResourcePacks_Click);
+            // 
+            // formButtonLogs
+            // 
+            this.formButtonLogs.Location = new System.Drawing.Point(8, 220);
+            this.formButtonLogs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonLogs.Name = "formButtonLogs";
+            this.formButtonLogs.Size = new System.Drawing.Size(72, 20);
+            this.formButtonLogs.TabIndex = 19;
+            this.formButtonLogs.Text = "Goto Logs";
+            this.formButtonLogs.UseVisualStyleBackColor = false;
+            this.formButtonLogs.Click += new System.EventHandler(this.formButtonLogs_Click);
+            // 
+            // formButtonScreenshots
+            // 
+            this.formButtonScreenshots.Location = new System.Drawing.Point(8, 192);
+            this.formButtonScreenshots.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonScreenshots.Name = "formButtonScreenshots";
+            this.formButtonScreenshots.Size = new System.Drawing.Size(112, 20);
+            this.formButtonScreenshots.TabIndex = 19;
+            this.formButtonScreenshots.Text = "Goto Screenshots";
+            this.formButtonScreenshots.UseVisualStyleBackColor = false;
+            this.formButtonScreenshots.Click += new System.EventHandler(this.formButtonScreenshots_Click);
             // 
             // formCheckShowAlpha
             // 
@@ -504,7 +558,7 @@
             this.formLabelVersionStatus.Location = new System.Drawing.Point(8, 108);
             this.formLabelVersionStatus.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.formLabelVersionStatus.Name = "formLabelVersionStatus";
-            this.formLabelVersionStatus.Size = new System.Drawing.Size(264, 40);
+            this.formLabelVersionStatus.Size = new System.Drawing.Size(264, 24);
             this.formLabelVersionStatus.TabIndex = 18;
             this.formLabelVersionStatus.Text = "Version List Status:";
             // 
@@ -640,10 +694,12 @@
             // 
             this.Delete.Controls.Add(this.formBarDelete);
             this.Delete.Controls.Add(this.formButtonDeleteAll);
+            this.Delete.Controls.Add(this.formButtonDeleteScreenshots);
             this.Delete.Controls.Add(this.formButtonDeleteVerList);
+            this.Delete.Controls.Add(this.formButtonDeleteLogs);
             this.Delete.Controls.Add(this.formButtonDeleteVerFiles);
+            this.Delete.Controls.Add(this.formButtonDeleteResourcePacks);
             this.Delete.Controls.Add(this.formButtonDeleteNatives);
-            this.Delete.Controls.Add(this.label2);
             this.Delete.Controls.Add(this.formButtonDeleteSaves);
             this.Delete.Controls.Add(this.formButtonDeleteAssets);
             this.Delete.Controls.Add(this.formButtonDeleteAllButSaves);
@@ -656,9 +712,16 @@
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
             // 
+            // formBarDelete
+            // 
+            this.formBarDelete.Location = new System.Drawing.Point(12, 328);
+            this.formBarDelete.Name = "formBarDelete";
+            this.formBarDelete.Size = new System.Drawing.Size(256, 12);
+            this.formBarDelete.TabIndex = 16;
+            // 
             // formButtonDeleteAll
             // 
-            this.formButtonDeleteAll.Location = new System.Drawing.Point(8, 88);
+            this.formButtonDeleteAll.Location = new System.Drawing.Point(8, 288);
             this.formButtonDeleteAll.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteAll.Name = "formButtonDeleteAll";
             this.formButtonDeleteAll.Size = new System.Drawing.Size(264, 20);
@@ -669,10 +732,10 @@
             // 
             // formButtonDeleteVerList
             // 
-            this.formButtonDeleteVerList.Location = new System.Drawing.Point(144, 8);
+            this.formButtonDeleteVerList.Location = new System.Drawing.Point(8, 176);
             this.formButtonDeleteVerList.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteVerList.Name = "formButtonDeleteVerList";
-            this.formButtonDeleteVerList.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteVerList.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteVerList.TabIndex = 11;
             this.formButtonDeleteVerList.Text = "Delete Version List";
             this.formButtonDeleteVerList.UseVisualStyleBackColor = false;
@@ -683,42 +746,29 @@
             this.formButtonDeleteVerFiles.Location = new System.Drawing.Point(8, 8);
             this.formButtonDeleteVerFiles.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteVerFiles.Name = "formButtonDeleteVerFiles";
-            this.formButtonDeleteVerFiles.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteVerFiles.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteVerFiles.TabIndex = 11;
-            this.formButtonDeleteVerFiles.Text = "Delete Version Files";
+            this.formButtonDeleteVerFiles.Text = "Clear All Version Files";
             this.formButtonDeleteVerFiles.UseVisualStyleBackColor = false;
             this.formButtonDeleteVerFiles.Click += new System.EventHandler(this.formButtonDeleteVerFiles_Click);
             // 
             // formButtonDeleteNatives
             // 
-            this.formButtonDeleteNatives.Location = new System.Drawing.Point(144, 28);
+            this.formButtonDeleteNatives.Location = new System.Drawing.Point(8, 36);
             this.formButtonDeleteNatives.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteNatives.Name = "formButtonDeleteNatives";
-            this.formButtonDeleteNatives.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteNatives.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteNatives.TabIndex = 11;
-            this.formButtonDeleteNatives.Text = "Delete Natives";
+            this.formButtonDeleteNatives.Text = "Clear Natives";
             this.formButtonDeleteNatives.UseVisualStyleBackColor = false;
             this.formButtonDeleteNatives.Click += new System.EventHandler(this.formButtonDeleteNatives_Click);
             // 
-            // label2
-            // 
-            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label2.Location = new System.Drawing.Point(12, 108);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(256, 216);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Use Caution, Still under construction. May error if somthing is wrong with the fi" +
-                "les.";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // formButtonDeleteSaves
             // 
-            this.formButtonDeleteSaves.Location = new System.Drawing.Point(144, 48);
+            this.formButtonDeleteSaves.Location = new System.Drawing.Point(8, 232);
             this.formButtonDeleteSaves.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteSaves.Name = "formButtonDeleteSaves";
-            this.formButtonDeleteSaves.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteSaves.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteSaves.TabIndex = 11;
             this.formButtonDeleteSaves.Text = "Delete Saves";
             this.formButtonDeleteSaves.UseVisualStyleBackColor = false;
@@ -726,10 +776,10 @@
             // 
             // formButtonDeleteAssets
             // 
-            this.formButtonDeleteAssets.Location = new System.Drawing.Point(8, 48);
+            this.formButtonDeleteAssets.Location = new System.Drawing.Point(8, 148);
             this.formButtonDeleteAssets.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteAssets.Name = "formButtonDeleteAssets";
-            this.formButtonDeleteAssets.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteAssets.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteAssets.TabIndex = 11;
             this.formButtonDeleteAssets.Text = "Delete Assets";
             this.formButtonDeleteAssets.UseVisualStyleBackColor = false;
@@ -737,7 +787,7 @@
             // 
             // formButtonDeleteAllButSaves
             // 
-            this.formButtonDeleteAllButSaves.Location = new System.Drawing.Point(8, 68);
+            this.formButtonDeleteAllButSaves.Location = new System.Drawing.Point(8, 260);
             this.formButtonDeleteAllButSaves.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteAllButSaves.Name = "formButtonDeleteAllButSaves";
             this.formButtonDeleteAllButSaves.Size = new System.Drawing.Size(264, 20);
@@ -748,10 +798,10 @@
             // 
             // formButtonDeleteLibraries
             // 
-            this.formButtonDeleteLibraries.Location = new System.Drawing.Point(8, 28);
+            this.formButtonDeleteLibraries.Location = new System.Drawing.Point(8, 120);
             this.formButtonDeleteLibraries.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.formButtonDeleteLibraries.Name = "formButtonDeleteLibraries";
-            this.formButtonDeleteLibraries.Size = new System.Drawing.Size(128, 20);
+            this.formButtonDeleteLibraries.Size = new System.Drawing.Size(264, 20);
             this.formButtonDeleteLibraries.TabIndex = 11;
             this.formButtonDeleteLibraries.Text = "Delete Libraries";
             this.formButtonDeleteLibraries.UseVisualStyleBackColor = false;
@@ -798,12 +848,38 @@
             this.formButtonClose.UseVisualStyleBackColor = false;
             this.formButtonClose.Click += new System.EventHandler(this.formButtonCancel_Click);
             // 
-            // formBarDelete
+            // formButtonDeleteResourcePacks
             // 
-            this.formBarDelete.Location = new System.Drawing.Point(12, 340);
-            this.formBarDelete.Name = "formBarDelete";
-            this.formBarDelete.Size = new System.Drawing.Size(256, 12);
-            this.formBarDelete.TabIndex = 16;
+            this.formButtonDeleteResourcePacks.Location = new System.Drawing.Point(8, 204);
+            this.formButtonDeleteResourcePacks.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonDeleteResourcePacks.Name = "formButtonDeleteResourcePacks";
+            this.formButtonDeleteResourcePacks.Size = new System.Drawing.Size(264, 20);
+            this.formButtonDeleteResourcePacks.TabIndex = 11;
+            this.formButtonDeleteResourcePacks.Text = "Delete Resource Packs";
+            this.formButtonDeleteResourcePacks.UseVisualStyleBackColor = false;
+            this.formButtonDeleteResourcePacks.Click += new System.EventHandler(this.formButtonDeleteResourcePacks_Click);
+            // 
+            // formButtonDeleteLogs
+            // 
+            this.formButtonDeleteLogs.Location = new System.Drawing.Point(8, 64);
+            this.formButtonDeleteLogs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonDeleteLogs.Name = "formButtonDeleteLogs";
+            this.formButtonDeleteLogs.Size = new System.Drawing.Size(264, 20);
+            this.formButtonDeleteLogs.TabIndex = 11;
+            this.formButtonDeleteLogs.Text = "Clear Logs";
+            this.formButtonDeleteLogs.UseVisualStyleBackColor = false;
+            this.formButtonDeleteLogs.Click += new System.EventHandler(this.formButtonDeleteLogs_Click);
+            // 
+            // formButtonDeleteScreenshots
+            // 
+            this.formButtonDeleteScreenshots.Location = new System.Drawing.Point(8, 92);
+            this.formButtonDeleteScreenshots.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formButtonDeleteScreenshots.Name = "formButtonDeleteScreenshots";
+            this.formButtonDeleteScreenshots.Size = new System.Drawing.Size(264, 20);
+            this.formButtonDeleteScreenshots.TabIndex = 11;
+            this.formButtonDeleteScreenshots.Text = "Clear Screenshots";
+            this.formButtonDeleteScreenshots.UseVisualStyleBackColor = false;
+            this.formButtonDeleteScreenshots.Click += new System.EventHandler(this.formButtonDeleteScreenshots_Click);
             // 
             // atomMinecraftSettings
             // 
@@ -898,8 +974,14 @@
         private System.Windows.Forms.CheckBox formCheckShowBeta;
         private System.Windows.Forms.CheckBox formCheckShowDev;
         private System.Windows.Forms.CheckBox formCheckShowAlpha;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ProgressBar formBarDelete;
+        private System.Windows.Forms.Button formButtonScreenshots;
+        private System.Windows.Forms.Button formButtonMinecraftOpenFolder;
+        private System.Windows.Forms.Button formButtonResourcePacks;
+        private System.Windows.Forms.Button formButtonLogs;
+        private System.Windows.Forms.Button formButtonDeleteScreenshots;
+        private System.Windows.Forms.Button formButtonDeleteLogs;
+        private System.Windows.Forms.Button formButtonDeleteResourcePacks;
 
     }
 }

@@ -141,16 +141,20 @@ namespace AtomLauncher
             // Do you want to delete related files? If so Which ones?
             // Or, popup saying "Are you sure? This wont delete the files"
             // 
-            cancelPressed = false;
-            Button button = (Button)sender;
-            string trashApp = button.Name.Replace("atomButtonTrash", "");
-            appData.Remove(trashApp);
-            userData.Remove(trashApp);
-            atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], userData, true);
-            atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], appData);
-            setRightPanel();
-            setInputBox();
-            atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
+            DialogResult trashDialog = MessageBox.Show("Are you sure you want to delete this App?\n\nNote: This does not delete the files and folders associated with the app.", "Delete App?", MessageBoxButtons.YesNo);
+            if (trashDialog == DialogResult.Yes)
+            {
+                cancelPressed = false;
+                Button button = (Button)sender;
+                string trashApp = button.Name.Replace("atomButtonTrash", "");
+                appData.Remove(trashApp);
+                userData.Remove(trashApp);
+                atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], userData, true);
+                atomFileData.saveDictonary(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], appData);
+                setRightPanel();
+                setInputBox();
+                atomFileData.saveConfFile(atomFileData.configFile, atomFileData.config);
+            }
         }
         private void atomButtonTrash_MouseLeave(object sender, EventArgs e)
         {
