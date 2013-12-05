@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Management;
 using System.Threading;
+using System.Diagnostics;
 
 namespace AtomLauncher
 {
@@ -450,6 +451,30 @@ namespace AtomLauncher
             formFolderDialog.Dispose();
         }
 
+        private void formButtonMinecraftOpenFolder_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(formTextMinecraftLocation.Text))
+            {
+                Process.Start(formTextMinecraftLocation.Text);
+            }
+            else
+            {
+                formLabelStatus.Text = "Minecraft Location does not exist.";
+            }
+        }
+
+        private void formButtonLogs_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(formTextMinecraftLocation.Text + @"\logs"))
+            {
+                Process.Start(formTextMinecraftLocation.Text + @"\logs");
+            }
+            else
+            {
+                formLabelStatus.Text = "Logs folder does not exist.";
+            }
+        }
+
         private void formButtonSaveLocation_Click(object sender, EventArgs e)
         {
             formFolderDialog.Description = "Select the folder to save app data in.";
@@ -543,6 +568,35 @@ namespace AtomLauncher
             }
         }
 
+        private void formButtonResourcePacks_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(formTextMinecraftLocation.Text + @"\resourcepacks"))
+            {
+                Process.Start(formTextMinecraftLocation.Text + @"\resourcepacks");
+            }
+            else
+            {
+                DialogResult packsDialog = MessageBox.Show("The resource pack folder does not exists. Do you want to create it?", "Resource Pack Folder?", MessageBoxButtons.YesNo);
+                if (packsDialog == DialogResult.Yes)
+                {
+                    Directory.CreateDirectory(formTextMinecraftLocation.Text + @"\resourcepacks");
+                    formLabelStatus.Text = "Resource Pack Folder Created.";
+                }
+            }
+        }
+
+        private void formButtonScreenshots_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(formTextMinecraftLocation.Text + @"\screenshots"))
+            {
+                Process.Start(formTextMinecraftLocation.Text + @"\screenshots");
+            }
+            else
+            {
+                formLabelStatus.Text = "Screenshots folder does not exist.";
+            }
+        }
+
         private void formButtonThumbnail_Click(object sender, EventArgs e)
         {
             formFileDialog.FileName = "";
@@ -564,74 +618,139 @@ namespace AtomLauncher
 
         private void formButtonDeleteAll_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
-            FileInfo[] Files = d.GetFiles();
-            DirectoryInfo[] Directories = d.GetDirectories();
-            Thread deleteItems = new Thread(() => deleteAllMethod(Files, Directories));
-            deleteItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete 'ALL' the minecraft files and folders?\n\nLocation: " + formTextMinecraftLocation.Text, "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
+                FileInfo[] Files = d.GetFiles();
+                DirectoryInfo[] Directories = d.GetDirectories();
+                Thread deleteItems = new Thread(() => deleteAllMethod(Files, Directories));
+                deleteItems.Start();
+            }
         }
 
         private void formButtonDeleteAllButSaves_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
-            Thread deleteExItems = new Thread(() => deleteAllExMethod(d, "saves"));
-            deleteExItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the minecraft files and folders except for any 'saves' directories?\n\nLocation: " + formTextMinecraftLocation.Text, "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
+                Thread deleteExItems = new Thread(() => deleteAllExMethod(d, "saves"));
+                deleteExItems.Start();
+            }
         }
 
         private void formButtonDeleteVerList_Click(object sender, EventArgs e)
         {
-            FileInfo[] Files = { new FileInfo(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json") };
-            Thread deleteFItems = new Thread(() => deleteFilesMethod(Files));
-            deleteFItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete the version list?\n\nLocation: " + formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                FileInfo[] Files = { new FileInfo(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json") };
+                Thread deleteFItems = new Thread(() => deleteFilesMethod(Files));
+                deleteFItems.Start();
+            }
         }
 
         private void formButtonDeleteLibraries_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\libraries");
-            FileInfo[] Files = d.GetFiles();
-            DirectoryInfo[] Directories = d.GetDirectories();
-            Thread deleteLibItems = new Thread(() => deleteAllMethod(Files, Directories));
-            deleteLibItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the 'libraries'?\n\nLocation: " + formTextMinecraftLocation.Text + @"\libraries", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\libraries");
+                FileInfo[] Files = d.GetFiles();
+                DirectoryInfo[] Directories = d.GetDirectories();
+                Thread deleteLibItems = new Thread(() => deleteAllMethod(Files, Directories));
+                deleteLibItems.Start();
+            }
         }
 
         private void formButtonDeleteNatives_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\versions");
-            FileInfo[] Files = d.GetFiles("*-natives-AL74*", SearchOption.AllDirectories);
-            DirectoryInfo[] Directories = d.GetDirectories("*-natives-AL74", SearchOption.AllDirectories);
-            foreach (DirectoryInfo directory in Directories)
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the 'natives' in the various version folders?\n\nLocation: " + formTextMinecraftLocation.Text + @"\versions", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
             {
-                Directory.Delete(directory.FullName, true);
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\versions");
+                DirectoryInfo[] Directories = d.GetDirectories("*-natives-AL74", SearchOption.AllDirectories);
+                Thread deleteNatItems = new Thread(() => deleteDirecMethod(Directories));
+                deleteNatItems.Start();
             }
         }
 
         private void formButtonDeleteAssets_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\assets");
-            DirectoryInfo[] Directories = d.GetDirectories();
-            Thread deleteAsItems = new Thread(() => deleteDirecMethod(Directories));
-            deleteAsItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the 'assets'?\n\nLocation: " + formTextMinecraftLocation.Text + @"\assets", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\assets");
+                FileInfo[] Files = d.GetFiles();
+                DirectoryInfo[] Directories = d.GetDirectories();
+                Thread deleteAsItems = new Thread(() => deleteAllMethod(Files, Directories));
+                deleteAsItems.Start();
+            }
         }
 
         private void formButtonDeleteSaves_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
-            DirectoryInfo[] Directories = d.GetDirectories("saves", SearchOption.AllDirectories);
-            Thread deleteSavItems = new Thread(() => deleteDirecMethod(Directories));
-            deleteSavItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the 'saves' directories?\n\nLocation: " + formTextMinecraftLocation.Text, "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
+                DirectoryInfo[] Directories = d.GetDirectories("saves", SearchOption.AllDirectories);
+                Thread deleteSavItems = new Thread(() => deleteDirecMethod(Directories));
+                deleteSavItems.Start();
+            }
         }
 
         private void formButtonDeleteVerFiles_Click(object sender, EventArgs e)
         {
-            DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text);
-            FileInfo[] Files = d.GetFiles("*.json", SearchOption.AllDirectories);
-            Thread deleteVerItems = new Thread(() => deleteFilesMethod(Files));
-            deleteVerItems.Start();
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete all the 'versions' files and folders?\n\nLocation: " + formTextMinecraftLocation.Text + @"\versions", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo d = new DirectoryInfo(formTextMinecraftLocation.Text + @"\versions");
+                FileInfo[] Files = d.GetFiles();
+                DirectoryInfo[] Directories = d.GetDirectories();
+                Thread deleteVerItems = new Thread(() => deleteAllMethod(Files, Directories));
+                deleteVerItems.Start();
+            }
+        }
+
+        private void formButtonDeleteLogs_Click(object sender, EventArgs e)
+        {
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to clear all the 'logs'?\n\nLocation: " + formTextMinecraftLocation.Text + @"\logs", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo[] Directories = { new DirectoryInfo(formTextMinecraftLocation.Text + @"\logs") };
+                Thread deleteLogItems = new Thread(() => deleteDirecMethod(Directories));
+                deleteLogItems.Start();
+            }
+        }
+
+        private void formButtonDeleteScreenshots_Click(object sender, EventArgs e)
+        {
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to clear all the 'screenshots'?\n\nLocation: " + formTextMinecraftLocation.Text + @"\screenshots", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo[] Directories = { new DirectoryInfo(formTextMinecraftLocation.Text + @"\screenshots") };
+                Thread deleteLogItems = new Thread(() => deleteDirecMethod(Directories));
+                deleteLogItems.Start();
+            }
+        }
+
+        private void formButtonDeleteResourcePacks_Click(object sender, EventArgs e)
+        {
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to clear all the 'resource packs'?\n\nLocation: " + formTextMinecraftLocation.Text + @"\resourcepacks", "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                DirectoryInfo[] Directories = { new DirectoryInfo(formTextMinecraftLocation.Text + @"\resourcepacks") };
+                Thread deleteLogItems = new Thread(() => deleteDirecMethod(Directories));
+                deleteLogItems.Start();
+            }
         }
 
         private void deleteFilesMethod(FileInfo[] Files)
         {
-            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; formBarDelete.Value = 0; }));
+            Thread.Sleep(1000);
             int x = Files.Count();
             int y = x;
             foreach (FileInfo file in Files)
@@ -646,7 +765,8 @@ namespace AtomLauncher
         }
         private void deleteDirecMethod(DirectoryInfo[] Directories)
         {
-            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; formBarDelete.Value = 0; }));
+            Thread.Sleep(1000);
             int x = Directories.Count();
             int y = x;
             foreach (DirectoryInfo directory in Directories)
@@ -661,7 +781,8 @@ namespace AtomLauncher
         }
         private void deleteAllMethod(FileInfo[] Files, DirectoryInfo[] Directories)
         {
-            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; formBarDelete.Value = 0; }));
+            Thread.Sleep(1000);
             int x = Files.Count() + Directories.Count();
             int y = x;
             foreach (FileInfo file in Files)
@@ -682,7 +803,8 @@ namespace AtomLauncher
         }
         private void deleteAllExMethod(DirectoryInfo Directory, string excludeString)
         {
-            this.Invoke(new MethodInvoker(delegate { Enabled = false; }));
+            this.Invoke(new MethodInvoker(delegate { Enabled = false; formBarDelete.Value = 0; }));
+            Thread.Sleep(1000);
             var Directories = Directory.GetDirectories("*", SearchOption.AllDirectories).Where(file => !file.FullName.Contains(excludeString));
             var Files = Directory.GetFiles("*", SearchOption.AllDirectories).Where(file => !file.FullName.Contains(excludeString));
             int x = Files.Count() + Directories.Count();

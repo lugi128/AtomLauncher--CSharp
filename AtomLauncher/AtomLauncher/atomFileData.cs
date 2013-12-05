@@ -360,7 +360,7 @@ namespace AtomLauncher
                     catch (Exception ex)
                     {
                         status = ex.Message;
-                        if (displayMessageBox) MessageBox.Show(ex.Message);
+                        if (displayMessageBox) MessageBox.Show("File: " + pathFILE + "\n\nError: " + ex.Message + "\n\nMake sure Your have proper file permissons to delete these files, or, make sure a program isnt exicuting them.");
                     }
                     break;
                 }
@@ -408,7 +408,7 @@ namespace AtomLauncher
                     catch (Exception ex)
                     {
                         status = ex.Message;
-                        if (displayMessageBox) MessageBox.Show(ex.Message);
+                        if (displayMessageBox) MessageBox.Show("File: " + pathFOLDER + "\n\nError: " + ex.Message + "\n\nMake sure Your have proper file permissons to delete these files, or, make sure a program isnt exicuting them.");
                     }
                     break;
                 }
