@@ -186,15 +186,23 @@ namespace AtomLauncher
 
         private void formButtonDeleteAllData_Click(object sender, EventArgs e)
         {
-            atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], true);
-            atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], true);
-            formLabelDetail.Text = "Click OK and restart launcher imiediatly for this to take effect.";
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete 'ALL' the data? This will delete all of the logins, apps, and app settings.\n\nLocation: " + atomFileData.config["dataLocation"], "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["appDataName"], true);
+                atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], true);
+                formLabelDetail.Text = "Click OK and restart launcher imiediatly for this to take effect.";
+            }
         }
 
         private void formButtonDeleteUserData_Click(object sender, EventArgs e)
         {
-            atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], true);
-            formLabelDetail.Text = "Click OK and restart launcher imiediatly for this to take effect.";
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete 'ALL' user data? This will delete all of the logins for each app.\n\nLocation: " + atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], "Are you sure?", MessageBoxButtons.YesNo);
+            if (yesnoDialog == DialogResult.Yes)
+            {
+                atomFileData.deleteLoop(atomFileData.config["dataLocation"] + atomFileData.config["userDataName"], true);
+                formLabelDetail.Text = "Click OK and restart launcher imiediatly for this to take effect.";
+            }
         }
 
         private void formCheckCustomFont_CheckedChanged(object sender, EventArgs e)

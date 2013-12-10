@@ -19,7 +19,7 @@ namespace AtomLauncher
         internal static Dictionary<string, string[]> versionList = new Dictionary<string, string[]>
         {
             //{"AL_LatestID", new string[] { version.latest.release, version.latest.snapshot }},
-            //{"1.6.4",       new string[] { "time", "releaseTime", "Type" }}
+            //{"1.6.4",       new string[] { "time", "releaseTime", "type" }}
         };
 
         internal static Dictionary<string, string[]> versionData = new Dictionary<string, string[]>
@@ -27,12 +27,23 @@ namespace AtomLauncher
             //{"id"                  , new string[] { "1.6.4" }},
             //{"time"                , new string[] { "2013-09-19T10:52:37-05:00" }},
             //{"releaseTime"         , new string[] { "2013-09-19T10:52:37-05:00" }},
-            //{"Type"                , new string[] { "release" }},
+            //{"type"                , new string[] { "release" }},
             //{"minecraftArguments"  , new string[] { "--username ${auth_player_name} --session ${auth_session} --version ${version_name} --appDir ${app_directory} --assetsDir ${app_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token}" }},
             //{"mainClass"           , new string[] { "net.minecraft.client.main.Main" }},
+            //{"assets"              , new string[] { "legacy" or "1.6.4" }},
             //{"libraries"           , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
             //{"urlLibraries"        , new string[] { "MODWEBSITE" "" "etc" }}, //for Mods the declare there own downloads.
             //{"natives"             , new string[] { "net\sf\jopt-simple\jopt-simple\4.5\jopt-simple-4.5.jar" "etc" "etc" }},
+        };
+
+        internal static Dictionary<string, string[]> assetsList = new Dictionary<string, string[]>
+        {
+            //{"objectFileLocation", new string[] { "hash", "size" }},
+            //{"objectFileLocation", new string[] { "hash", "size" }},
+            //{"objectFileLocation", new string[] { "hash", "size" }},
+            //{"etc", new string[] { "etc", "etc" }},
+            //{"etc", new string[] { "etc", "etc" }},
+            //{"etc", new string[] { "etc", "etc" }},
         };
 
         internal static Dictionary<int, string[]> fileInput = new Dictionary<int, string[]>();
@@ -152,11 +163,11 @@ namespace AtomLauncher
                 string fileName = "";
                 if (selectedApp == "AL_AddNewApp")
                 {
-                    fileName = atomProgram.appData + @"\.minecraft\versions\LatestVerList\versions.json";
+                    fileName = atomProgram.appData + @"\.minecraft\versions\ALVerList\versions.json";
                 }
                 else
                 {
-                    fileName = atomLauncher.appData[selectedApp]["location"][0] + @"\versions\LatestVerList\versions.json";
+                    fileName = atomLauncher.appData[selectedApp]["location"][0] + @"\versions\ALVerList\versions.json";
                 }
                 if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 1)
                 {
@@ -502,71 +513,32 @@ namespace AtomLauncher
             {
                 if (atomLauncher.cancelPressed) throw new System.Exception("Checking Minecraft Files");
                 int x = 0;
-                int i = 0;//Dev// Need to rewrite this to properly use the foreach loop.
+                int i = 0;
                 foreach (string entry in versionData["libraries"])
                 {
-                    if (versionData["urlLibraries"][x] == "")
+                    if (versionData["urlLibraries"][i] == "")
                     {
-                        fileInput.Add(x - i, new string[] { "http://s3.amazonaws.com/Minecraft.Download/libraries/" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] });
+                        fileInput.Add(x, new string[] { "https://libraries.minecraft.net/" + entry.Replace(@"\", "/"), @"libraries\" + entry }); x++;
+                        fileInput.Add(x, new string[] { "https://libraries.minecraft.net/" + entry.Replace(@"\", "/") + ".sha1", @"libraries\" + entry + ".sha" }); x++;
                     }
                     else
                     {
-                        modInput.Add(i, new string[] { "URL" + versionData["libraries"][x].Replace(@"\", "/"), @"libraries\" + versionData["libraries"][x] });
-                        i++;
-                        //Dev// rewrite bad, Possible idea, check to see if download is possbile, if not error out.
+                        modInput.Add(x, new string[] { "URL" + entry.Replace(@"\", "/"), @"libraries\" + entry }); x++;
+                        //Dev// rewrite bad, Possible idea, check to see if download is possbile, if not, ... error?
                     }
-                    x++;
+                    i++;
                 }
-                x = x - i;
                 //Dev//
                 // Create a method to check for multiple xml files.
-                string filename = mcLocation + @"\assets\Minecraft.Resources";
-                string[] fileNames = { filename + ".0.xml" };
+                string fileName = mcLocation + @"\assets\indexes\" + versionData["assets"][0] + ".json";
                 string subString = "";
-                if ((DateTime.Now - File.GetLastWriteTime(fileNames[0])).TotalHours > 1)
+                if ((DateTime.Now - File.GetLastWriteTime(fileName)).TotalHours > 8)
                 {
                     //Dev//
                     //In the future, possibly check ETAG instead with all the files.
                     try
                     {
-                        string pageMarker = "";
-                        int y = 0;
-                        while (true)
-                        {
-                            bool isTruncated = false;
-                            atomDownloading.Single("http://resources.download.minecraft.net/" + pageMarker, fileNames[y]);
-                            XDocument doc = XDocument.Load(fileNames[y]);
-                            foreach (XElement el in doc.Root.Elements())
-                            {
-                                if (el.Name.LocalName == "IsTruncated")
-                                {
-                                    isTruncated = Convert.ToBoolean(el.Value);
-                                    break;
-                                }
-                            }
-                            if (isTruncated)
-                            {
-                                throw new System.Exception("Unimplimented Resources. PLEASE REPORT THIS.");
-                                //XElement el = doc.Root.Elements().Last();
-                                //foreach (XElement element in el.Elements())
-                                //{
-                                //    if (element.Name.LocalName == "Key")
-                                //    {
-                                //        pageMarker = "?marker=" + element.Value;
-                                //    }
-                                //}
-                                //y++;
-                                //if (y > fileNames.Length - 1)
-                                //{
-                                //    Array.Resize(ref fileNames, fileNames.Length + 1);
-                                //}
-                                //fileNames[y] = filename + "." + y + ".xml";
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
+                        atomDownloading.Single("https://s3.amazonaws.com/Minecraft.Download/indexes/" + versionData["assets"][0] + ".json", fileName);
                     }
                     catch (Exception ex)
                     {
@@ -575,38 +547,21 @@ namespace AtomLauncher
                 }
                 try
                 {
-                    foreach (string file in fileNames)
+                    if (File.Exists(fileName))
                     {
-                        if (File.Exists(file))
+                        assetsList = otherJsonNet.getAssetsList(fileName);
+                        foreach (KeyValuePair<string, string[]> entry in assetsList)
                         {
-                            XDocument doc = XDocument.Load(file);
-                            foreach (XElement el in doc.Root.Elements())
-                            {
-                                foreach (XElement element in el.Elements())
-                                {
-                                    if (element.Name.LocalName == "Key")
-                                    {
-                                        if (!element.Value.EndsWith("/"))
-                                        {
-                                            fileInput.Add(x, new string[] { "http://resources.download.minecraft.net/" + element.Value, @"assets\" + element.Value.Replace("/", @"\") }); x++;
-                                        }
-                                    }
-                                }
-                            }
+                            fileInput.Add(x, new string[] { "http://resources.download.minecraft.net/" + entry.Value[0].Truncate(2) + "/" + entry.Value[0], @"assets\objects\" + entry.Value[0].Truncate(2) + @"\" + entry.Value[0] }); x++;
                         }
-                        else
-                        {
-                            status = subString + " / Resource File Missing.";
-                            break;
-                        }
+                    }
+                    else
+                    {
+                        status = subString + " Assets index missing.";
                     }
                 }
                 catch
                 {
-                    foreach (string file in fileNames)
-                    {
-                        status = status + atomFileData.deleteLoop(file);
-                    }
                     if (status == "")
                     {
                         status = "Minecraft Resources Error: Please login again.";
@@ -634,6 +589,33 @@ namespace AtomLauncher
                                 status = "Offline Mode, Files Missing. You need to login and download first, before offline mode can be used.";
                             }
                         }
+                    }
+                    if (versionData["assets"][0] == "legacy")
+                    {
+                        int z = 0;
+                        atomLauncher.atomLaunch.formText("formLabelStatus", "Checking and creating legacy files...");
+                        foreach (KeyValuePair<string, string[]> entry in assetsList)
+                        {
+                            atomLauncher.atomLaunch.formText("formLabelFileMB", (z + 1) + " / " + assetsList.Count());
+                            atomLauncher.atomLaunch.barValues((z + 1) * 100 / assetsList.Count(), 0);
+                            if (!File.Exists(mcLocation + @"\assets\virtual\legacy\" + entry.Key.Replace("/", @"\")))
+                            {
+                                Directory.CreateDirectory(Path.GetDirectoryName(mcLocation + @"\assets\virtual\legacy\" + entry.Key.Replace("/", @"\")));
+                                File.Copy(mcLocation + @"\assets\objects\" + entry.Value[0].Truncate(2) + @"\" + entry.Value[0], mcLocation + @"\assets\virtual\legacy\" + entry.Key.Replace("/", @"\"));
+                                z++;
+                            }
+                            else
+                            {
+                                Random rnd = new Random();
+                                z += rnd.Next(2, 26);
+                                if (z >= assetsList.Count())
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        atomLauncher.atomLaunch.formText("formLabelFileMB", "");
+                        atomLauncher.atomLaunch.barValues(0, 0);
                     }
                 }
             }
@@ -729,10 +711,12 @@ namespace AtomLauncher
                     mcArgs = mcArgs.Replace("${auth_uuid}", "OFFLINE_MODE");
                     mcArgs = mcArgs.Replace("${auth_access_token}", "OFFLINE_MODE");
                 }
+                mcArgs = mcArgs.Replace("${assets_index_name}", versionData["assets"][0]);
                 mcArgs = mcArgs.Replace("${version_name}", mcSelectVer);
                 mcArgs = mcArgs.Replace("${user_properties}", "{}");
                 mcArgs = mcArgs.Replace("${game_directory}", "\"" + mcSave + "\"");
-                mcArgs = mcArgs.Replace("${game_assets}", "\"" + mcLocation + "\\assets\"");
+                mcArgs = mcArgs.Replace("${game_assets}", "\"" + mcLocation + "\\assets\\virtual\\legacy\"");
+                mcArgs = mcArgs.Replace("${assets_root}", "\"" + mcLocation + "\\assets\"");
                 buildArguments = mojangIntelTrick + " " + mcStartRam + " " + mcMaxRam + " " + mcNatives + " " + mcLibraries + mcJar + " " + mcClass + " " + mcArgs;
             }
             catch (Exception ex)
