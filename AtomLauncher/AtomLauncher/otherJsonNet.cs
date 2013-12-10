@@ -122,13 +122,19 @@ namespace AtomLauncher
                     }
                 }
             }
+            string tmpAssets = "legacy";
+            if (version.assets != null)
+            {
+                tmpAssets = version.assets;
+            }
             Dictionary<string, string[]> dict = new Dictionary<string, string[]>{
                 {"id"                  , new string[] { version.id }},
                 {"time"                , new string[] { version.time }},
                 {"releaseTime"         , new string[] { version.releaseTime }},
-                {"Type"                , new string[] { version.type }},
+                {"type"                , new string[] { version.type }},
                 {"minecraftArguments"  , new string[] { version.minecraftArguments }},
                 {"mainClass"           , new string[] { version.mainClass }},
+                {"assets"              , new string[] { tmpAssets }},
               //{"libraries"           , new string[] { "net/sf/jopt-simple/jopt-simple/4.5/jopt-simple-4.5.jar" "etc" "etc" }},
                 {"libraries"           , libraries },
                 {"urlLibraries"        , urlLibraries },
@@ -149,13 +155,34 @@ namespace AtomLauncher
             dynamic version = JsonConvert.DeserializeObject(json);
             Dictionary<string, string[]> dict = new Dictionary<string, string[]>{
                 {"AL_LatestID", new string[] { version.latest.release, version.latest.snapshot }},
-              //{"1.6.4",       new string[] { "time", "releaseTime", "Type" }}
+              //{"1.6.4",       new string[] { "time", "releaseTime", "type" }}
             };
             foreach (var entry in version.versions)
             {
                 string keyString = entry.id;
                 string[] arrString = { entry.time, entry.releaseTime, entry.type };
                 dict.Add(keyString, arrString); //Odd errors if put in directly.
+            }
+            return dict;
+        }
+
+        /// <summary>
+        /// Parses the minecraft index file for minecraft assets.
+        /// </summary>
+        /// <param name="jsonFile">The json file for the list of assets. Example: "C:\LOCATION\verions.json"</param>
+        /// <returns>Returns a dictonary with all of the elements.</returns>
+        internal static Dictionary<string, string[]> getAssetsList(string jsonFile)
+        {
+            var json = System.IO.File.ReadAllText(jsonFile);
+            dynamic assets = JsonConvert.DeserializeObject(json);
+            Dictionary<string, string[]> dict = new Dictionary<string, string[]>
+            {
+                //{"objectFileLocation", new string[] { "hash", "size" }},
+            };
+            var values = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(Convert.ToString(assets.objects));
+            foreach (KeyValuePair<string, dynamic> entry in values)
+            {
+                dict.Add(entry.Key, new string[] { entry.Value.hash, entry.Value.size });
             }
             return dict;
         }

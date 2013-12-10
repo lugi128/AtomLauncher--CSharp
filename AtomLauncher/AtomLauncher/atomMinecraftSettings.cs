@@ -55,7 +55,7 @@ namespace AtomLauncher
 
         private void loadVer()
         {
-            string[] dirs = { "LatestVerList" };
+            string[] dirs = { "ALVerList" };
             if (Directory.Exists(formTextMinecraftLocation.Text + @"\versions"))
             {
                 dirs = Directory.GetDirectories(formTextMinecraftLocation.Text + @"\versions");
@@ -81,9 +81,9 @@ namespace AtomLauncher
             {
                 foreach (string d in dirs)
                 {
-                    if (!d.EndsWith("LatestVerList"))
+                    if (!d.EndsWith("ALVerList"))
                     {
-                        if (!formComboVersionSelect.Items.Contains(Path.GetFileName(d)) && !atomMinecraft.versionList.ContainsKey(Path.GetFileName(d)))
+                        if (!formComboVersionSelect.Items.Contains(Path.GetFileName(d)))
                         {
                             this.Invoke(new MethodInvoker(delegate { formComboVersionSelect.Items.Add(Path.GetFileName(d)); }));
                         }
@@ -128,7 +128,7 @@ namespace AtomLauncher
             {
                 foreach (string d in dirs)
                 {
-                    if (!d.EndsWith("LatestVerList"))
+                    if (!d.EndsWith("ALVerList"))
                     {
                         if (!formComboVersionSelect.Items.Contains(Path.GetFileName(d)))
                         {
@@ -642,10 +642,10 @@ namespace AtomLauncher
 
         private void formButtonDeleteVerList_Click(object sender, EventArgs e)
         {
-            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete the version list?\n\nLocation: " + formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json", "Are you sure?", MessageBoxButtons.YesNo);
+            DialogResult yesnoDialog = MessageBox.Show("Are you sure you want to delete the version list?\n\nLocation: " + formTextMinecraftLocation.Text + @"\versions\ALVerList\versions.json", "Are you sure?", MessageBoxButtons.YesNo);
             if (yesnoDialog == DialogResult.Yes)
             {
-                FileInfo[] Files = { new FileInfo(formTextMinecraftLocation.Text + @"\versions\LatestVerList\versions.json") };
+                FileInfo[] Files = { new FileInfo(formTextMinecraftLocation.Text + @"\versions\ALVerList\versions.json") };
                 Thread deleteFItems = new Thread(() => deleteFilesMethod(Files));
                 deleteFItems.Start();
             }
