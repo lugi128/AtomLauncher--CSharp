@@ -38,8 +38,8 @@
             this.formLabelStatus = new System.Windows.Forms.Label();
             this.formTextAppName = new System.Windows.Forms.TextBox();
             this.formLabelAppName = new System.Windows.Forms.Label();
-            this.formTextAdditionalFiles = new System.Windows.Forms.TextBox();
-            this.formLabelAdditionalFiles = new System.Windows.Forms.Label();
+            this.formTextPack = new System.Windows.Forms.TextBox();
+            this.formLabelPack = new System.Windows.Forms.Label();
             this.formTabs = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
             this.formButtonAppArguments = new System.Windows.Forms.Button();
@@ -159,23 +159,23 @@
             this.formLabelAppName.Text = "Custom App Name";
             this.formLabelAppName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // formTextAdditionalFiles
+            // formTextPack
             // 
-            this.formTextAdditionalFiles.Enabled = false;
-            this.formTextAdditionalFiles.Location = new System.Drawing.Point(8, 336);
-            this.formTextAdditionalFiles.Name = "formTextAdditionalFiles";
-            this.formTextAdditionalFiles.Size = new System.Drawing.Size(264, 16);
-            this.formTextAdditionalFiles.TabIndex = 7;
+            this.formTextPack.Enabled = false;
+            this.formTextPack.Location = new System.Drawing.Point(8, 336);
+            this.formTextPack.Name = "formTextPack";
+            this.formTextPack.Size = new System.Drawing.Size(264, 16);
+            this.formTextPack.TabIndex = 7;
             // 
-            // formLabelAdditionalFiles
+            // formLabelPack
             // 
-            this.formLabelAdditionalFiles.Enabled = false;
-            this.formLabelAdditionalFiles.Location = new System.Drawing.Point(8, 328);
-            this.formLabelAdditionalFiles.Name = "formLabelAdditionalFiles";
-            this.formLabelAdditionalFiles.Size = new System.Drawing.Size(264, 8);
-            this.formLabelAdditionalFiles.TabIndex = 8;
-            this.formLabelAdditionalFiles.Text = "Additional Files URL";
-            this.formLabelAdditionalFiles.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.formLabelPack.Enabled = false;
+            this.formLabelPack.Location = new System.Drawing.Point(8, 328);
+            this.formLabelPack.Name = "formLabelPack";
+            this.formLabelPack.Size = new System.Drawing.Size(264, 8);
+            this.formLabelPack.TabIndex = 8;
+            this.formLabelPack.Text = "Additional Files URL";
+            this.formLabelPack.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // formTabs
             // 
@@ -264,14 +264,14 @@
             // 
             // Files
             // 
-            this.Files.Controls.Add(this.formTextAdditionalFiles);
+            this.Files.Controls.Add(this.formTextPack);
             this.Files.Controls.Add(this.formTextThumbnail);
             this.Files.Controls.Add(this.formButtonThumbnailClear);
             this.Files.Controls.Add(this.formButtonThumbnail);
             this.Files.Controls.Add(this.label1);
             this.Files.Controls.Add(this.formLabelThumbnailDetail);
             this.Files.Controls.Add(this.formLabelThumbnail);
-            this.Files.Controls.Add(this.formLabelAdditionalFiles);
+            this.Files.Controls.Add(this.formLabelPack);
             this.Files.Location = new System.Drawing.Point(4, 19);
             this.Files.Name = "Files";
             this.Files.Size = new System.Drawing.Size(280, 361);
@@ -465,8 +465,8 @@
         private System.Windows.Forms.Label formLabelStatus;
         private System.Windows.Forms.TextBox formTextAppName;
         private System.Windows.Forms.Label formLabelAppName;
-        private System.Windows.Forms.TextBox formTextAdditionalFiles;
-        private System.Windows.Forms.Label formLabelAdditionalFiles;
+        private System.Windows.Forms.TextBox formTextPack;
+        private System.Windows.Forms.Label formLabelPack;
         private System.Windows.Forms.TabControl formTabs;
         private System.Windows.Forms.TabPage General;
         private System.Windows.Forms.TabPage Program;
