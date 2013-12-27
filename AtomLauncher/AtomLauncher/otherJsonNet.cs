@@ -12,7 +12,6 @@ namespace AtomLauncher
         /// Parses the minecraft json related to a specific version.
         /// </summary>
         /// <param name="jsonFile">The json file for a sepcific version. Example: "C:\LOCATION\1.6.2.json"</param>
-        /// <param name="useNightly">Whether to use the nightly builds or not. Could be unstable.</param>
         /// <returns>Returns a dictonary with all of the elements.</returns>
         internal static Dictionary<string, string[]> getVersionData(string jsonFile)
         {
@@ -74,33 +73,27 @@ namespace AtomLauncher
                     string[] colonSplit = fileName.Split(new char[] { ':' }, 3);
                     string[] folderSplit = colonSplit[0].Split(new char[] { '.' });
                     string compileFolder = "";
-                    for (int a = 0; a < folderSplit.Length; a++)
+                    foreach (string entry in folderSplit)
                     {
-                        if (a == 0)
-                        {
-                            compileFolder = folderSplit[a];
-                        }
-                        else
-                        {
-                            compileFolder = compileFolder + @"\" + folderSplit[a];
-                        }
+                        compileFolder += entry + @"\";
                     }
+                    string compileSplit = "";
                     if (param.natives != null)
                     {
                         isNative = true;
-                        compileFolder = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + "-" + param.natives.windows + ".jar";
+                        compileSplit = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + "-" + param.natives.windows + ".jar";
                     }
                     else
                     {
-                        compileFolder = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + ".jar";
+                        compileSplit = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + ".jar";
                     }
-                    compileFolder = compileFolder.Replace("${arch}", archType);
+                    string compileComplete = compileSplit.Replace("${arch}", archType);
                     if (l > libraries.Length - 1)
                     {
                         Array.Resize(ref libraries, libraries.Length + 1);
                         Array.Resize(ref urlLibraries, libraries.Length + 1);
                     }
-                    libraries[l] = compileFolder;
+                    libraries[l] = compileComplete;
                     if (modFile)
                     {
                         urlLibraries[l] = param.url;
@@ -117,7 +110,7 @@ namespace AtomLauncher
                         {
                             Array.Resize(ref natives, natives.Length + 1);
                         }
-                        natives[n] = compileFolder;
+                        natives[n] = compileComplete;
                         n++;
                     }
                 }
