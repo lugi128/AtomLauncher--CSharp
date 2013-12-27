@@ -115,7 +115,7 @@ namespace AtomLauncher
                 else if (step == 5)
                 {
                     atomLauncher.atomLaunch.formText("formLabelStatus", "Checking Additional Files...");
-                    status = checkAdditionalFiles();
+                    status = checkPack();
                 }
                 else if (step == 6)
                 {
@@ -480,7 +480,7 @@ namespace AtomLauncher
         /// Look for & Download optional or additional Files
         /// </summary>
         /// <returns>Status of exceptions or success</returns>
-        private static string checkAdditionalFiles()
+        private static string checkPack()
         {
             string status = "Successful";
             try

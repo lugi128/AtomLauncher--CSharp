@@ -51,8 +51,8 @@
             this.formTextUsername = new System.Windows.Forms.TextBox();
             this.formTextAppName = new System.Windows.Forms.TextBox();
             this.formLabelAppName = new System.Windows.Forms.Label();
-            this.formTextAdditionalFiles = new System.Windows.Forms.TextBox();
-            this.formLabelAdditionalFiles = new System.Windows.Forms.Label();
+            this.formTextPack = new System.Windows.Forms.TextBox();
+            this.formLabelPack = new System.Windows.Forms.Label();
             this.formTextSaveLocation = new System.Windows.Forms.TextBox();
             this.formLabelSaveLocation = new System.Windows.Forms.Label();
             this.formButtonSaveLocation = new System.Windows.Forms.Button();
@@ -357,25 +357,25 @@
             this.formLabelAppName.Text = "Custom App Name";
             this.formLabelAppName.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // formTextAdditionalFiles
+            // formTextPack
             // 
-            this.formTextAdditionalFiles.Enabled = false;
-            this.formTextAdditionalFiles.Location = new System.Drawing.Point(8, 336);
-            this.formTextAdditionalFiles.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.formTextAdditionalFiles.Name = "formTextAdditionalFiles";
-            this.formTextAdditionalFiles.Size = new System.Drawing.Size(264, 16);
-            this.formTextAdditionalFiles.TabIndex = 7;
+            this.formTextPack.Enabled = false;
+            this.formTextPack.Location = new System.Drawing.Point(8, 336);
+            this.formTextPack.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.formTextPack.Name = "formTextPack";
+            this.formTextPack.Size = new System.Drawing.Size(264, 16);
+            this.formTextPack.TabIndex = 7;
             // 
-            // formLabelAdditionalFiles
+            // formLabelPack
             // 
-            this.formLabelAdditionalFiles.Enabled = false;
-            this.formLabelAdditionalFiles.Location = new System.Drawing.Point(8, 328);
-            this.formLabelAdditionalFiles.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.formLabelAdditionalFiles.Name = "formLabelAdditionalFiles";
-            this.formLabelAdditionalFiles.Size = new System.Drawing.Size(264, 8);
-            this.formLabelAdditionalFiles.TabIndex = 8;
-            this.formLabelAdditionalFiles.Text = "Additional Files URL";
-            this.formLabelAdditionalFiles.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.formLabelPack.Enabled = false;
+            this.formLabelPack.Location = new System.Drawing.Point(8, 328);
+            this.formLabelPack.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.formLabelPack.Name = "formLabelPack";
+            this.formLabelPack.Size = new System.Drawing.Size(264, 8);
+            this.formLabelPack.TabIndex = 8;
+            this.formLabelPack.Text = "Additional Files URL";
+            this.formLabelPack.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // formTextSaveLocation
             // 
@@ -576,9 +576,9 @@
             this.Files.Controls.Add(this.formLabelMinecraftLocation);
             this.Files.Controls.Add(this.formTextSaveLocation);
             this.Files.Controls.Add(this.formLabelSaveLocation);
-            this.Files.Controls.Add(this.formLabelAdditionalFiles);
+            this.Files.Controls.Add(this.formLabelPack);
             this.Files.Controls.Add(this.formButtonSaveLocation);
-            this.Files.Controls.Add(this.formTextAdditionalFiles);
+            this.Files.Controls.Add(this.formTextPack);
             this.Files.Location = new System.Drawing.Point(4, 19);
             this.Files.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Files.Name = "Files";
@@ -938,8 +938,8 @@
         private System.Windows.Forms.TextBox formTextUsername;
         private System.Windows.Forms.TextBox formTextAppName;
         private System.Windows.Forms.Label formLabelAppName;
-        private System.Windows.Forms.TextBox formTextAdditionalFiles;
-        private System.Windows.Forms.Label formLabelAdditionalFiles;
+        private System.Windows.Forms.TextBox formTextPack;
+        private System.Windows.Forms.Label formLabelPack;
         private System.Windows.Forms.TextBox formTextSaveLocation;
         private System.Windows.Forms.Label formLabelSaveLocation;
         private System.Windows.Forms.Button formButtonSaveLocation;
