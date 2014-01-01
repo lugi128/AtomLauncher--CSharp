@@ -285,6 +285,7 @@ namespace AtomLauncher
                     string ALUpdateData = "";
                     using (WebClient client = new WebClient())
                     {
+                        client.Headers[HttpRequestHeader.UserAgent] = atomDownloading.userAgentVer;
                         ALUpdateData = client.DownloadString(atomFileData.config["updateURL"]);
                     }
                     string[] ALUpdateStrings = ALUpdateData.Split(new string[] { ":::" }, StringSplitOptions.None);

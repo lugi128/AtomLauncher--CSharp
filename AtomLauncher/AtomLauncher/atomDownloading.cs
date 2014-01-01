@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 namespace AtomLauncher
 {
@@ -23,6 +24,7 @@ namespace AtomLauncher
         static double bytesRecievedTotal = 0;
         static double bytesRecieved = 0;
         static string downloadingFile = "";
+        internal static string userAgentVer = "AtomLauncher/AtomicElectronics/1.0";
 
         //static public Dictionary<int, string[]> demoDownloadDictonary = new Dictionary<int, string[]>{
         //    {0, new string[] { "http://www.atomicelectronics.net/Name/Test/test0.zip", @"Folder\test0.zip" }},
@@ -61,7 +63,8 @@ namespace AtomLauncher
                 atomLauncher.atomLaunch.formText("formLabelDLFile", entry.Value[0]);
                 try
                 {
-                    System.Net.WebRequest req = System.Net.HttpWebRequest.Create(entry.Value[0]);
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(entry.Value[0]);
+                    req.UserAgent = userAgentVer;
                     req.Method = "HEAD";
                     using (System.Net.WebResponse resp = req.GetResponse())
                     {
@@ -132,7 +135,8 @@ namespace AtomLauncher
             int contentLength = 0;
             try
             {
-                System.Net.WebRequest req = System.Net.HttpWebRequest.Create(urlFilePATH);
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(urlFilePATH);
+                req.UserAgent = userAgentVer;
                 req.Method = "HEAD";
                 using (System.Net.WebResponse resp = req.GetResponse())
                 {
@@ -192,6 +196,7 @@ namespace AtomLauncher
             if (atomLauncher.cancelPressed || cancelDownload) return;
             using (webConnect = new WebClient())
             {
+                webConnect.Headers[HttpRequestHeader.UserAgent] = userAgentVer;
                 webConnect.DownloadProgressChanged += new DownloadProgressChangedEventHandler(progress);
                 webConnect.DownloadFileCompleted += new AsyncCompletedEventHandler(completed);
                 try

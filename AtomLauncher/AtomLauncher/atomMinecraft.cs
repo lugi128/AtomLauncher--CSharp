@@ -276,7 +276,9 @@ namespace AtomLauncher
                     {
                         placedPassword = otherCipher.Decrypt(inputPassword, otherCipher.machineIDLookup());
                     }
-                    WebRequest request = WebRequest.Create("https://authserver.mojang.com/authenticate");   //Start WebRequest
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://authserver.mojang.com/authenticate"); //Start WebRequest
+                    request.UserAgent = atomDownloading.userAgentVer;
                     request.Method = "POST";                                                                //Method type, POST
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(new                           //Object to Upload
                     {

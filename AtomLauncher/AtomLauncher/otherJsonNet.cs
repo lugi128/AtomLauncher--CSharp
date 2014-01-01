@@ -81,11 +81,11 @@ namespace AtomLauncher
                     if (param.natives != null)
                     {
                         isNative = true;
-                        compileSplit = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + "-" + param.natives.windows + ".jar";
+                        compileSplit = compileFolder + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + "-" + param.natives.windows + ".jar";
                     }
                     else
                     {
-                        compileSplit = compileFolder + @"\" + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + ".jar";
+                        compileSplit = compileFolder + colonSplit[1] + @"\" + colonSplit[2] + @"\" + colonSplit[1] + "-" + colonSplit[2] + ".jar";
                     }
                     string compileComplete = compileSplit.Replace("${arch}", archType);
                     if (l > libraries.Length - 1)
