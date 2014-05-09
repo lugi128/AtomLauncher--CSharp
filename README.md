@@ -1,5 +1,9 @@
 Atom Launcher
 =============
+NO LONGER SUPPORTED CODE
+----------
+Please browse to AtomLauncher-Java for the next versions.
+_______
 An Open Source Game Launcher written in C#.
 The point to using this launcher is for extra configurations, features, and auto installing your own packs of files, also known as an "Atom Package".
 
